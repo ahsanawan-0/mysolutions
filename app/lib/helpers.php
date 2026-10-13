@@ -270,6 +270,26 @@ function navigation(): array
     return $nav ??= require base_path('app/data/navigation.php');
 }
 
+/**
+ * Logo <img> from public/assets/img/logo/ (PNG lockups made by `npm run logo` from the client's JPEG; P07 swaps in SVG).
+ * logo('colour' | 'white', ['height' => 36, 'class' => '…']). Decorative (alt=""): the wrapping link carries the label.
+ */
+function logo(string $variant = 'colour', array $attrs = []): string
+{
+    static $sizes = [];
+    $file = 'img/logo/logo-horizontal' . ($variant === 'white' ? '-white' : '') . '.png';
+    $path = public_path('assets/' . $file);
+    if (!is_file($path)) {
+        return '<span class="logo-text' . ($variant === 'white' ? ' logo-text--light' : '') . '" aria-hidden="true"><span class="logo-text__mark"></span>' . e(config('name')) . '</span>';
+    }
+    $sizes[$file] ??= getimagesize($path) ?: [0, 0];
+    [$w, $h] = $sizes[$file];
+    $height = (int) ($attrs['height'] ?? 36);
+    $width = $h > 0 ? (int) round($w * $height / $h) : $height;
+    $class = 'logo-img' . (isset($attrs['class']) ? ' ' . $attrs['class'] : '');
+    return '<img class="' . e($class) . '" src="' . e(asset($file)) . '" alt="" width="' . $width . '" height="' . $height . '" decoding="async">';
+}
+
 /** Site-wide UI copy for reusable components (app/data/ui.php): ui('cta_band'), ui('footer.description'). */
 function ui(string $key, mixed $default = null): mixed
 {

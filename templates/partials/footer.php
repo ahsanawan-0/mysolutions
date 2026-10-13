@@ -1,34 +1,45 @@
 <?php
 declare(strict_types=1);
 /**
- * C23 Site footer (docs/08 §3, docs/13 §1): Navy 900 with the grid-wave art strip on its top edge.
- * Col 1 logo + tagline + description + socials · Col 2 services (categories + subs) · Col 3 sectors · Col 4 contact.
- * Bottom bar: the exact company disclosure + legal links + "Cookie settings" button (P28 consent module listens).
- * Every fact comes from app/config/site.php; copy from app/data/ui.php; lists from app/data/{services,sectors}.php.
+ * C23 Site footer (docs/08 §3 as revised by the client on 13 Oct 2026, docs/13 §1).
+ * A rounded Navy 900 panel inset on the canvas (Innovax footer reference, docs/04 §1): a glass brand card
+ * (logo · description · office hours · socials) + Services / Sectors / Company columns, a contact row with
+ * icon circles, and a decorative word strip along the bottom edge. The company disclosure + legal links sit
+ * below the panel. Every fact comes from app/config/site.php; copy from app/data/ui.php; lists from app/data/.
  */
 $services = services();
 $sectors = sectors();
-$quoteUrl = url('/contact-us/#quote');
 $address = config('address');
+$hours = config('hours.days') ?? [];
+$short = static fn (string $day): string => substr($day, 0, 3);
 $legalLinks = ui('footer.legal_links');
+$companyLinks = ui('footer.company_links');
+$marquee = ui('footer.marquee');
+$href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u;
 ?>
-<footer class="site-footer on-dark" data-header-theme="dark">
-  <div class="site-footer__art" aria-hidden="true">
-    <?= component('grid-wave', ['class' => 'site-footer__wave', 'align' => 'top']) ?>
-  </div>
+<footer class="site-footer">
+  <div class="site-footer__panel on-dark" data-header-theme="dark">
+    <div class="site-footer__glow" aria-hidden="true"></div>
 
-  <div class="container site-footer__inner">
     <div class="site-footer__grid" data-anim="fade-up">
-      <div class="site-footer__col site-footer__col--brand">
-        <a class="site-footer__logo" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home">
-          <span class="logo-text logo-text--light" aria-hidden="true"><span class="logo-text__mark"></span><?= e(config('name')) ?></span>
-        </a>
-        <p class="site-footer__tagline"><?= e(config('tagline')) ?></p>
+      <div class="site-footer__card glass-thin-dark">
+        <a class="site-footer__logo" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home"><?= logo('white', ['height' => 44]) ?></a>
         <p class="site-footer__description"><?= e(ui('footer.description')) ?></p>
+        <?php if ($hours !== []): ?>
+        <dl class="site-footer__hours" aria-label="Office hours">
+          <?php foreach ($hours as $row): ?>
+          <div class="site-footer__hours-row">
+            <dt><?= e($short($row['days'][0])) ?><?= count($row['days']) > 1 ? ' – ' . e($short($row['days'][count($row['days']) - 1])) : '' ?></dt>
+            <dd><?= e($row['opens']) ?> – <?= e($row['closes']) ?></dd>
+          </div>
+          <?php endforeach; ?>
+        </dl>
+        <?php endif; ?>
         <ul class="site-footer__socials" aria-label="Social media">
-          <li><a class="btn-icon" href="<?= e(config('socials.linkedin')) ?>" rel="noopener" aria-label="LinkedIn"><?= icon('linkedin-logo', 'regular', ['size' => 24]) ?></a></li>
-          <li><a class="btn-icon" href="<?= e(config('socials.instagram')) ?>" rel="noopener" aria-label="Instagram"><?= icon('instagram-logo', 'regular', ['size' => 24]) ?></a></li>
-          <li><a class="btn-icon" href="<?= e(config('socials.facebook')) ?>" rel="noopener" aria-label="Facebook"><?= icon('facebook-logo', 'regular', ['size' => 24]) ?></a></li>
+          <li><a href="<?= e(config('socials.linkedin')) ?>" rel="noopener" aria-label="LinkedIn"><?= icon('linkedin-logo', 'regular', ['size' => 20]) ?></a></li>
+          <li><a href="<?= e(config('socials.instagram')) ?>" rel="noopener" aria-label="Instagram"><?= icon('instagram-logo', 'regular', ['size' => 20]) ?></a></li>
+          <li><a href="<?= e(config('socials.facebook')) ?>" rel="noopener" aria-label="Facebook"><?= icon('facebook-logo', 'regular', ['size' => 20]) ?></a></li>
+          <li><a href="<?= e(config('whatsapp')) ?>" rel="noopener" aria-label="WhatsApp"><?= icon('whatsapp-logo', 'regular', ['size' => 20]) ?></a></li>
         </ul>
       </div>
 
@@ -58,29 +69,53 @@ $legalLinks = ui('footer.legal_links');
         </ul>
       </nav>
 
-      <div class="site-footer__col site-footer__col--contact">
-        <h2 class="site-footer__heading" id="footer-contact">Contact</h2>
-        <address class="site-footer__address">
-          <span class="site-footer__contact-row"><?= icon('map-pin', 'light', ['size' => 20]) ?><span><?= e(config('name')) ?><br><?= e($address['street']) ?><br><?= e($address['locality']) ?> <?= e($address['postcode']) ?><br>United Kingdom</span></span>
-          <a class="site-footer__contact-row site-footer__link" href="tel:<?= e(config('phone_e164')) ?>"><?= icon('phone', 'light', ['size' => 20]) ?><span><?= e(config('phone_display')) ?></span></a>
-          <a class="site-footer__contact-row site-footer__link" href="<?= e(config('whatsapp')) ?>" rel="noopener"><?= icon('whatsapp-logo', 'light', ['size' => 20]) ?><span>WhatsApp</span></a>
-          <a class="site-footer__contact-row site-footer__link" href="mailto:<?= e(config('email')) ?>"><?= icon('envelope-simple', 'light', ['size' => 20]) ?><span><?= e(config('email')) ?></span></a>
-          <span class="site-footer__contact-row"><?= icon('clock', 'light', ['size' => 20]) ?><span>Office hours: <?= e(config('hours.summary')) ?></span></span>
-        </address>
-        <?= component('button', ['label' => 'Get a Free Quote', 'href' => $quoteUrl, 'class' => 'site-footer__cta']) ?>
-      </div>
+      <nav class="site-footer__col" aria-labelledby="footer-company">
+        <h2 class="site-footer__heading" id="footer-company">Company</h2>
+        <ul class="site-footer__list">
+          <?php foreach ($companyLinks as [$label, $path]): ?>
+          <li><a class="site-footer__link" href="<?= e($href($path)) ?>"><?= e($label) ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+      </nav>
     </div>
 
-    <div class="site-footer__bottom">
-      <p class="site-footer__legal">© <?= e(date('Y')) ?> <?= e(config('legal_name')) ?>. Registered in <?= e(config('registered_in')) ?>, company no. <?= e(config('company_number')) ?>. Registered office: <?= e($address['street']) ?>, <?= e($address['locality']) ?> <?= e($address['postcode']) ?>.</p>
-      <ul class="site-footer__legal-links" aria-label="Legal">
-        <?php foreach ($legalLinks as $i => [$label, $path]): ?>
-        <li><a href="<?= e(url($path)) ?>"><?= e($label) ?></a></li>
-        <?php if ($i === 1): ?>
-        <li><button type="button" data-cookie-settings>Cookie settings</button></li>
-        <?php endif; ?>
-        <?php endforeach; ?>
-      </ul>
+    <address class="site-footer__contact" data-anim="stagger">
+      <div class="site-footer__contact-item">
+        <span class="site-footer__contact-icon"><?= icon('map-pin', 'regular', ['size' => 22]) ?></span>
+        <span class="site-footer__contact-text"><span class="site-footer__contact-label">Visit our office</span><span><?= e($address['street']) ?>, <?= e($address['locality']) ?> <?= e($address['postcode']) ?></span></span>
+      </div>
+      <div class="site-footer__contact-item">
+        <span class="site-footer__contact-icon"><?= icon('envelope-simple', 'regular', ['size' => 22]) ?></span>
+        <span class="site-footer__contact-text"><span class="site-footer__contact-label">Email us</span><a href="mailto:<?= e(config('email')) ?>"><?= e(config('email')) ?></a></span>
+      </div>
+      <div class="site-footer__contact-item">
+        <span class="site-footer__contact-icon"><?= icon('phone', 'regular', ['size' => 22]) ?></span>
+        <span class="site-footer__contact-text"><span class="site-footer__contact-label">Call or WhatsApp</span><a href="tel:<?= e(config('phone_e164')) ?>"><?= e(config('phone_display')) ?></a></span>
+      </div>
+    </address>
+
+    <div class="site-footer__strip" aria-hidden="true">
+      <div class="site-footer__strip-track">
+        <?php for ($i = 0; $i < 2; $i++): ?>
+        <ul class="site-footer__strip-list">
+          <?php foreach ($marquee as $word): ?>
+          <li><?= e($word) ?></li>
+          <?php endforeach; ?>
+        </ul>
+        <?php endfor; ?>
+      </div>
     </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <p class="site-footer__legal">© <?= e(date('Y')) ?> <?= e(config('legal_name')) ?>. Registered in <?= e(config('registered_in')) ?>, company no. <?= e(config('company_number')) ?>. Registered office: <?= e($address['street']) ?>, <?= e($address['locality']) ?> <?= e($address['postcode']) ?>.</p>
+    <ul class="site-footer__legal-links" aria-label="Legal">
+      <?php foreach ($legalLinks as $i => [$label, $path]): ?>
+      <li><a href="<?= e(url($path)) ?>"><?= e($label) ?></a></li>
+      <?php if ($i === 1): ?>
+      <li><button type="button" data-cookie-settings>Cookie settings</button></li>
+      <?php endif; ?>
+      <?php endforeach; ?>
+    </ul>
   </div>
 </footer>

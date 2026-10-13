@@ -22,7 +22,8 @@ $quoteUrl = url('/contact-us/') . '#quote';
 <header class="site-header site-header--<?= e($variant) ?>" data-header="<?= e($variant) ?>" data-theme="<?= e($theme) ?>">
   <div class="site-header__inner">
     <a class="site-header__logo" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home">
-      <span class="logo-text" aria-hidden="true"><span class="logo-text__mark"></span><?= e(config('name')) ?></span>
+      <?= logo('colour', ['height' => 40, 'class' => 'site-header__logo-img site-header__logo-img--colour']) ?>
+      <?= logo('white', ['height' => 40, 'class' => 'site-header__logo-img site-header__logo-img--white']) ?>
     </a>
 
     <nav class="site-nav" aria-label="Primary">
@@ -102,7 +103,7 @@ $quoteUrl = url('/contact-us/') . '#quote';
 
 <div class="mobile-menu" id="mobile-menu" hidden data-mobile-menu>
   <div class="mobile-menu__bar">
-    <span class="logo-text logo-text--light" aria-hidden="true"><span class="logo-text__mark"></span><?= e(config('name')) ?></span>
+    <a class="mobile-menu__logo" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home"><?= logo('white', ['height' => 36]) ?></a>
     <button class="mobile-menu__close btn-icon" type="button" aria-label="Close menu" data-mobile-close><?= icon('x', 'regular', ['size' => 26]) ?></button>
   </div>
   <nav class="mobile-menu__nav" aria-label="Mobile">

@@ -10,6 +10,7 @@
     "build": "vite build",
     "icons": "node scripts/build-icons.mjs",
     "art": "node scripts/art.mjs",
+    "logo": "node scripts/logo.mjs",
     "images": "node scripts/images.mjs",
     "og": "node scripts/og.mjs",
     "fonts": "python -I scripts/fonts.py ."

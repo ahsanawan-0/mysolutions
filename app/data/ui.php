@@ -27,6 +27,15 @@ return [
     // Footer (templates/partials/footer.php)
     'footer' => [
         'description' => 'Tender writing, bid management, compliance and digital support for UK businesses.', // PROVISIONAL
+        'company_links' => [
+            ['About us', '/about-us/'],
+            ['Insights', '/insights/'],
+            ['FAQ', '/faq/'],
+            ['Contact', '/contact-us/'],
+            ['Get a Free Quote', '/contact-us/#quote'],
+        ],
+        // Decorative word strip along the bottom edge of the footer panel
+        'marquee' => ['Tender Writing', 'Bid Management', 'Compliance', 'Digital Presence', 'UK Businesses'],
         'legal_links' => [
             ['Privacy', '/privacy-policy/'],
             ['Cookies', '/cookie-policy/'],

@@ -53,12 +53,16 @@
 - **Category colour coding (🟡 proposed):** Bid & Proposal Management = **Azure** `#009AF0` · Compliance & Virtual Assistance = **Navy** `#003C8C` · Digital Presence = **Sky** `#8DD6FF` (on dark) / Sky 700 (on light). Used for chips, icon tiles, slider cards and category heroes, so visitors always know which family a page belongs to.
 - **Mobile:** burger → full-screen navy sheet; accordion for Services/Sectors; phone + email + socials at the bottom; sticky bottom **"Call" / "WhatsApp" / "Get a Quote"** bar on mobile (appears after the hero).
 
-## 3. Footer (dark navy 900, grid-wave art at the top edge)
-| Col 1 | Col 2 | Col 3 | Col 4 |
-|---|---|---|---|
-| Logo (reversed), tagline, 2-line company description, social icons (LinkedIn, Instagram, Facebook) | **Services**: 3 category links, each followed by its sub-services in smaller text | **Sectors** (7 links) | **Contact**: address (with `<address>`), phone, WhatsApp, email, office hours; "Get a Free Quote" button |
+## 3. Footer (🔒 revised by the client 13 Oct 2026: Innovax-style rounded panel, no grid-wave at the top)
+A **rounded Navy 900 panel** (radius 32) inset on the canvas, flat colour with one faint azure glow (no heavy gradients), Apple/Airbnb-clean:
 
-Bottom bar: `© 2026 My Solutionz Ltd. Registered in England and Wales, company no. 15677749. Registered office: Unit A53, 4–6 Greatorex Street, London E1 5NF.` · Privacy · Cookies · **Cookie settings** (reopens consent) · Terms · Accessibility · Sitemap.
+| Brand card (glass) | Col 2 | Col 3 | Col 4 |
+|---|---|---|---|
+| Logo (reversed), 2-line company description, **office hours rows** with hairlines, round white social buttons (LinkedIn, Instagram, Facebook, WhatsApp) | **Services**: 3 category links, each followed by its sub-services in smaller text | **Sectors** (7 links + All sectors) | **Company**: About, Insights, FAQ, Contact, Get a Free Quote |
+
+Below the columns: a **contact row** with azure icon circles (Visit our office · Email us · Call or WhatsApp). Along the **bottom edge** of the panel: a decorative **word strip** (Tender Writing ⬡ Bid Management ⬡ Compliance ⬡ Digital Presence…) cut by the panel's rounded bottom (Innovax reference), slow marquee, static under reduced motion. The grid-wave art is used on the CTA band only.
+
+Bottom bar (on the canvas, under the panel): `© 2026 My Solutionz Ltd. Registered in England and Wales, company no. 15677749. Registered office: Unit A53, 4–6 Greatorex Street, London E1 5NF.` · Privacy · Cookies · **Cookie settings** (reopens consent) · Terms · Accessibility · Sitemap.
 
 ---
 

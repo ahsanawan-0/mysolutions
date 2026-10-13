@@ -118,8 +118,14 @@ function initPill(header) {
       gsap.to(pill, { opacity: 0, duration: dur, overwrite: 'auto' });
       return;
     }
-    const x = link.offsetLeft;
-    const w = link.offsetWidth;
+    // Measure against the list, not the link's offsetParent (each .site-nav__item is position: relative)
+    // The pill covers the link AND its caret toggle (when the item has a menu)
+    const listRect = list.getBoundingClientRect();
+    const rect = link.getBoundingClientRect();
+    const toggle = link.closest('.site-nav__item')?.querySelector('[data-menu-trigger]');
+    const right = toggle ? toggle.getBoundingClientRect().right : rect.right;
+    const x = rect.left - listRect.left;
+    const w = right - rect.left;
     if (immediate) {
       gsap.set(pill, { x, width: w, opacity: 1 });
     } else {

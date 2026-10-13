@@ -26,6 +26,16 @@
 }
 /* The sectors dropdown hangs off its item; the mega menu is fixed to the header (see .menu--mega) */
 .site-nav__item.has-menu { position: relative; }
+/* Invisible hover bridge: keeps the item "hovered" while the pointer crosses the header strip and
+   the 8px gap down to the open panel, so the menu doesn't close mid-way (the panel sits above it). */
+.site-nav__item.has-menu.is-open::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: calc(var(--header-h) / 2);
+}
 
 .menu__grid {
   display: grid;

@@ -17,7 +17,7 @@
   position: relative;
   padding: var(--hero-frame) var(--hero-frame) 0;
   background: var(--ms-canvas);
-  color: var(--ms-white);
+  color: var(--ms-ink);          /* the bottom row sits on the canvas; the panel is the .on-dark part */
 }
 
 /* ---------- Panel ---------- */
@@ -30,6 +30,7 @@
   border-radius: var(--hero-radius);
   background: var(--ms-grad-hero);
   background-color: var(--navy-900);
+  color: var(--ms-white);
   isolation: isolate;
 }
 /* The photo lives in its own clipped layer so the panel itself can let menus and glows overflow */
@@ -188,7 +189,8 @@
   font-weight: var(--fw-medium);
   text-decoration: none;
 }
-.hero__link:hover { color: var(--sky-300); }
+.hero__panel .hero__link { color: var(--ms-white); }          /* beats base.css `.on-dark a` */
+.hero__panel .hero__link:hover { color: var(--sky-300); }
 .hero__chev {
   display: inline-grid;
   place-items: center;
@@ -263,19 +265,85 @@
   line-height: 1.2;
   box-shadow: var(--shadow-2);
 }
-.special-frame {
-  position: absolute;
-  inset: -14px -14px auto -14px;
-  height: calc(100% + 14px + var(--card-h) * .75);
-  border-radius: 22px;
-  padding: 1.5px;
-  background: rgb(var(--white-rgb) / .28);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
+/* .special-frame itself: src/css/components/special-frame.css (the glowing border) */
+
+/* ---------- Slider (P09, hero-slider.js adds .is-js): cards are positioned by JS, the CSS states above are the
+   no-JS layout. Controls: prev · dots · next · pause, visually subtle, revealed by JS. ---------- */
+.hero__stage.is-js .hero__cards { position: relative; height: var(--card-h); margin: 0; width: 100%; }
+.hero__stage.is-js .hero__card { position: absolute; top: 0; left: 0; transition: none; opacity: 1; transform: none; filter: none; will-change: transform; }
+.hero__stage.is-js .hero__viewport { cursor: grab; touch-action: pan-y; }
+.hero__stage.is-js .hero__viewport.is-dragging { cursor: grabbing; }
+.hero__stage.is-js .hero__viewport.is-dragging .hero__card-link { pointer-events: none; }
+.hero__stage.is-js .hero__card-link { user-select: none; -webkit-user-drag: none; }
+.hero__controls {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  opacity: .7;
+  transition: opacity var(--dur-hover) var(--ease-apple);
 }
+/* The controls keep their space from the server render (no layout shift when JS boots); they only show with JS */
+.hero__stage:not(.is-js) .hero__controls { visibility: hidden; }
+html.no-js .hero__controls { display: none; }
+.hero__stage:hover .hero__controls, .hero__stage:focus-within .hero__controls { opacity: 1; }
+.hero__ctrl {
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ms-white);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-apple);
+}
+.hero__ctrl:hover { background: rgb(var(--white-rgb) / .10); }
+.hero__ctrl:focus-visible { outline: var(--focus-ring); outline-color: var(--sky-300); outline-offset: 2px; }
+.hero__ctrl--pause .icon--play { display: none; }
+.hero__ctrl--pause[aria-pressed="true"] .icon--pause { display: none; }
+.hero__ctrl--pause[aria-pressed="true"] .icon--play { display: block; }
+.hero__dots { display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.hero__dot {
+  display: block;
+  width: 20px;
+  height: var(--target-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.hero__dot::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgb(var(--white-rgb) / .35);
+  transition: transform var(--dur-hover) var(--ease-apple), background-color var(--dur-hover) var(--ease-apple);
+}
+.hero__dot:hover::before { background: rgb(var(--white-rgb) / .7); }
+.hero__dot[aria-current="true"]::before { background: var(--sky-300); transform: scale(1.5); }
+.hero__dot:focus-visible { outline: var(--focus-ring); outline-color: var(--sky-300); outline-offset: -8px; border-radius: var(--r-pill); }
+
+/* ---------- Entrance pre-states (P09, docs/05 §6): applied from first paint under html.js so the intro causes no
+   layout shift; hero-intro.js adds .is-intro-live when GSAP takes over (and .is-intro-done at the end). The H1 is
+   clipped, never faded (LCP rule, docs/06 §5b); the photo is untouched. A 0s animation at 3s restores everything
+   if the script never takes over. Reduced motion: no pre-states, no intro. ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .hero:not(.is-intro-live):not(.is-intro-done) :is(.hero__panel, .hero__title, .hero__badge, .hero__lead, .quick-start, .hero__links, .hero__helper, .hero__controls, .hero__mini, .hero__chip-item, .hero__card-link, .site-nav__item, .site-header__phone, .site-header__cta) {
+    animation: hero-pre-safety 0s 3s both;
+  }
+  html.js .hero:not(.is-intro-live):not(.is-intro-done) .hero__panel { clip-path: inset(5% 4% 5% 4% round var(--hero-radius)); }
+  html.js .hero:not(.is-intro-live):not(.is-intro-done) .hero__title { clip-path: inset(0 0 100% 0); }
+  html.js .hero:not(.is-intro-live):not(.is-intro-done) :is(.hero__badge, .hero__lead, .quick-start, .hero__links, .hero__helper, .hero__controls, .hero__mini, .hero__chip-item, .hero__card-link, .site-nav__item, .site-header__phone, .site-header__cta) { opacity: 0; }
+}
+@keyframes hero-pre-safety { to { opacity: 1; clip-path: none; } }
 
 /* Helper text, bottom-right */
 .hero__helper { max-width: 34ch; margin: 0; font-size: var(--fs-small); line-height: var(--lh-small); color: var(--navy-200); }

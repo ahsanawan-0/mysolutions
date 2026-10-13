@@ -337,3 +337,36 @@
 - P16: make the mini card the latest insight (`home.hero.mini`).
 - P23: `/contact-us/` reads `sector` / `service` from the query to pre-select the form.
 - Client: real hero photo (`assets-src/images/home/hero-building.jpg`) and the mini-card thumbnail; headline choice (A / B / C) and the free-consultation claim.
+
+---
+
+## P09 — Home hero: services slider, glowing border, choreography
+**Date:** 14 October 2026
+**Commit:** `P09: hero slider, glowing border, entrance choreography`
+
+**Files created / changed**
+- `src/js/modules/hero-slider.js` (new, `data-module="hero-slider"` on `.hero__stage`; lazy chunk 40 KB raw / 16 KB gz with Draggable + InertiaPlugin): infinite loop over the 12 server-rendered cards. Each card is placed by its wrapped distance from a fractional `current` index (prev / active / next at opacity 1 − .55t, scale 1 − .08t, blur t px; cards further than 2.5 slots hidden), so the reference's faded neighbours and the viewport mask stay as in P08. Autoplay every 3.5 s, 700 ms `cubic-bezier(.22,1,.36,1)` (CustomEase `slide`); held while hovered (mouse only), while focus is inside, while the tab is hidden, while dragging and when paused with the button. Drag / swipe through a proxy Draggable (`type: x`, inertia, snap to the nearest card, `allowNativeTouchScrolling` + `touch-action: pan-y`); the click after a drag is swallowed so a card link never opens by accident. ← → inside the region; focusing a neighbour's link centres it. Controls prev · 12 dots (`aria-current`) · next · pause (`aria-pressed`, label swap); `aria-roledescription="carousel"`, cards `role="group" aria-roledescription="slide" aria-label="n of 12"`, far cards `aria-hidden` + `tabindex="-1"`, a polite live region announces user-initiated changes only; `.special` breathes on every change. Reduced motion: no autoplay, instant moves. Adds `html.no-at-property` when `CSS.registerProperty` is missing.
+- `src/css/components/special-frame.css` (new): docs/05 §5 as written (`conic-gradient(from var(--angle), …)` ring masked to 1.5 px with `mask-composite`, `ms-orbit` 4 s linear, blurred halo pulsing 2.8 s), with the ring and the halo as `::before` / `::after` so the ring mask does not clip the glow; a third mask layer `conic-gradient(#000 var(--draw), transparent 0)` lets the intro draw the ring (registered `--draw`, inherits so the pseudo-elements follow the element GSAP tweens); the 120° tag shine every 5 s; `.is-breathing`; the `@property`-less fallback (oversized conic square rotating inside the masked ring); reduced motion = static ring with the light at the top edge and a soft halo.
+- `src/js/modules/hero-intro.js` (new, `data-module="hero-intro"` on `.hero`): the docs/05 §6 timeline on `splash:done` (or at once when `html.splash-done` is already set): panel `clip-path` opens 0.9 s, photo scale 1.15 → 1 (opacity never touched), nav items stagger, badge `back.out(1.6)`, H1 lines slide up inside SplitText masks (no opacity), lead, Quick-Start bar, the three visible card links from x +80, the frame draws (`--draw` 0 → 100 %) then orbits (`.is-live`), helper + quick links + controls, mini card + chips stagger; `clearProps` at the end, then the scroll parallax (scrub, `top top` → `bottom top`): photo `yPercent` 12, copy `yPercent` −8 + opacity .6, stage `yPercent` −14, panel radius 28 → 40; mobile halves the distances. A 4 s timeout lands the final state if the ticker stalls. Reduced motion: no intro, no parallax, frame live at once.
+- `src/css/pages/home.css`: JS-mode stage (`.is-js`: cards absolute, controls, dots, grab cursor), the entrance **pre-states under `html.js`** (panel clip, H1 `clip-path: inset(0 0 100% 0)`, the rest opacity 0; `.is-intro-live` hands over to GSAP; a 0 s animation at 3 s restores everything if the script never takes over; none under reduced motion), controls keep their space from the server render (no shift when they appear). `templates/sections/home/hero.php`: carousel semantics, controls + live region, `data-module`s; `on-dark` moved from the section to the panel (the bottom row is on the canvas). `main.css` imports `special-frame.css`.
+
+**Decisions**
+- The panel's opening clip is `inset(5% 4% 5% 4%)` rather than the table's 6 %, so the header logo (the splash's Flip target) is never clipped while the hand-off lands.
+- Autoplay and the move tween run on the GSAP ticker, which already pauses in hidden tabs; `visibilitychange` additionally holds the timer.
+- The hero header is excluded from the intro except its links / phone / CTA, again so the logo is visible from the first frame.
+- CSS pre-states, not JS, hide the intro'd elements at first paint (docs/12 §4); the H1 is clipped, never faded, and the photo is not pre-stated at all.
+- Found while verifying: `base.css` colours every `a` inside `.on-dark` sky / white on hover, which the P08 sector tiles, mini-card button and quick links inherited (the tiles' text turned white on hover). Scoping `on-dark` to the panel fixes the whole bottom row; the quick links get an explicit white. The parallax moves the image inside the clipped photo layer, not the layer (moving the layer showed a translucent band under the panel when scrolled).
+
+**Deviations**
+- Lighthouse not available (P31). LCP measured with `PerformanceObserver` on the production build with the splash on: with the placeholder SVG the LCP candidate is the lead paragraph at ~3.7 s because an inline SVG cannot be an LCP candidate and the H1 is masked until the intro reveals it; with a temporary high-entropy photo in `assets-src/images/home/` (not committed) the `<img>` is the LCP element at **~0.7 s** on mobile 360 and desktop. The real photo is therefore required for the ≤ 2.5 s target; noted for the client.
+
+**Checks**
+- Playwright, production build: CLS 0.011 total (0.003 intro, 0.008 slider boot; the dev server's JS-injected CSS adds a 1.0 shift that does not exist in production); with the splash on, CLS 0.014; `php -l`, `npm run build` clean; `seo-audit --all` PASS; `check-content` unchanged at 100.
+- Behaviour (Playwright, 1440): ring `--angle` advances continuously (43° → 100° in 0.5 s); autoplay 1 → 3 in 4.2 s; held under hover, under focus-within, when paused; → moves 3 → 4 and announces "Slide 5 of 12: Policy Management"; dot 5 sets `aria-current`; a 300 px drag moves two cards with inertia and stays on the page; parallax at 400 px: photo +40 px, stage −20 px, copy opacity .84, radius 33 px; reduced motion: intro done at once, no autoplay, no ring animation, → instant. Mobile 360 (touch): swipe 1 → 2, active card at the 32 px slot, no overflow. Sectors dropdown opens under its nav item inside the panel; tiles ink / azure-800 on hover. No console errors.
+- Frames: `intro_mid` (headline in, bar fading, cards and frame not yet) and `intro_done` (frame drawn with the light at the top-left, dots under the cards) inspected.
+
+**Follow-ups**
+- P10–P16: the sections below the hero; the `#services` quick link already scrolls through Lenis.
+- P31: Lighthouse LCP / CLS on the host once the real photo is in; the controls' pause button could gain a visible label on hover.
+- P33: Safari check of `mask-composite` with three layers and the `@property` fallback path.
+- Client: the hero photo (needed for the LCP target), headline choice, tag wording ("Our Special Service" vs "Our Core Services").

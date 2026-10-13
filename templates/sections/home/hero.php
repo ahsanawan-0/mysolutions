@@ -7,8 +7,10 @@ declare(strict_types=1);
  *   (the services slider: 12 server-rendered cards, prev / active / next visible, the "Our Special Service" tag with
  *   its frame above the active card) → helper text bottom-right → the canvas notch tab (S-curve) → below the panel:
  *   the mini insight card and the sector chips (a marquee of all seven below 1024px).
- * P08 = static structure only. P09 adds the slider (src/js/modules/hero-slider.js on [data-hero-slider]), the
- * glowing border (.special-frame) and the entrance / parallax choreography (listens for `splash:done`).
+ * P09: data-module="hero-slider" on the stage (src/js/modules/hero-slider.js: infinite loop, autoplay, drag with
+ * inertia, keys, controls, live region), data-module="hero-intro" on the section (src/js/modules/hero-intro.js: the
+ * docs/05 §6 entrance after `splash:done` + the scroll parallax), and the glowing .special-frame
+ * (src/css/components/special-frame.css). Without JS the static P08 layout stays.
  * Copy: app/data/home.php → hero. Cards: app/data/services.php. Chips: app/data/sectors.php.
  */
 $h = home('hero');
@@ -38,8 +40,8 @@ $helper = str_replace(
     e($h['helper']['text'])
 );
 ?>
-<section class="hero on-dark" data-header-theme="dark" data-hero>
-  <div class="hero__panel">
+<section class="hero" data-header-theme="dark" data-hero data-module="hero-intro">
+  <div class="hero__panel on-dark">
     <div class="hero__photo">
       <?= img($h['photo']['key'], ['alt' => $h['photo']['alt'], 'priority' => true, 'sizes' => '(min-width: 1024px) 60vw, 100vw', 'ratio' => '4/3', 'cover' => true, 'class' => 'hero__photo-img']) ?>
     </div>
@@ -105,7 +107,7 @@ $helper = str_replace(
         </ul>
       </div>
 
-      <div class="hero__stage" role="region" aria-label="Our services" data-hero-slider>
+      <div class="hero__stage" role="region" aria-roledescription="carousel" aria-label="Our services" data-hero-slider data-module="hero-slider">
         <div class="special" data-special>
           <span class="special-frame" aria-hidden="true"></span>
           <span class="special__tag"><?= e($h['tag']) ?></span>
@@ -113,7 +115,7 @@ $helper = str_replace(
         <div class="hero__viewport" data-hero-viewport>
           <ul class="hero__cards" role="list" data-hero-track>
             <?php foreach ($cards as $i => ['sub' => $sub, 'category' => $category]): ?>
-            <li class="hero__card<?= $i === $activeIndex ? ' is-active' : '' ?>" data-hero-card>
+            <li class="hero__card<?= $i === $activeIndex ? ' is-active' : '' ?>" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> of <?= count($cards) ?>" data-hero-card>
               <a class="hero__card-link glass-thin-dark" href="<?= e(url($sub['url'])) ?>">
                 <?= component('chip', ['label' => $category['short'], 'variant' => $category['colour'], 'class' => 'hero__card-chip']) ?>
                 <?= component('hex-tile', ['icon' => $sub['icon'], 'category' => $category['colour'], 'size' => 'sm', 'class' => 'hero__card-icon']) ?>
@@ -124,6 +126,21 @@ $helper = str_replace(
             <?php endforeach; ?>
           </ul>
         </div>
+        <!-- Slider controls (subtle; revealed by hero-slider.js) + the live region that announces user-initiated changes -->
+        <div class="hero__controls" data-hero-controls>
+          <button class="hero__ctrl" type="button" data-hero-prev aria-label="Previous service"><?= icon('caret-left', 'regular', ['size' => 16]) ?></button>
+          <ol class="hero__dots" role="list">
+            <?php foreach ($cards as $i => ['sub' => $sub]): ?>
+            <li><button class="hero__dot" type="button" data-hero-dot="<?= $i ?>" aria-label="Go to <?= e($sub['name']) ?> (<?= $i + 1 ?> of <?= count($cards) ?>)"<?= $i === $activeIndex ? ' aria-current="true"' : '' ?>></button></li>
+            <?php endforeach; ?>
+          </ol>
+          <button class="hero__ctrl" type="button" data-hero-next aria-label="Next service"><?= icon('caret-right', 'regular', ['size' => 16]) ?></button>
+          <button class="hero__ctrl hero__ctrl--pause" type="button" data-hero-pause aria-pressed="false">
+            <?= icon('pause', 'regular', ['size' => 16]) ?><?= icon('play', 'regular', ['size' => 16]) ?>
+            <span class="visually-hidden" data-hero-pause-label>Pause the services slider</span>
+          </button>
+        </div>
+        <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-hero-live></p>
       </div>
 
       <p class="hero__helper"><?= $helper ?></p>

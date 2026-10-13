@@ -1,0 +1,99 @@
+/* The "Our Special Service" frame (docs/05 §5 🔒): a light streak travels around the rounded frame on a conic
+   gradient (`--angle`, registered in tokens.css), masked to a 1.5px ring, with a blurred halo that pulses; the tag
+   gets a 120° shine sweep every 5s; the frame "breathes" when the slider changes card (hero-slider.js) and "draws
+   itself" during the entrance (hero-intro.js tweens --draw 0% → 100%, then adds .is-live to start the orbit).
+   The ring and the halo are pseudo-elements so the mask that cuts the ring does not clip the glow.
+   Fallback without @property (html.no-at-property, set by hero-slider.js): an oversized conic square rotates
+   inside the masked ring. Reduced motion: a static ring with a soft glow. */
+@property --draw { syntax: '<percentage>'; inherits: true; initial-value: 100%; }   /* inherits: the pseudo-elements read it from the frame, which GSAP tweens */
+
+.special-frame {
+  position: absolute;
+  inset: -14px -14px auto -14px;            /* hugs the tag, extends behind the card */
+  height: calc(100% + 14px + var(--card-h, 190px) * .75);
+  border-radius: 22px;
+  pointer-events: none;
+  --draw: 100%;
+  --frame-ring: conic-gradient(from var(--angle),
+      rgb(var(--white-rgb) / .10) 0deg 250deg,
+      var(--sky-300) 290deg, var(--ms-white) 310deg, var(--azure-500) 330deg,
+      rgb(var(--white-rgb) / .10) 360deg);
+}
+.special-frame::before,
+.special-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  --angle: 0deg;
+  background: var(--frame-ring);
+  -webkit-mask: conic-gradient(#000 var(--draw), transparent 0), linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: source-in, xor;
+  mask: conic-gradient(#000 var(--draw), transparent 0), linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: intersect, exclude;
+}
+.special-frame::before { padding: 1.5px; }                 /* the ring */
+.special-frame::after  {                                   /* the soft glow halo */
+  inset: -6px;
+  padding: 7px;
+  filter: blur(14px);
+  opacity: .55;
+}
+.special-frame.is-live::before { animation: ms-orbit 4s linear infinite; }
+.special-frame.is-live::after  { animation: ms-orbit 4s linear infinite, ms-pulse 2.8s ease-in-out infinite; }
+html.no-js .special-frame::before, html.no-js .special-frame::after { animation: ms-orbit 4s linear infinite; }
+@keyframes ms-orbit { to { --angle: 360deg; } }
+@keyframes ms-pulse { 50% { opacity: .9; } }
+
+/* Tag shine sweep along the 120° brand diagonal, every 5s */
+.special__tag { overflow: hidden; }
+.special__tag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 35%, rgb(var(--white-rgb) / .35) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: ms-shine 5s linear infinite;
+  pointer-events: none;
+}
+@keyframes ms-shine {
+  0%   { transform: translateX(-120%); }
+  22%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+/* Breathe on card change (hero-slider.js toggles .is-breathing on .special) */
+.special { transform-origin: 50% 50%; }
+.special.is-breathing { animation: ms-breathe 400ms var(--ease-apple); }
+@keyframes ms-breathe { 50% { transform: scale(1.015); } }
+
+/* Fallback: no @property → rotate an oversized conic square inside the masked ring */
+html.no-at-property .special-frame::before, html.no-at-property .special-frame::after { background: none; overflow: hidden; animation: none; }
+html.no-at-property .special-frame::before { background: none; }
+html.no-at-property .special-frame { overflow: hidden; }
+html.no-at-property .special-frame::before {
+  background: conic-gradient(from 0deg, rgb(var(--white-rgb) / .10) 0deg 250deg, var(--sky-300) 290deg, var(--ms-white) 310deg, var(--azure-500) 330deg, rgb(var(--white-rgb) / .10) 360deg);
+  inset: -60%;
+  border-radius: 0;
+  padding: 0;
+  -webkit-mask: none;
+  mask: none;
+  animation: ms-spin 4s linear infinite;
+}
+html.no-at-property .special-frame::after { display: none; }
+html.no-at-property .special-frame {
+  padding: 1.5px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+@keyframes ms-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .special-frame::before, .special-frame::after, .special__tag::after, .special.is-breathing,
+  html.no-at-property .special-frame::before { animation: none !important; }
+  .special-frame::before, .special-frame::after { --angle: 300deg; }   /* the light rests at the top edge */
+  .special-frame { --draw: 100%; }
+  .special-frame::after { opacity: .4; }
+}

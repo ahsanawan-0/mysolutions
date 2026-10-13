@@ -48,12 +48,19 @@ $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u
         <ul class="site-footer__services">
           <?php foreach ($services as $category): ?>
           <li>
-            <a class="site-footer__link site-footer__link--cat" href="<?= e(url($category['url'])) ?>"><?= e($category['name']) ?></a>
-            <ul class="site-footer__subs">
-              <?php foreach ($category['subs'] as $sub): ?>
-              <li><a class="site-footer__link site-footer__link--sub" href="<?= e(url($sub['url'])) ?>"><?= e($sub['name']) ?></a></li>
-              <?php endforeach; ?>
-            </ul>
+            <details class="footer-acc"<?= is_active($category['url']) ? ' open' : '' ?>>
+              <summary class="footer-acc__summary">
+                <?= icon($category['icon'], 'light', ['size' => 22, 'class' => 'footer-acc__icon footer-acc__icon--' . $category['colour']]) ?>
+                <span class="footer-acc__name"><?= e($category['name']) ?></span>
+                <?= icon('caret-down', 'regular', ['size' => 18, 'class' => 'footer-acc__caret']) ?>
+              </summary>
+              <ul class="site-footer__subs">
+                <li><a class="site-footer__link site-footer__link--sub site-footer__link--overview" href="<?= e(url($category['url'])) ?>">Overview: <?= e($category['short']) ?></a></li>
+                <?php foreach ($category['subs'] as $sub): ?>
+                <li><a class="site-footer__link site-footer__link--sub" href="<?= e(url($sub['url'])) ?>"><?= e($sub['name']) ?></a></li>
+                <?php endforeach; ?>
+              </ul>
+            </details>
           </li>
           <?php endforeach; ?>
         </ul>

@@ -49,6 +49,7 @@
   border-radius: var(--r-lg);
   display: grid;
   gap: var(--space-5);
+  align-self: start;        /* content height only, never stretched to the tallest column */
   align-content: start;
   justify-items: start;
 }
@@ -96,9 +97,35 @@
 }
 .site-footer__link:hover { color: var(--sky-300); }
 .site-footer__link:focus-visible { outline-color: var(--sky-300); }
-.site-footer__services > li + li { margin-top: var(--space-3); }
-.site-footer__subs { margin-top: var(--space-1); }
+.site-footer__services > li + li { margin-top: var(--space-1); }
+.site-footer__subs { margin: var(--space-1) 0 var(--space-2) var(--space-3); padding-left: var(--space-4); border-left: 1px solid rgb(var(--white-rgb) / .14); }
 .site-footer__link--sub { font-family: var(--font-body); font-weight: var(--fw-body); font-size: var(--fs-small); color: var(--navy-200); }
+.site-footer__link--overview { color: var(--sky-300); }
+
+/* Category accordions (native <details>): icon · name · caret that flips when open */
+.footer-acc__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-min);
+  padding-block: var(--space-1);
+  list-style: none;
+  cursor: pointer;
+  color: var(--ms-white);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+.footer-acc__summary::-webkit-details-marker { display: none; }
+.footer-acc__summary:hover { color: var(--sky-300); }
+.footer-acc__summary:focus-visible { outline-color: var(--sky-300); border-radius: var(--r-xs); }
+.footer-acc__name { flex: 1; }
+.footer-acc__icon { flex: none; color: var(--sky-300); }
+.footer-acc__icon--bid { color: var(--azure-300); }
+.footer-acc__icon--compliance { color: var(--navy-200); }
+.footer-acc__icon--digital { color: var(--cat-digital); }
+.footer-acc__caret { flex: none; color: var(--navy-200); transition: transform var(--dur-ui) var(--ease-apple); }
+.footer-acc[open] > .footer-acc__summary .footer-acc__caret { transform: rotate(180deg); color: var(--ms-white); }
 .site-footer__link--all { color: var(--sky-300); }
 .site-footer__link--all:hover { color: var(--ms-white); }
 @media (hover: hover) and (min-width: 1024px) {

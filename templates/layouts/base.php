@@ -21,6 +21,7 @@ $showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page
 </head>
 <body<?= $bodyClass !== '' ? ' class="' . e($bodyClass) . '"' : '' ?>>
 <a class="skip-link" href="#main">Skip to main content</a>
+<?php include templates_path('partials/splash'); ?>
 <?php if ($headerVariant === 'default'): ?>
 <?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme]) ?>
 <?php endif; ?>

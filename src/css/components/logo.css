@@ -1,0 +1,25 @@
+/* Logo motion vocabulary (docs/07 §6), shared with the splash choreography in splash.css:
+   - header logo hover / focus: the two bars re-draw up their 60° diagonal at 2× splash speed (300 ms, ease-out only);
+   - `.is-loading` (forms, P23): the mark breathes 1 ↔ 1.02 over 3 s until the class is removed.
+   The clip-path polygons are the bar-wipe geometry from `npm run logo` (design/logo-motion/outputs/fit_work/geometry.json),
+   in fill-box percentages, so they work at any size. Literal cubic-beziers inside keyframes (Chromium drops var() there). */
+.logo__bar { transform-box: fill-box; }
+.logo__mark { transform-box: fill-box; transform-origin: center; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo-link:hover .logo__bar--azure,
+  .logo-link:focus-visible .logo__bar--azure { animation: logo-redraw 300ms cubic-bezier(0, 0, 0.2, 1) both; }
+  .logo-link:hover .logo__bar--navy,
+  .logo-link:focus-visible .logo__bar--navy { animation: logo-redraw 300ms cubic-bezier(0, 0, 0.2, 1) 60ms both; }
+
+  .is-loading .logo__mark { animation: logo-breathe 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+}
+
+@keyframes logo-redraw {
+  from { clip-path: polygon(281% 1.4%, -113.7% 200.6%, 0.3% 373.2%, 395% 173.9%); }
+  to   { clip-path: polygon(213.7% -100.6%, -181% 98.6%, -67.1% 271.2%, 327.6% 71.9%); }
+}
+@keyframes logo-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.02); }
+}

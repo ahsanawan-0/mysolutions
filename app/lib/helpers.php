@@ -271,22 +271,103 @@ function navigation(): array
 }
 
 /**
- * Logo <img> from public/assets/img/logo/ (PNG lockups made by `npm run logo` from the client's JPEG; P07 swaps in SVG).
- * logo('colour' | 'white', ['height' => 36, 'class' => '…']). Decorative (alt=""): the wrapping link carries the label.
+ * Inline an SVG from public/assets/ so its parts can be styled and animated (logo lockups, the splash mark).
+ * inline_svg('brand/logo-horizontal.svg', ['prefix' => 'hl', 'class' => 'site-header__logo-svg', 'attrs' => ['data-anim' => 'logo-assembly']])
+ *  - prefix: namespaces every id (id="x" → id="hl-x", plus href="#x" and url(#x) references) so one file can be
+ *    inlined more than once per page. Without a prefix the ids are kept (one copy per page, e.g. the splash).
+ *  - class: appended to the root element's class. attrs: extra root attributes.
+ *  - title: false strips the <title>; a string replaces it and the root gets role="img". By default the SVG is
+ *    decorative (aria-hidden="true" focusable="false"): the wrapping link or heading carries the accessible name.
+ */
+function inline_svg(string $file, array $o = []): string
+{
+    static $cache = [];
+    $path = public_path('assets/' . ltrim($file, '/'));
+    if (!isset($cache[$path])) {
+        if (!is_file($path)) {
+            if (is_local()) {
+                throw new RuntimeException("inline_svg('{$file}'): file not found in public/assets/.");
+            }
+            return '';
+        }
+        $raw = (string) file_get_contents($path);
+        $raw = (string) preg_replace('/<\?xml[^>]*\?>|<!--.*?-->/s', '', $raw);
+        $cache[$path] = trim($raw);
+    }
+    $svg = $cache[$path];
+
+    $prefix = isset($o['prefix']) ? preg_replace('/[^A-Za-z0-9_-]/', '', (string) $o['prefix']) : '';
+    if ($prefix !== '') {
+        $svg = (string) preg_replace('/\bid="([^"]+)"/', 'id="' . $prefix . '-$1"', $svg);
+        $svg = (string) preg_replace('/\bhref="#([^"]+)"/', 'href="#' . $prefix . '-$1"', $svg);
+        $svg = (string) preg_replace('/url\(#([^)]+)\)/', 'url(#' . $prefix . '-$1)', $svg);
+    }
+
+    $title = $o['title'] ?? null;
+    if ($title === false) {
+        $svg = (string) preg_replace('/\s*<title>.*?<\/title>/s', '', $svg, 1);
+    } elseif (is_string($title) && $title !== '') {
+        $svg = preg_match('/<title>/', $svg)
+            ? (string) preg_replace('/<title>.*?<\/title>/s', '<title>' . e($title) . '</title>', $svg, 1)
+            : (string) preg_replace('/^(<svg[^>]*>)/', '$1<title>' . e($title) . '</title>', $svg, 1);
+    }
+
+    $attrs = $o['attrs'] ?? [];
+    if (is_string($title) && $title !== '') {
+        $attrs += ['role' => 'img', 'focusable' => 'false'];
+    } else {
+        $attrs += ['aria-hidden' => 'true', 'focusable' => 'false'];
+    }
+    if (!empty($o['class'])) {
+        if (preg_match('/^<svg[^>]*\sclass="([^"]*)"/', $svg, $m)) {
+            $svg = (string) preg_replace('/^(<svg[^>]*\sclass=")([^"]*)"/', '${1}' . e($m[1] . ' ' . $o['class']) . '"', $svg, 1);
+        } else {
+            $attrs['class'] = (string) $o['class'];
+        }
+    }
+    $extra = '';
+    foreach ($attrs as $name => $value) {
+        if ($value === false || $value === null) {
+            continue;
+        }
+        $extra .= ' ' . e((string) $name) . ($value === true ? '' : '="' . e((string) $value) . '"');
+    }
+    return (string) preg_replace('/^<svg\b/', '<svg' . $extra, $svg, 1);
+}
+
+/**
+ * Logo lockup from public/assets/brand/ (SVGs built by `npm run logo` from the client's JPEGs, P07).
+ * logo('colour' | 'white', ['height' => 40, 'class' => '…', 'inline' => true, 'prefix' => 'hl', 'lockup' => 'horizontal' | 'vertical' | 'mark'])
+ * Default: a decorative <img> (alt=""; the wrapping link carries the label) with real width/height from the viewBox.
+ * inline => true embeds the SVG (ids namespaced by prefix) so CSS can theme its parts (header: dark theme turns the
+ * wordmark white and lightens the navy bar) and the splash can fly onto it.
  */
 function logo(string $variant = 'colour', array $attrs = []): string
 {
-    static $sizes = [];
-    $file = 'img/logo/logo-horizontal' . ($variant === 'white' ? '-white' : '') . '.png';
+    static $boxes = [];
+    $lockup = $attrs['lockup'] ?? 'horizontal';
+    $file = 'brand/logo-' . $lockup . ($variant === 'white' && $lockup !== 'vertical' ? '-white' : '') . '.svg';
     $path = public_path('assets/' . $file);
     if (!is_file($path)) {
         return '<span class="logo-text' . ($variant === 'white' ? ' logo-text--light' : '') . '" aria-hidden="true"><span class="logo-text__mark"></span>' . e(config('name')) . '</span>';
     }
-    $sizes[$file] ??= getimagesize($path) ?: [0, 0];
-    [$w, $h] = $sizes[$file];
+    if (!isset($boxes[$path])) {
+        preg_match('/viewBox="0 0 ([\d.]+) ([\d.]+)"/', (string) file_get_contents($path), $m);
+        $boxes[$path] = [(float) ($m[1] ?? 1), (float) ($m[2] ?? 1)];
+    }
+    [$vw, $vh] = $boxes[$path];
     $height = (int) ($attrs['height'] ?? 36);
-    $width = $h > 0 ? (int) round($w * $height / $h) : $height;
+    $width = (int) round($vw * $height / $vh);
     $class = 'logo-img' . (isset($attrs['class']) ? ' ' . $attrs['class'] : '');
+
+    if (!empty($attrs['inline'])) {
+        return inline_svg($file, [
+            'prefix' => $attrs['prefix'] ?? 'logo',
+            'class' => $class,
+            'title' => false,
+            'attrs' => ['width' => $width, 'height' => $height],
+        ]);
+    }
     return '<img class="' . e($class) . '" src="' . e(asset($file)) . '" alt="" width="' . $width . '" height="' . $height . '" decoding="async">';
 }
 

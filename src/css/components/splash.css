@@ -1,0 +1,83 @@
+/* Splash overlay (docs/07 §4–§5; templates/partials/splash.php; src/js/modules/splash.js).
+   Shown only under html.js, not after the first view of a session (html.no-splash), never under reduced motion.
+   The choreography below is design/logo-motion/motion.css scoped to #logo-root (the approved pixel2motion run;
+   keep the two in sync). Keyframe easings are literal cubic-beziers because Chromium drops var() inside
+   @keyframes (docs/07 §4 rule 8); the durations are the choreography itself, documented in motion_spec.md. */
+.splash { display: none; }
+html.js:not(.no-splash) .splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: var(--ms-canvas);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Two full-size panels, clipped to the two halves of the 120° diagonal by splash.js, slide apart at the hand-off */
+.splash__panel { position: absolute; inset: 0; background: var(--ms-canvas); will-change: transform; }
+.splash__logo { position: relative; width: clamp(200px, 34vw, 360px); }
+.splash__logo svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Failsafe: even if JS never runs or throws mid-way, the overlay fades out at 2.6 s (the module removes it earlier) */
+html.js:not(.no-splash) .splash { animation: splash-failsafe 300ms ease-out 2600ms both; }
+@keyframes splash-failsafe {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash { display: none !important; }
+}
+
+/* ---------- The choreography (1600 ms), scoped to the splash ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  #logo-root #hex-sky, #logo-root #bar-azure, #logo-root #bar-navy { transform-box: fill-box; transform-origin: center; }
+  #logo-root .letter { transform-box: fill-box; }
+  #logo-root #streak { transform-box: fill-box; transform-origin: center; will-change: transform, opacity; }
+
+  /* Staging 0–450 ms: a faint azure light streak crosses the canvas along the brand diagonal */
+  #logo-root #streak { animation: splash-streak 450ms linear 0ms both; }
+  /* Anticipation 150–350 + action 350–850 ms: the hexagon appears small, coils, pops to 1.02, settles */
+  #logo-root #hex-sky { animation: splash-hex 700ms linear 150ms both; }
+  /* Action 420–1000 / 540–1120 ms: the bars grow up their own 60° diagonal (clip wipe + 24 px drift) */
+  #logo-root #bar-azure { animation: splash-bar 580ms linear 420ms both; }
+  #logo-root #bar-navy { animation: splash-bar 580ms linear 540ms both; }
+  /* Follow-through 1010–1530 ms: letter cascade, 240 ms each, 28 ms stagger */
+  #logo-root .letter { animation: splash-letter 240ms linear 1010ms both; }
+  #logo-root #letter-2 { animation-delay: 1038ms; }
+  #logo-root #letter-3 { animation-delay: 1066ms; }
+  #logo-root #letter-4 { animation-delay: 1094ms; }
+  #logo-root #letter-5 { animation-delay: 1122ms; }
+  #logo-root #letter-6 { animation-delay: 1150ms; }
+  #logo-root #letter-7 { animation-delay: 1178ms; }
+  #logo-root #letter-8 { animation-delay: 1206ms; }
+  #logo-root #letter-9 { animation-delay: 1234ms; }
+  #logo-root #letter-10 { animation-delay: 1262ms; }
+  #logo-root #letter-11 { animation-delay: 1290ms; }
+  /* Follow-through 1260–1600 ms: the tagline wipes left → right with a 6 px drift */
+  #logo-root #tagline { animation: splash-tagline 340ms linear 1260ms both; }
+}
+
+@keyframes splash-streak {
+  0%   { opacity: 0; transform: translate(-110px, -64px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  33%  { opacity: 0.45; }
+  100% { opacity: 0; transform: translate(110px, 64px); }
+}
+@keyframes splash-hex {
+  0%    { opacity: 0; transform: scale(0.6);  animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  28.6% { opacity: 1; transform: scale(0.55); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  78.6% { transform: scale(1.02);             animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+  100%  { opacity: 1; transform: scale(1); }
+}
+@keyframes splash-bar {
+  0%   { clip-path: polygon(281% 1.4%, -113.7% 200.6%, 0.3% 373.2%, 395% 173.9%); transform: translate(12px, 20.8px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  100% { clip-path: polygon(213.7% -100.6%, -181% 98.6%, -67.1% 271.2%, 327.6% 71.9%); transform: translate(0, 0); }
+}
+@keyframes splash-letter {
+  0%   { opacity: 0; transform: translateY(125px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes splash-tagline {
+  0%   { clip-path: inset(-5% 100% -5% 0); transform: translateX(-6px); animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+  100% { clip-path: inset(-5% 0 -5% 0);    transform: translateX(0); }
+}

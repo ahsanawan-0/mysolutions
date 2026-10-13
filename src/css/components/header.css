@@ -57,19 +57,21 @@ body:not(.has-overlay-header) > main { padding-top: var(--header-h-initial); }
   gap: var(--space-4);
 }
 
-/* Logo: PNG lockups from the client's JPEG (npm run logo) until P07 ships the SVGs; colour on light, white on dark */
+/* Logo: the horizontal SVG lockup (public/assets/brand/, npm run logo) inlined once so its parts can be themed and
+   animated (dark theme: white wordmark + lighter navy bar; hover re-draw and the splash hand-off live in logo.css) */
 .site-header__logo { display: inline-flex; align-items: center; color: inherit; text-decoration: none; min-height: var(--target-min); }
-.logo-img { display: block; height: auto; }
-.site-header__logo-img { height: 40px; width: auto; }
-.site-header__logo-img--white { display: none; }
-.site-header[data-theme="dark"] .site-header__logo-img--colour { display: none; }
-.site-header[data-theme="dark"] .site-header__logo-img--white { display: block; }
-.site-header.is-scrolled .site-header__logo-img { height: 34px; }
+.logo-img { display: block; }
+img.logo-img { height: auto; }
+.site-header__logo-svg { height: 40px; width: auto; transition: height var(--dur-ui) var(--ease-apple); }
+.site-header[data-theme="dark"] .site-header__logo-svg .logo__wordmark,
+.site-header[data-theme="dark"] .site-header__logo-svg .logo__tagline { fill: var(--ms-white); }
+.site-header[data-theme="dark"] .site-header__logo-svg .logo__bar--navy { fill: var(--navy-400); }
+.site-header.is-scrolled .site-header__logo-svg { height: 34px; }
 @media (max-width: 479px) {
-  .site-header__logo-img { height: 32px; }
+  .site-header__logo-svg { height: 32px; }
 }
 .mobile-menu__logo { display: inline-flex; align-items: center; min-height: var(--target-min); }
-/* Text fallback (only when the PNGs are missing) */
+/* Text fallback (only when the SVGs are missing) */
 .logo-text {
   display: inline-flex;
   align-items: center;

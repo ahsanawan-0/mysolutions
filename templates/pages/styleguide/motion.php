@@ -256,13 +256,9 @@ $cardHtml = static fn (array $c): string => '<article class="sgm__card">' . comp
   </section>
 
   <!-- logo-assembly -->
-  <section class="sg__section"><?= $head('logo-assembly', $catalogue['logo-assembly'], 'Stand-in: three rhombi forming the hexagon until P07 ships the real mark pieces.') ?>
+  <section class="sg__section"><?= $head('logo-assembly', $catalogue['logo-assembly'], 'The real mark: the sky hexagon, azure bar and navy bar (each a [data-piece] in brand/logo-mark.svg) fly in and assemble.') ?>
     <div class="sg__panel sgm__assembly" data-assembly-scope>
-      <svg class="sgm__mark" viewBox="0 0 100 110" data-anim="logo-assembly" aria-hidden="true" focusable="false">
-        <polygon class="sgm__piece sgm__piece--1" data-piece points="50,9 89.8,32 50,55 10.2,32"/>
-        <polygon class="sgm__piece sgm__piece--2" data-piece points="10.2,32 50,55 50,101 10.2,78"/>
-        <polygon class="sgm__piece sgm__piece--3" data-piece points="50,55 89.8,32 89.8,78 50,101"/>
-      </svg>
+      <?= inline_svg('brand/logo-mark.svg', ['prefix' => 'sgm', 'class' => 'sgm__mark', 'title' => false, 'attrs' => ['data-anim' => 'logo-assembly']]) ?>
       <p class="small">Scrubbed from the moment the panel enters until its top reaches 35% of the viewport.</p>
     </div>
   </section>

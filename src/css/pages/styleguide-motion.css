@@ -118,10 +118,7 @@ html.no-js .sgm__steps-fill { transform: none; }
 
 /* Logo assembly */
 .sgm__assembly { display: grid; justify-items: center; gap: var(--space-6); padding-block: var(--space-16); overflow: hidden; }
-.sgm__mark { width: min(60vw, 260px); height: auto; overflow: visible; }
-.sgm__piece--1 { fill: var(--sky-300); }
-.sgm__piece--2 { fill: var(--azure-500); }
-.sgm__piece--3 { fill: var(--navy-700); }
+.sgm__mark { width: min(70vw, 320px); height: auto; overflow: visible; }
 
 /* Blur-zoom */
 .sgm__blur { display: grid; place-items: center; min-height: 300px; text-align: center; overflow: hidden; }

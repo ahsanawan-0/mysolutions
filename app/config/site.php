@@ -56,7 +56,7 @@ return [
         'default_robots'    => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
         'og_default'        => '/assets/og/default.jpg',   // 1200×630, scripts/og.mjs
         'og_default_alt'    => 'My Solutionz: Solutions Crafted for Success. Bid and proposal management, compliance and digital presence services, London',
-        'logo'              => '/assets/img/logo/logo-mark-512.png',   // 512px PNG on white, created in P07
+        'logo'              => '/assets/brand/logo-512.png',   // 512px PNG on white (vertical lockup), npm run logo
         'theme_color'       => '#011B43',   // = --navy-900 in src/css/tokens.css (browser UI colour; not a component value)
         'organization_type' => 'Organization',   // 'LocalBusiness' only if the London office is confirmed as staffed (docs/15 P10)
         'legacy_sitemap'    => true,             // /legacy-sitemap.xml of old URLs; switch off ~6 weeks after launch

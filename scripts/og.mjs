@@ -1,7 +1,7 @@
-// Default Open Graph image (1200×630): brand gradient + hex pattern + wordmark + tagline.
+// Default Open Graph image (1200×630): brand gradient + hex pattern + the white horizontal logo lockup
+// (public/assets/brand/logo-horizontal-white.svg, built by `npm run logo`) + the three service lines.
 // Colours are read from src/css/tokens.css so no hex lives here. Output: public/assets/og/default.jpg
-// Temporary text-only mark until P07 delivers the logo SVG; generalised per page in P30.
-// Usage: npm run og
+// Generalised per page in P30. Usage: npm run og
 
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
@@ -19,6 +19,13 @@ const token = (name) => {
 const W = 1200;
 const H = 630;
 const c = { navy900: token('navy-900'), navy700: token('navy-700'), azure: token('azure-500'), sky: token('sky-300'), white: token('ms-white') };
+
+// The white lockup, inlined (its outer <svg> stripped) and scaled to 1000px wide
+const lockup = await readFile(path.join(root, 'public/assets/brand/logo-horizontal-white.svg'), 'utf8');
+const [, vbW, vbH] = lockup.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/) ?? [0, 1366, 291];
+const lockupInner = lockup.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').replace(/<title>.*?<\/title>/s, '');
+const lockupScale = 1000 / Number(vbW);
+const lockupH = Number(vbH) * lockupScale;
 
 const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -39,16 +46,9 @@ const svg = `
   </defs>
   <rect width="${W}" height="${H}" fill="url(#bg)"/>
   <rect width="${W}" height="${H}" fill="url(#hex)"/>
-  <!-- Abstract "M" from three hexagon-derived shapes (logo anatomy, docs/02 §1) -->
-  <g transform="translate(96 150) scale(1.0)">
-    <polygon points="0,150 40,127 80,150 80,196 40,219 0,196" fill="${c.sky}"/>
-    <polygon points="70,40 118,12 170,150 122,178" fill="${c.azure}"/>
-    <polygon points="150,40 198,12 250,150 202,178" fill="${c.navy700}" stroke="${c.sky}" stroke-opacity="0.5" stroke-width="2"/>
-  </g>
-  <text x="400" y="300" font-family="Mona Sans, Arial, Helvetica, sans-serif" font-size="92" font-weight="600" fill="${c.white}" letter-spacing="-3">My Solutionz</text>
-  <text x="404" y="362" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="36" fill="${c.sky}">Solutions Crafted for Success</text>
-  <text x="404" y="440" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="26" fill="${c.white}" fill-opacity="0.85">Bid &amp; Proposal Management · Compliance &amp; Virtual Assistance · Digital Presence</text>
-  <text x="404" y="560" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="28" fill="${c.white}" fill-opacity="0.7">mysolutionz.co.uk</text>
+  <g transform="translate(100 ${((H - 120) - lockupH) / 2 + 20}) scale(${lockupScale})">${lockupInner}</g>
+  <text x="100" y="${H - 96}" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="26" fill="${c.white}" fill-opacity="0.85">Bid &amp; Proposal Management · Compliance &amp; Virtual Assistance · Digital Presence</text>
+  <text x="100" y="${H - 50}" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="26" fill="${c.sky}">mysolutionz.co.uk</text>
 </svg>`;
 
 const outDir = path.join(root, 'public/assets/og');

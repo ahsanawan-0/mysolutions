@@ -21,9 +21,8 @@ $quoteUrl = url('/contact-us/') . '#quote';
 ?>
 <header class="site-header site-header--<?= e($variant) ?>" data-header="<?= e($variant) ?>" data-theme="<?= e($theme) ?>">
   <div class="site-header__inner">
-    <a class="site-header__logo" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home">
-      <?= logo('colour', ['height' => 40, 'class' => 'site-header__logo-img site-header__logo-img--colour']) ?>
-      <?= logo('white', ['height' => 40, 'class' => 'site-header__logo-img site-header__logo-img--white']) ?>
+    <a class="site-header__logo logo-link" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home">
+      <?= logo('colour', ['height' => 40, 'inline' => true, 'prefix' => 'hl', 'class' => 'site-header__logo-svg']) ?>
     </a>
 
     <nav class="site-nav" aria-label="Primary">

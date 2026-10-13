@@ -19,7 +19,8 @@
 /.venv/
 /.claude/settings.local.json
 
-# pixel2motion render outputs (splash-screen animation)
+# pixel2motion: the skill clone (git clone https://github.com/nolangz/pixel2motion .claude/skills/pixel2motion) and its render outputs
+/.claude/skills/pixel2motion/
 /design/logo-motion/outputs/
 
 # OS files

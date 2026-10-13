@@ -1,0 +1,71 @@
+/* My Solutionz splash choreography (pixel2motion, docs/07 §3). Targets the part ids in logo.svg
+   (= public/assets/brand/logo-splash.svg): #streak, #hex-sky, #bar-azure, #bar-navy, .letter × 11, #tagline.
+   Personality: engineered · confident · ascending. Preset: Trustworthy/Professional blended with Elegant
+   (overshoot 1.02, squash 0). Total 1600 ms; every animation has fill-mode both, so ?t=<ms> seeks and
+   ?static=1 (finish) land on the verified static logo (Final Frame Contract).
+   Keyframe easings are literal cubic-beziers (Chromium drops var() inside @keyframes). Tokens are documentation
+   and drive the animation shorthands only. Bar wipe polygons: design/logo-motion/outputs/fit_work/geometry.json. */
+
+#logo-root svg {
+  --p2m-duration: 1600ms;
+  --p2m-ease-enter: cubic-bezier(0, 0, 0.2, 1);      /* Trustworthy: confident ease-out */
+  --p2m-ease-settle: cubic-bezier(0.4, 0, 0.2, 1);   /* Trustworthy: settle */
+  --p2m-ease-elegant: cubic-bezier(0.16, 1, 0.3, 1); /* Elegant: long settle after the overshoot */
+  --p2m-overshoot: 1.02;
+  --p2m-squash: 0;
+  overflow: visible;
+}
+
+/* Parts scale / rotate around their own centre */
+#hex-sky, #bar-azure, #bar-navy { transform-box: fill-box; transform-origin: center; }
+.letter { transform-box: fill-box; }
+#streak { transform-box: fill-box; transform-origin: center; will-change: transform, opacity; }
+
+/* ---- Staging 0–450 ms: a faint azure light streak crosses the empty canvas along the brand diagonal ---- */
+#streak { animation: p2m-streak 450ms linear 0ms both; }
+@keyframes p2m-streak {
+  0%   { opacity: 0; transform: translate(-110px, -64px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } /* --p2m-ease-enter */
+  33%  { opacity: 0.45; }
+  100% { opacity: 0; transform: translate(110px, 64px); }
+}
+
+/* ---- Anticipation 150–350 ms + Action 350–850 ms: the sky hexagon appears small, coils, pops to 1.02, settles ---- */
+#hex-sky { animation: p2m-hex 700ms linear 150ms both; }
+@keyframes p2m-hex {
+  0%     { opacity: 0; transform: scale(0.6);  animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }   /* --p2m-ease-enter */
+  28.6%  { opacity: 1; transform: scale(0.55); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }   /* coil (anticipation) */
+  78.6%  { transform: scale(1.02);             animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); } /* --p2m-overshoot, --p2m-ease-elegant */
+  100%   { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Action 420–1000 ms / 540–1120 ms: the bars grow up their own 60° diagonal (clip wipe + 24 px drift) ---- */
+#bar-azure { animation: p2m-bar 580ms linear 420ms both; }
+#bar-navy  { animation: p2m-bar 580ms linear 540ms both; }  /* heavier part, +120 ms */
+@keyframes p2m-bar {
+  0%   { clip-path: polygon(281% 1.4%, -113.7% 200.6%, 0.3% 373.2%, 395% 173.9%); transform: translate(12px, 20.8px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } /* --p2m-ease-enter */
+  100% { clip-path: polygon(213.7% -100.6%, -181% 98.6%, -67.1% 271.2%, 327.6% 71.9%); transform: translate(0, 0); }
+}
+
+/* ---- Follow-through 1010–1530 ms: letter cascade, 240 ms each, 28 ms stagger (≈12 % of a letter) ---- */
+.letter { animation: p2m-letter 240ms linear 1010ms both; }
+#letter-2  { animation-delay: 1038ms; }
+#letter-3  { animation-delay: 1066ms; }
+#letter-4  { animation-delay: 1094ms; }
+#letter-5  { animation-delay: 1122ms; }
+#letter-6  { animation-delay: 1150ms; }
+#letter-7  { animation-delay: 1178ms; }
+#letter-8  { animation-delay: 1206ms; }
+#letter-9  { animation-delay: 1234ms; }
+#letter-10 { animation-delay: 1262ms; }
+#letter-11 { animation-delay: 1290ms; }
+@keyframes p2m-letter {
+  0%   { opacity: 0; transform: translateY(125px); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } /* 0.6 em; --p2m-ease-enter */
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Follow-through 1260–1600 ms: the tagline wipes left → right with a 6 px drift, then everything is still ---- */
+#tagline { animation: p2m-tagline 340ms linear 1260ms both; }
+@keyframes p2m-tagline {
+  0%   { clip-path: inset(-5% 100% -5% 0); transform: translateX(-6px); animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1); } /* --p2m-ease-settle */
+  100% { clip-path: inset(-5% 0 -5% 0);    transform: translateX(0); }
+}

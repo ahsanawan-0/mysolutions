@@ -2,7 +2,7 @@
 declare(strict_types=1);
 /**
  * C21 CTA band: Navy 900 → Azure 800 gradient, animated grid-wave layer, large faded logo mark at the right
- * (temporary hexagon until P07 ships the mark SVG; P06 drives data-anim="cta-mark" = docs/06 §6 S10 rise + rotate).
+ * (the brand mark SVG inlined; P06 drives data-anim="cta-mark" = docs/06 §6 S10 rise + rotate).
  * Default copy: app/data/ui.php → cta_band. Every key can be overridden per page.
  * @var string|null $eyebrow
  * @var string|null $heading        Line 1 of the two-voice heading
@@ -28,7 +28,7 @@ $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u
 <section class="cta-band on-dark<?= isset($class) ? ' ' . e($class) : '' ?>" aria-labelledby="<?= e($id) ?>">
   <div class="cta-band__bg" aria-hidden="true">
     <?= component('grid-wave', ['class' => 'cta-band__wave', 'animated' => true, 'align' => 'bottom']) ?>
-    <svg class="cta-band__mark" viewBox="0 0 100 110" data-anim="cta-mark" focusable="false"><polygon points="50,4 94,29 94,81 50,106 6,81 6,29" stroke-width="10" stroke-linejoin="round"/></svg>
+    <?= inline_svg('brand/logo-mark.svg', ['prefix' => 'cta', 'class' => 'cta-band__mark', 'title' => false, 'attrs' => ['data-anim' => 'cta-mark']]) ?>
   </div>
   <div class="container cta-band__inner">
     <div class="cta-band__copy">

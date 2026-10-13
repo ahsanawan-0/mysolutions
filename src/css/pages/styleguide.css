@@ -83,6 +83,16 @@
 .sg__panel .lead { margin-top: var(--space-4); }
 .sg__panel.on-dark { background: var(--ms-grad-hero); border-color: transparent; }
 
+/* Logo lockups (P07) */
+.sg__logos { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.sg__logo { display: grid; place-items: center; gap: var(--space-4); margin: 0; padding: var(--space-8) var(--space-6); border-radius: var(--r-lg); background: var(--ms-white); border: 1px solid var(--ms-line); text-align: center; }
+.sg__logo--dark { background: var(--navy-900); border-color: transparent; color: var(--navy-200); }
+.sg__logo img, .sg__logo svg { max-width: 100%; height: auto; }
+.sg__logo .site-header__logo-svg { height: 48px; width: auto; }
+.sg__logo--dark .site-header__logo-svg .logo__wordmark, .sg__logo--dark .site-header__logo-svg .logo__tagline { fill: var(--ms-white); }
+.sg__logo--dark .site-header__logo-svg .logo__bar--navy { fill: var(--navy-400); }
+.sg__favicons { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-6); padding: var(--space-6); border-radius: var(--r-lg); background: var(--ms-mist); }
+
 /* Rows */
 .sg__row { padding: var(--space-6); border-radius: var(--r-lg); background: var(--ms-white); border: 1px solid var(--ms-line); --cluster-gap: var(--space-4); }
 .sg__row + .sg__row { margin-top: var(--space-4); }

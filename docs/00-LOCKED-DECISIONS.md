@@ -77,7 +77,7 @@
 | P01 🟡 | Blog storage: Markdown files (recommended) vs. MySQL admin panel (`11` §6) |
 | P02 🟡 | Single `/contact-us/` page with quote form (recommended) vs. separate quote page |
 | ~~P03~~ ✅ | Years of experience → **10+** (resolved, see L05c) |
-| P04 ❗ | Vector (SVG) logo |
+| ~~P04~~ ✅ | Vector (SVG) logo → rebuilt as exact SVG from the JPEGs in P07 (`public/assets/brand/`); the client's original vector remains welcome as a cross-check |
 | P05 🟡 | VAT number (only if VAT-registered). Company number and registered office ✅ resolved (L05b) |
 | P06 ❗ | Remaining content: 2 more category pages, 12 sub-service pages, sectors, Home, FAQs, blog posts |
 | P07 ❗ | Testimonials, team photos, case studies, accreditations (or decision to omit) |

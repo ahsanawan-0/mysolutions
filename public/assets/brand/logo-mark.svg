@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 366" class="logo logo--mark">
+  <title>My Solutionz</title>
+  <g id="mark" class="logo__mark">
+    <polygon id="hex-sky" class="logo__hex" data-piece="hex-sky" fill="#8DD6FF" points="0,274 53,182 160,182 213,274 160,366 53,366"/>
+    <polygon id="bar-azure" class="logo__bar logo__bar--azure" data-piece="bar-azure" fill="#009AF0" points="106,89 158,0 268,0 426,275 374,366 265,366"/>
+    <polygon id="bar-navy" class="logo__bar logo__bar--navy" data-piece="bar-navy" fill="#003C8C" points="320,89 371,0 481,0 640,275 587,366 478,366"/>
+  </g>
+</svg>

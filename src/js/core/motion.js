@@ -160,7 +160,7 @@ export async function initAnimations(root = document) {
 
 /* ---------- data-module loader (code-split per module) ---------- */
 // header.js and back-to-top.js are always on (imported statically by main.js), so they are not lazy modules
-const moduleLoaders = import.meta.glob(['../modules/*.js', '!../modules/header.js', '!../modules/back-to-top.js']);
+const moduleLoaders = import.meta.glob(['../modules/*.js', '!../modules/header.js', '!../modules/back-to-top.js', '!../modules/splash.js']);
 
 export function initModules(root = document) {
   root.querySelectorAll('[data-module]').forEach((el) => {

@@ -262,3 +262,43 @@
 - P07: real logo mark pieces for `logo-assembly` (`[data-piece]` × 3) and the CTA band's `cta-mark`; splash hand-off uses `window.lenis`.
 - P08+: use the catalogue by attribute only; heroes use `split-lines`/transform entrances (never opacity 0 on the H1/LCP image). Pages with pinned sections give them `min-height: 100vh` content and an `.is-active` style for steps/panels.
 - Consider moving the styleguide CSS out of the main bundle before launch (raw CSS budget), and re-run the long-task check in a desktop browser.
+
+---
+
+## P07 — Logo SVGs, favicons, pixel2motion splash screen
+**Date:** 14 October 2026
+**Commit:** `P07: logo SVGs, favicons, pixel2motion splash`
+
+**Files created / changed**
+- `scripts/logo.mjs` (rewritten; `npm run logo`): measures both client JPEGs (mark bbox, text bands, per-glyph columns), fits the wordmark font, outlines every glyph with opentype.js and writes `public/assets/brand/logo-mark.svg`, `logo-mark-white.svg`, `logo-horizontal.svg`, `logo-horizontal-white.svg` (white type, navy bar → Navy 400), `logo-vertical.svg`, `logo-splash.svg` (vertical + the `#streak` staging light, base opacity 0), `logo-512.png`; `public/favicon.ico` (16/32/48, png-to-ico), `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (mark on white), `icon.svg` (dark-scheme style lightens the navy bar), `site.webmanifest`; plus `design/logo-motion/logo.svg` and `outputs/fit_work/geometry.json` (fit metrics + the bar-wipe clip-path polygons). Colours come from `tokens.css`. Ids: `#mark › #hex-sky #bar-azure #bar-navy` (each `data-piece`), `#wordmark › .letter` (`#letter-1…11`), `#tagline`; classes `logo__*` for CSS.
+- `app/lib/helpers.php`: `inline_svg($file, ['prefix', 'class', 'attrs', 'title'])` (namespaces ids/`href="#"`/`url(#)` per copy, decorative by default) and `logo()` rewritten for the SVGs (`<img>` with width/height from the viewBox, or `inline => true`; `lockup` horizontal | vertical | mark).
+- Header: one inlined SVG (`hl-` prefix) themed by CSS (`header.css`: dark theme = white type + Navy 400 bar); footer and mobile sheet use `<img src="…logo-horizontal-white.svg">`; CTA band inlines the mark (`cta-` prefix, `.cta-band__mark polygon { fill: var(--sky-300) }`); motion styleguide's `logo-assembly` demo uses the real mark; styleguide gets a **Logo** section (lockups, inline dark + hover re-draw, favicons). `app/config/site.php` `seo.logo` → `/assets/brand/logo-512.png`. `scripts/og.mjs` embeds the white lockup (temporary text mark gone). `public/assets/img/logo/*.png` removed.
+- `src/css/components/logo.css` (new): shared motion vocabulary (docs/07 §6): header logo hover/focus → the bars re-draw up their diagonal in 300 ms (same clip-path polygons as the splash), `.is-loading .logo__mark` breathing loop 1 ↔ 1.02 / 3 s.
+- Splash: `templates/partials/splash.php` (printed by `base.php` after the skip link; inline sessionStorage check adds `html.no-splash` before first paint; `aria-hidden`, no focusables), `src/css/components/splash.css` (overlay + the choreography scoped to `#logo-root` + a CSS-only failsafe at 2.6 s; `display: none` under reduced motion and without `html.js`), `src/js/modules/splash.js` (once per session, skip on click/tap/Esc/Enter/Space, waits for `#logo-root` animations, GSAP **Flip** (lazy chunk, 24 KB raw) fits `#mark`/`#wordmark`/`#tagline` onto the header's `#hl-*` parts while the two canvas panels slide apart along the 120° diagonal, overlay removed from the DOM, hard cap 2.4 s from first paint, `splash:done` on `window` + `html.splash-done`). `main.js` boots it after the motion core; `motion.js` excludes it from the lazy module glob.
+- `design/logo-motion/`: `logo.svg`, `motion.css`, `logo_motion.html` (showcase with replay / slow motion / speed slider / `?t=` / `?static=1`), `motion_spec.md`. QA evidence in `outputs/` (git-ignored, regenerate with the commands in the spec). `.gitignore`: the skill clone `.claude/skills/pixel2motion/`.
+- Docs: `docs/02` §1 (font identified, vector logo resolved), `docs/00` pending P04 and `docs/15` Q04 marked resolved. `CLAUDE.md`: Commands (`npm run logo`), helpers (`logo()`, `inline_svg()`), splash notes. `package.json`: dev deps `@fontsource/khand`, `opentype.js`, `png-to-ico`.
+
+**Decisions**
+- **The wordmark is Khand, not Saira Condensed.** A pixel fit of candidate fonts (size from the measured cap height, letter-spacing by least squares against the glyph columns, scored by IoU + ink-weight ratio) ranked Khand Regular at IoU 0.980 / weight 1.00 for "My Solutionz" and Khand Medium at 0.983 for the tagline; Saira Condensed scored 0.32. Khand (OFL) is a build-time dependency only.
+- Each lockup is reproduced from its own JPEG (the horizontal has a bigger wordmark relative to the mark and tighter tagline spacing than the vertical), so both match the client's files exactly: Chrome overlays IoU 0.992 (vertical) and 0.978 (horizontal).
+- One inlined SVG in the header, themed by CSS, rather than two swapped images; the footer and mobile sheet use `<img>` SVGs so the HTML stays small (an inlined lockup is 12.4 KB).
+- The staging light streak runs on the 120° diagonal that rises to the right, like the gradients and dividers (the bars themselves lean the other way).
+- The splash never uses `overflow: hidden` to hold scrolling: on classic-scrollbar desktops that drops the scrollbar, widens the viewport and re-reports the H1 as a later, larger LCP candidate (measured +200 ms). Lenis stop + wheel/touch prevention on the overlay instead.
+- The hard cap counts from the CSS animations' start (first paint), read from `animation.currentTime`, not from module execution.
+
+**Deviations**
+- Letter cascade timing: docs/07 §3 says 280 ms letters with a 40 ms stagger inside 1000–1350 ms, which 11 letters cannot fit; the run uses 240 ms / 28 ms (last letter lands at 1530 ms, tagline 1260–1600 ms). Recorded in `motion_spec.md`.
+- Lighthouse was not run (not installed; P31). LCP was measured with `PerformanceObserver` on the production build instead: the H1 is the candidate with and without the splash, medians 612 ms vs 508 ms over four alternating runs with overlapping spreads. Re-check with Lighthouse on the host in P31.
+- The streak lives only in `logo-splash.svg` (the brand files stay clean); `splash.css` duplicates `motion.css` with `#logo-root` scoping and the `splash-` keyframe prefix (kept in sync by hand).
+
+**Checks**
+- pixel2motion QA: overlay inspected (uniform tint, no fringes); easing probe shows eased values at every timestamp (hex scale 0.917 at mid-window vs 0.751 linear; bar drift 4.1 px vs 8.3; letter 20 px vs 62.5); ink sweeps 400–1600 ms without a stall-then-jump; **Final Frame Contract** same-pipeline `?static=1` vs `?t=1600` = 0 differing pixels; reduced motion renders the static logo. Approved by the client in this session before integration.
+- Site (Playwright, php :8000 + Vite): fresh session → overlay present with 16 animations from first paint, tagline done at +1.6 s, Flip mid-flight at +1.9 s (mark 256×146 → heading to the header's 70×40), overlay removed at +2.14 s (cap 2.4 s), `splash:done` fired, Lenis restarted; second view → `html.no-splash`, nothing rendered; Esc at 0.3 s and click at 0.2 s skip to the final frame and hand off; `prefers-reduced-motion` → no splash; 360 px plays and is gone by +2.24 s; no console errors; `scrollWidth === clientWidth` at 360 / 768 / 1024 / 1440 during and after the splash. Styleguide: all brand assets and icons 200, no duplicate ids with three inlined copies on one page, header logo 188×40 with the wordmark turning white under `data-theme="dark"`.
+- `php -l` clean on every changed PHP file; `npm run build` clean (CSS 78.5 KB / 15.1 KB gz, main JS 160 KB / 61 KB gz unchanged, Flip 24 KB lazy); `check-content` unchanged at 91 findings; `npm run og` rendered the new default image.
+
+**Follow-ups**
+- P08/P09: the hero header variant must keep `.site-header__logo-svg` with the `hl-` ids so the Flip target exists; listen for `splash:done` (or check `html.splash-done`) before the hero entrance; `#logo-root` is reserved for the splash.
+- P23: add `.is-loading` to a form wrapper that contains a logo mark to get the breathing loop.
+- P28/P34: the splash partial's inline sessionStorage script needs a CSP nonce (same as the js-class script).
+- P31: Lighthouse LCP with the splash on vs off on the real host; P33: check the splash on iOS Safari (clip-path on SVG children, `touchmove` hold).
+- Client: the original vector logo is still welcome as a cross-check of the rebuilt SVGs.

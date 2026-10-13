@@ -20,15 +20,15 @@ The mark is an abstract **"M"** made of **three hexagon-derived shapes**:
 2. **Tall slanted bar** (middle, azure `#009AF0`), a hexagon stretched diagonally top-left → bottom-right.
 3. **Tall slanted bar** (right, navy `#003C8C`), parallel to the first, offset to the right.
 
-Together they read as an **M** rising upward to the right, a visual metaphor for **growth**. The wordmark "My Solutionz" and the tagline **"Solutions Crafted for Success"** are set in a **condensed, squared, rounded-corner sans** (very likely the *Saira Condensed* family; needs confirmation from the designer).
+Together they read as an **M** rising upward to the right, a visual metaphor for **growth**. The wordmark "My Solutionz" and the tagline **"Solutions Crafted for Success"** are set in a **condensed, squared, rounded-corner sans**: identified in P07 by pixel-fitting the JPEGs as **Khand** (OFL, Indian Type Foundry; Regular for the wordmark, Medium for the tagline, IoU 0.98 at a 1.00 ink-weight ratio; the earlier *Saira Condensed* guess scored 0.32). Khand is used at build time only (`npm run logo` outlines it to paths); it is never loaded on the site.
 
 **Design consequences (locked):**
 - **The hexagon is the brand's shape motif.** We use it for icon containers, bullets, loader progress, section dividers, the team-card mask and the parallax background particles. The "Alternate Futures" reference (`inspirations/for_section (2).jpeg`) with hexagon service tiles matches this exactly.
 - **The 60° diagonal** of the bars is the brand's motion angle. Diagonal wipes, clip-path reveals and the shine sweep on the "Our Special Service" border travel along this angle (≈ −60° / 120°).
 
-### Logo files still needed (open question)
-- ❗ **Vector logo (SVG or AI/EPS)**. The JPEGs are fine for reference only. The splash animation (pixel2motion), the favicon and the crisp header logo all need an SVG. If no vector exists, we will **redraw the mark as SVG** from the geometry above (3 polygons, which is simple and exact) and set the wordmark from the font.
-- White/reversed version of the logo for the dark hero/nav. We can produce this from the SVG.
+### Logo files (resolved in P07)
+- ✅ **Vector logo rebuilt from the JPEGs**: `public/assets/brand/` (`logo-mark.svg`, `logo-mark-white.svg`, `logo-horizontal.svg`, `logo-horizontal-white.svg`, `logo-vertical.svg`, `logo-splash.svg`, `logo-512.png`) by `npm run logo`: the mark as 3 exact polygons, the wordmark and tagline as outlined Khand, each lockup measured from its own JPEG (overlay IoU 0.99). The client's original vector file is still welcome as a cross-check but no longer blocks anything.
+- ✅ White/reversed version (`logo-horizontal-white.svg`: white type, navy bar lightened to Navy 400) for dark surfaces; the header inlines one SVG and themes it with CSS.
 
 ---
 

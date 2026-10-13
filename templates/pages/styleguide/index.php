@@ -65,12 +65,34 @@ $typeScale = [
     <?= heading(1, 'Foundations, tokens and', 'components') ?>
     <p class="lead">Local-only reference built by P02. Everything here comes from <code>tokens.css</code>, the Phosphor sprite and the foundation partials.</p>
     <nav class="sg__nav cluster" aria-label="Styleguide sections">
-      <?php foreach (['colours' => 'Colours', 'type' => 'Type', 'buttons' => 'Buttons', 'icons' => 'Icons', 'components' => 'Components', 'glass' => 'Glass', 'images' => 'Images', 'closing' => 'Closing'] as $id => $label): ?>
+      <?php foreach (['logo' => 'Logo', 'colours' => 'Colours', 'type' => 'Type', 'buttons' => 'Buttons', 'icons' => 'Icons', 'components' => 'Components', 'glass' => 'Glass', 'images' => 'Images', 'closing' => 'Closing'] as $id => $label): ?>
         <a class="chip chip--outline" href="#<?= $id ?>"><?= $label ?></a>
       <?php endforeach; ?>
       <a class="chip chip--outline" href="<?= e(url('/styleguide/motion/')) ?>">Motion →</a>
     </nav>
   </header>
+
+  <!-- ============ Logo (P07) ============ -->
+  <section class="sg__section" id="logo">
+    <?= heading(2, 'Logo', 'lockups') ?>
+    <p class="lead">Exact vectors rebuilt from the client's JPEGs (<code>npm run logo</code> → <code>public/assets/brand/</code>): the mark is three polygons, the wordmark and tagline are outlined Khand. <code>logo()</code> prints an <code>&lt;img&gt;</code> or, with <code>inline =&gt; true</code>, the SVG itself so CSS can theme the parts.</p>
+    <div class="sg__logos">
+      <figure class="sg__logo"><?= logo('colour', ['height' => 64]) ?><figcaption class="small">logo-horizontal.svg</figcaption></figure>
+      <figure class="sg__logo sg__logo--dark"><?= logo('white', ['height' => 64]) ?><figcaption class="small">logo-horizontal-white.svg (Navy 400 bar)</figcaption></figure>
+      <figure class="sg__logo"><?= logo('colour', ['height' => 160, 'lockup' => 'vertical']) ?><figcaption class="small">logo-vertical.svg (splash)</figcaption></figure>
+      <figure class="sg__logo"><?= logo('colour', ['height' => 96, 'lockup' => 'mark']) ?><figcaption class="small">logo-mark.svg</figcaption></figure>
+      <figure class="sg__logo sg__logo--dark"><?= logo('white', ['height' => 96, 'lockup' => 'mark']) ?><figcaption class="small">logo-mark-white.svg</figcaption></figure>
+      <figure class="sg__logo sg__logo--dark"><a class="site-header__logo logo-link" href="#logo" aria-label="Hover or focus: the bars re-draw"><?= logo('colour', ['height' => 48, 'inline' => true, 'prefix' => 'sgl', 'class' => 'site-header__logo-svg sg__logo-inline']) ?></a><figcaption class="small">inline, dark theme, hover re-draw</figcaption></figure>
+    </div>
+    <h3 class="sg__h3">Favicons and app icons</h3>
+    <div class="sg__favicons">
+      <img src="/favicon.ico" alt="favicon.ico at 32px" width="32" height="32">
+      <img src="/icon.svg" alt="icon.svg (follows the colour scheme)" width="48" height="48">
+      <img src="/icon-192.png" alt="icon-192.png" width="96" height="96">
+      <img src="/apple-touch-icon.png" alt="apple-touch-icon.png" width="90" height="90">
+      <img src="<?= e(asset('brand/logo-512.png')) ?>" alt="logo-512.png, the schema.org Organization logo" width="128" height="128">
+    </div>
+  </section>
 
   <!-- ============ Colours ============ -->
   <section class="sg__section" id="colours">

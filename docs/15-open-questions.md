@@ -10,7 +10,7 @@
 | Q01 ✅ | ~~Years of experience~~ → **10 years** (answered 13 Oct 2026) | | |
 | Q02 ✅ | ~~Final services list~~ → **3 categories / 12 sub-services** (answered 13 Oct 2026, see `00` §K) | | |
 | Q03 ❗ | **Content** for: 2 remaining service categories + 12 sub-services (being written step by step), Home, sector pages, FAQ, blog posts | Prompts paste exact copy | — |
-| Q04 ❗ | **Vector logo** (SVG/AI/EPS)? | Splash animation, crisp header, favicon | We redraw the mark as SVG from the JPEG (3 polygons) and outline the wordmark |
+| ~~Q04~~ ✅ | **Vector logo** (SVG/AI/EPS)? | Splash animation, crisp header, favicon | Done in P07: the mark redrawn as 3 exact polygons and the wordmark outlined in Khand from the JPEGs (overlay IoU 0.99, `public/assets/brand/`). The original vector is still welcome as a cross-check |
 | Q05 ✅ | ~~Company details~~ → **My Solutionz Ltd, no. 15677749** (verified on Companies House). Only open point: **VAT number, if VAT-registered** | Legal footer | No VAT line |
 | Q06 🟡 | ~~Which address~~ → **London confirmed**. Still open: is Unit A53, 4–6 Greatorex Street a **staffed office** customers can visit, or a virtual/mail address? | Google Business Profile eligibility; LocalBusiness vs Organization schema | Organization schema, no GBP address until confirmed |
 | Q06b | Bid & Proposal page: confirm (a) a **free quote** is offered, (b) you upload submissions to buyer portals when agreed, (c) you support **private sector proposals/RFPs** | Claims in the copy must be true | Kept as written |

@@ -109,7 +109,10 @@
   --container-wide: 1440px;
   --container-text: 720px;
   --grid-gap:       var(--space-6);
-  --header-h:       80px;
+  --header-h:         88px;   /* live value: header.js sets 68px once scrolled */
+  --header-h-initial: 88px;   /* layout offset for pages without an overlaying hero (never changes → no CLS) */
+  --header-h-compact: 68px;
+  --action-bar-h:     64px;   /* mobile sticky Call / WhatsApp / Quote bar */
 
   /* ---------- Radii (concentric: child = parent − padding) ---------- */
   --r-xs: 8px;

@@ -14,8 +14,8 @@ final class LlmsController
         header('Content-Type: text/plain; charset=UTF-8');
         header('Cache-Control: public, max-age=3600');
 
-        $services = require base_path('app/data/services.php');
-        $sectors = require base_path('app/data/sectors.php');
+        $services = services();
+        $sectors = sectors();
         $address = config('address');
 
         $out = [];

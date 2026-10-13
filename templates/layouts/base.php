@@ -2,10 +2,16 @@
 declare(strict_types=1);
 /**
  * Base layout. Expects $page (normalised by App\Seo::prepare) and $content (string) from the Router.
+ * Page keys used here: body_class, header ('default' | 'hero' | 'none'; 'hero' means the hero template renders the
+ * header itself via render('partials/header', ['variant' => 'hero'])), header_theme ('light' | 'dark': what sits
+ * under the header at the top of the page), header_overlay (true when a hero sits under the fixed header).
  * @var array<string,mixed> $page
  * @var string $content
  */
-$bodyClass = trim((string) ($page['body_class'] ?? ''));
+$headerVariant = $page['header'] ?? 'default';
+$headerTheme = $page['header_theme'] ?? 'light';
+$overlay = (bool) ($page['header_overlay'] ?? false);
+$bodyClass = trim(($page['body_class'] ?? '') . ($overlay ? ' has-overlay-header' : ''));
 $showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page::PUBLISHED && ($page['canonical'] ?? false) !== false;
 ?>
 <!doctype html>
@@ -15,7 +21,9 @@ $showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page
 </head>
 <body<?= $bodyClass !== '' ? ' class="' . e($bodyClass) . '"' : '' ?>>
 <a class="skip-link" href="#main">Skip to main content</a>
-<?php include templates_path('partials/header'); ?>
+<?php if ($headerVariant === 'default'): ?>
+<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme]) ?>
+<?php endif; ?>
 <main id="main" tabindex="-1">
 <?= $content ?>
 </main>

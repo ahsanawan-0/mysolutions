@@ -2,15 +2,23 @@
 declare(strict_types=1);
 
 /**
- * Sectors we serve (docs/09 §5). Single source of truth for routes, navigation and sector pages.
- * P04 extends the entries (menu lines); P22 adds the page content. 🟡 Final list once client content arrives.
+ * Sectors we serve (docs/09 §5, PROMPTS P04). Single source of truth for routes, navigation and sector pages.
+ * Access via sectors(). P22 adds the page content. 🟡 Final list once client content arrives.
+ * Keys: slug, name, icon (Phosphor light), summary, status, url.
  */
-return [
-    ['slug' => 'healthcare-social-care', 'name' => 'Healthcare & Social Care', 'icon' => 'first-aid-kit', 'summary' => 'Tender writing and compliance support for care providers, domiciliary care, supported living and NHS contracts.'], // PROVISIONAL
-    ['slug' => 'transport',              'name' => 'Transport',                'icon' => 'bus',           'summary' => 'Bids for passenger transport, home-to-school, patient transport and logistics contracts.'], // PROVISIONAL
-    ['slug' => 'cleaning',               'name' => 'Cleaning',                 'icon' => 'broom',         'summary' => 'Commercial and public-sector cleaning tenders, from schools to healthcare settings.'], // PROVISIONAL
-    ['slug' => 'education-training',     'name' => 'Education & Training',     'icon' => 'graduation-cap','summary' => 'Training providers, apprenticeships and education-sector frameworks.'], // PROVISIONAL
-    ['slug' => 'security',               'name' => 'Security',                 'icon' => 'shield-star',   'summary' => 'Manned guarding, monitoring and security services tenders.'], // PROVISIONAL
-    ['slug' => 'facilities-management',  'name' => 'Facilities Management',    'icon' => 'buildings',     'summary' => 'Hard and soft FM contracts for public and private estates.'], // PROVISIONAL
-    ['slug' => 'building-maintenance',   'name' => 'Building Maintenance',     'icon' => 'wrench',        'summary' => 'Repairs, maintenance and minor works frameworks for housing and public bodies.'], // PROVISIONAL
+$sectors = [
+    ['slug' => 'healthcare-social-care', 'name' => 'Healthcare & Social Care', 'icon' => 'first-aid-kit',  'summary' => 'Tenders for domiciliary care, supported living, residential and NHS-commissioned services.', 'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'transport',              'name' => 'Transport',                'icon' => 'bus',            'summary' => 'Bids for passenger, patient and logistics transport contracts.',                          'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'cleaning',               'name' => 'Cleaning',                 'icon' => 'broom',          'summary' => 'Commercial, healthcare and education cleaning contracts.',                               'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'education-training',     'name' => 'Education & Training',     'icon' => 'graduation-cap', 'summary' => 'Training provision, apprenticeships and education support services.',                   'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'security',               'name' => 'Security',                 'icon' => 'shield-star',    'summary' => 'Manned guarding, mobile patrols and event security contracts.',                          'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'facilities-management',  'name' => 'Facilities Management',    'icon' => 'buildings',      'summary' => 'Integrated and soft FM contracts across public and private estates.',                    'status' => 'draft'], // PROVISIONAL
+    ['slug' => 'building-maintenance',   'name' => 'Building Maintenance',     'icon' => 'wrench',         'summary' => 'Planned and reactive maintenance and repair contracts.',                                 'status' => 'draft'], // PROVISIONAL
 ];
+
+foreach ($sectors as &$sector) {
+    $sector['url'] = '/sectors/' . $sector['slug'] . '/';
+}
+unset($sector);
+
+return $sectors;

@@ -228,6 +228,48 @@ function icon(string $name, string $weight = 'light', array $attrs = []): string
     return $svg;
 }
 
+/** All service categories with their sub-services (app/data/services.php). */
+function services(): array
+{
+    static $services = null;
+    return $services ??= require base_path('app/data/services.php');
+}
+
+function service_category(string $slug): ?array
+{
+    foreach (services() as $category) {
+        if ($category['slug'] === $slug) {
+            return $category;
+        }
+    }
+    return null;
+}
+
+function service_sub(string $categorySlug, string $subSlug): ?array
+{
+    $category = service_category($categorySlug);
+    foreach ($category['subs'] ?? [] as $sub) {
+        if ($sub['slug'] === $subSlug) {
+            return $sub;
+        }
+    }
+    return null;
+}
+
+/** All sectors (app/data/sectors.php). */
+function sectors(): array
+{
+    static $sectors = null;
+    return $sectors ??= require base_path('app/data/sectors.php');
+}
+
+/** Primary navigation items (app/data/navigation.php). */
+function navigation(): array
+{
+    static $nav = null;
+    return $nav ??= require base_path('app/data/navigation.php');
+}
+
 /** Responsive <picture> (or branded placeholder) from the image manifest. See App\Image::render(). */
 function img(string $key, array $o = []): string
 {

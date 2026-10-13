@@ -12,8 +12,8 @@ use App\Controllers\SitemapController;
  * Until a template exists, the Router serves a dev stub on local and a 404 elsewhere.
  */
 
-$services = require __DIR__ . '/data/services.php';
-$sectors = require __DIR__ . '/data/sectors.php';
+$services = services();
+$sectors = sectors();
 
 $routes = [
     '/'          => ['template' => 'pages/home',  'built_by' => 'P08–P16', 'sitemap' => 'pages'],

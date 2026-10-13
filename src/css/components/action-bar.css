@@ -1,0 +1,52 @@
+/* Mobile sticky action bar (< 768px): Call · WhatsApp · Get a Quote. Shown after the first viewport. */
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 850;
+  display: none;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 1px;
+  height: calc(var(--action-bar-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--glass-thick-dark-bg);
+  -webkit-backdrop-filter: var(--glass-thick-dark-blur);
+  backdrop-filter: var(--glass-thick-dark-blur);
+  box-shadow: 0 -1px 0 rgb(var(--white-rgb) / .12), var(--shadow-3);
+  transform: translateY(110%);
+  transition: transform var(--dur-ui) var(--ease-apple);
+}
+.action-bar.is-visible { transform: none; }
+.action-bar__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  color: var(--ms-white);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.action-bar__item .icon { color: var(--sky-300); }
+.action-bar__item--primary { background: var(--azure-650); }
+.action-bar__item--primary .icon { color: var(--ms-white); }
+.action-bar__item:focus-visible { outline-color: var(--sky-300); outline-offset: -4px; }
+
+@media (max-width: 767px) {
+  .action-bar { display: grid; }
+  /* Keep page content and the draft ribbon clear of the bar */
+  body { padding-bottom: calc(var(--action-bar-h) + env(safe-area-inset-bottom)); }
+  .draft-ribbon { bottom: calc(var(--action-bar-h) + env(safe-area-inset-bottom) + var(--space-3)); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .action-bar { background: var(--glass-solid-dark); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .action-bar { background: rgb(var(--navy-900-rgb) / .97); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .action-bar { transition: none; }
+}

@@ -138,3 +138,35 @@
 
 **Follow-ups**
 - P04: extend `app/data/services.php` / `sectors.php` with menu copy; P07: favicon set, `site.webmanifest`, `logo-mark-512.png`, replace the OG mark; P25: add blog posts/categories to the insights sitemap via `App\Blog`; P30: per-page OG images, validator run, `legacy_sitemap` off ~6 weeks after launch.
+
+---
+
+## P04 — Header, glass navigation, mega menu, mobile menu + services/sectors data
+**Date:** 13 October 2026
+**Commit:** `P04: header and navigation`
+
+**Files created / changed**
+- `app/data/services.php` (exact P04 content: 3 categories with `slug/name/short/colour/icon/summary/status/url/subs`, 12 subs with `status: draft` + `// PROVISIONAL` summaries; URLs derived), `app/data/sectors.php` (7 sectors, draft), `app/data/navigation.php`. Helpers `services()`, `service_category()`, `service_sub()`, `sectors()`, `navigation()`; `routes.php` and `LlmsController` use them.
+- `templates/partials/header.php`: `default` variant (logo · Innovax glass pill nav with a sliding white active pill · phone ≥ 1280px · "Get a Free Quote" glass pill → `/contact-us/#quote` · burger) and `hero` variant (centred links with an Azure active dot; rendered inside the hero by P08 via `render('partials/header', ['variant' => 'hero', 'theme' => 'dark'])`). Services mega menu (3 category columns from the data: coloured hex tile + name → category page, sub-service icon + name + summary; 4th column featured "Have a tender deadline coming up?" + quote button + "View all services"), Sectors dropdown (7), full-screen mobile sheet (28px links, native `<details>` accordions for Services → categories → subs and Sectors, contact block, socials), mobile sticky action bar (Call · WhatsApp · Get a Quote).
+- `templates/layouts/base.php`: prints the default header unless `$page['header']` is `hero`/`none`; `header_theme` (`light` default; heroes set `dark`) and `header_overlay` (adds `has-overlay-header`; otherwise `main` gets `padding-top: --header-h-initial`).
+- CSS: `components/header.css`, `mega-menu.css`, `mobile-menu.css`, `action-bar.css`; tokens `--header-h` 88 (live), `--header-h-initial`, `--header-h-compact` 68, `--action-bar-h` 64.
+- JS: `src/js/core/eases.js` (CustomEase `apple/out/inout/spring`, `reducedMotion()`), `src/js/modules/header.js` (sticky glass after 80px + 88→68 + `--header-h` update, hide on scroll down / reveal on scroll up with `yPercent`, never while focused or a menu/sheet is open; theme watcher for `[data-header-theme]` sections; `gsap.quickTo` active pill; menus with 150ms hover intent, click/Enter/Space, Esc → focus back to the trigger, outside click, focus-out, `autoAlpha` + y 8→0 with 0.04 column stagger; mobile sheet with focus trap, Esc, scroll lock (`html.is-locked` + `window.lenis?.stop()`), stagger-in, close returns focus to the burger; action bar after 0.9 viewport), `main.js` boots it.
+
+**Decisions**
+- The header is `position: fixed` from the start; pages without an overlaying hero reserve `--header-h-initial` (a constant) so the 88→68 shrink never shifts layout.
+- The mega panel is `position: fixed` inside the header (the header's `will-change: transform` makes it the containing block) and the nav list's glass lives on a `::before`, because a `backdrop-filter` on the list would otherwise become the panel's containing block.
+- Two header themes (`data-theme="dark|light"`) swap the token set; light = ink text, ink active pill, outlined CTA.
+- Native `<details>` accordions on mobile (keyboard/screen-reader support for free); the Services accordion also links to each category overview.
+- Featured mega-menu card is the quote CTA now; P16 may switch it to the latest insight.
+
+**Deviations**
+- None. The logo is still the temporary text + hexagon mark until P07.
+
+**Checks**
+- `php -l` clean; `npm run build` clean (CSS 44 KB / 9.2 KB gz, JS 82 KB / 32 KB gz incl. GSAP core + CustomEase); no hex outside `tokens.css`; `check-content` runs (89 findings: provisional data + unbuilt templates, as expected).
+- Browser at 1280: pill sits exactly on the active link; mega menu opens with `aria-expanded`, hover-intent (closed at 60ms, open at 310ms), closes on mouseleave, Esc (focus returns to the trigger), outside click; 3 columns + featured card centred at 1200px; screenshots show the glass-thick-dark panel with the stagger complete.
+- Browser at 360: burger visible, desktop nav hidden, no horizontal scroll, body padding 64px for the action bar; sheet opens (scroll lock, focus on Close), Shift+Tab wraps, 3 categories / 15 sub-links / 7 sectors, Esc closes and unlocks.
+- Note: the desktop app's Browser pane stopped compositing frames mid-session (`requestAnimationFrame` frozen), so scroll hide/reveal and the sheet's stagger were verified by code review + the synchronous DOM state; re-check visually once the pane is displayed.
+
+**Follow-ups**
+- P06 absorbs `core/eases.js` into the motion core and exposes `window.lenis` for the sheet's scroll lock. P07 swaps the text logo for the SVG lockups (white version for `data-theme="dark"`). P08 renders the `hero` variant inside the hero panel and sets `header_theme: 'dark'`, `header_overlay: true`. P17 does the same for inner heroes.

@@ -1,0 +1,224 @@
+/* ==========================================================================
+   C04 Site header: fixed, glass pill nav with sliding active pill, phone + CTA, burger.
+   Themes: [data-theme="dark"] over photo/navy heroes, [data-theme="light"] over light sections.
+   States: .is-scrolled (glass bar, 88 → 68px), hide/reveal via transform from header.js.
+   ========================================================================== */
+
+/* Pages without an overlaying hero reserve the initial header height (fixed value → no CLS) */
+body:not(.has-overlay-header) > main { padding-top: var(--header-h-initial); }
+
+.site-header {
+  --h: var(--header-h-initial);
+  --nav-fg: var(--ms-white);
+  --nav-fg-muted: rgb(var(--white-rgb) / .78);
+  --pill-bg: var(--glass-ultrathin-dark-bg);
+  --pill-border: var(--glass-thin-dark-border);
+  --active-bg: var(--ms-white);
+  --active-fg: var(--navy-900);
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 800;
+  height: var(--h);
+  color: var(--nav-fg);
+  transition: height var(--dur-ui) var(--ease-apple), background-color var(--dur-ui) var(--ease-apple), box-shadow var(--dur-ui) var(--ease-apple);
+  will-change: transform;
+}
+.site-header[data-theme="light"] {
+  --nav-fg: var(--ms-ink);
+  --nav-fg-muted: var(--text-2);
+  --pill-bg: rgb(var(--ink-rgb) / .05);
+  --pill-border: rgb(var(--ink-rgb) / .08);
+  --active-bg: var(--ms-ink);
+  --active-fg: var(--ms-white);
+}
+.site-header.is-scrolled { --h: var(--header-h-compact); }
+.site-header.is-scrolled[data-theme="dark"] {
+  background: var(--glass-thick-dark-bg);
+  -webkit-backdrop-filter: var(--glass-thick-dark-blur);
+  backdrop-filter: var(--glass-thick-dark-blur);
+  box-shadow: 0 1px 0 rgb(var(--white-rgb) / .08);
+}
+.site-header.is-scrolled[data-theme="light"] {
+  background: var(--glass-regular-light-bg);
+  -webkit-backdrop-filter: var(--glass-regular-light-blur);
+  backdrop-filter: var(--glass-regular-light-blur);
+  box-shadow: 0 1px 0 var(--glass-regular-light-line);
+}
+
+.site-header__inner {
+  width: 100%;
+  max-width: calc(var(--container-wide) + 2 * var(--gutter));
+  height: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Temporary text logo until P07 ships the SVG lockups */
+.site-header__logo { display: inline-flex; align-items: center; color: inherit; text-decoration: none; min-height: var(--target-min); }
+.logo-text {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.logo-text__mark {
+  width: 22px;
+  height: 24px;
+  background: var(--ms-grad-brand);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.logo-text--light { color: var(--ms-white); }
+
+/* ---------- Desktop nav ---------- */
+.site-nav { display: none; justify-self: center; }
+.site-nav__list { position: relative; display: flex; align-items: center; margin: 0; }
+.site-nav__item { position: relative; display: flex; align-items: center; }
+.site-nav__link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: 12px 15px;
+  border-radius: var(--r-xs);
+  color: var(--nav-fg);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;      /* 15px */
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+.site-nav__toggle {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: var(--target-min);
+  margin-left: -10px;
+  margin-right: 4px;
+  color: var(--nav-fg-muted);
+  border-radius: var(--r-xs);
+  transition: transform var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.site-nav__toggle[aria-expanded="true"] { transform: rotate(180deg); color: var(--nav-fg); }
+.site-nav__toggle:focus-visible { outline-color: currentColor; }
+
+/* Innovax glass pill (default variant). The glass lives on a pseudo-element: a backdrop-filter on the
+   list itself would make it the containing block of the fixed mega-menu panel. */
+.glass-nav { padding: 5px; }
+.glass-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--r-sm);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  -webkit-backdrop-filter: var(--glass-thin-dark-blur);
+  backdrop-filter: var(--glass-thin-dark-blur);
+  transition: background-color var(--dur-ui) var(--ease-apple), border-color var(--dur-ui) var(--ease-apple);
+}
+.site-nav__pill {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  height: calc(100% - 10px);
+  width: 0;
+  border-radius: var(--r-xs);
+  background: var(--active-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color var(--dur-ui) var(--ease-apple);
+}
+.glass-nav .site-nav__link.is-under-pill { color: var(--active-fg); }
+/* No-JS: the active link simply shows as a solid pill */
+.no-js .glass-nav .site-nav__link.is-active { background: var(--active-bg); color: var(--active-fg); }
+.no-js .site-nav__pill { display: none; }
+
+/* Hero variant: centred links with an Azure active dot above the current item */
+.site-nav__list--dots { gap: var(--space-2); }
+.site-nav__list--dots .site-nav__link { padding-block: 14px; }
+.site-nav__list--dots .site-nav__link.is-active::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--azure-500);
+  transform: translateX(-50%);
+  box-shadow: 0 0 8px var(--azure-500);
+}
+.site-header--hero { position: relative; inset: auto; z-index: 5; height: auto; --h: 72px; }
+.site-header--hero .site-header__inner { height: var(--h); padding-inline: 0; }
+
+/* ---------- Actions ---------- */
+.site-header__actions { display: flex; align-items: center; gap: var(--space-3); justify-self: end; }
+.site-header__phone {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding-inline: var(--space-2);
+  color: var(--nav-fg);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.site-header__phone:hover { color: var(--azure-500); }
+.site-header[data-theme="light"] .site-header__phone:hover { color: var(--azure-700); }
+.site-header__cta { display: none; }
+.site-header[data-theme="light"] .site-header__cta {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--ms-ink);
+  --btn-fg: var(--ms-ink);
+  --btn-border: var(--ms-ink);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.site-header[data-theme="light"] .site-header__cta:hover { --btn-fg: var(--ms-white); }
+.site-header__burger { color: var(--nav-fg); }
+.site-header__burger:hover { background: var(--pill-bg); }
+
+@media (min-width: 1024px) {
+  .site-nav { display: block; }
+  .site-header__cta { display: inline-flex; }
+  .site-header__burger { display: none; }
+}
+@media (min-width: 1280px) {
+  .site-header__phone { display: inline-flex; }
+}
+
+/* ---------- Fallbacks ---------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-scrolled[data-theme="dark"] { background: rgb(var(--navy-900-rgb) / .97); }
+  .site-header.is-scrolled[data-theme="light"] { background: rgb(245 247 251 / .97); }
+  .glass-nav::before { background: rgb(var(--white-rgb) / .3); }
+  .site-header[data-theme="light"] .glass-nav::before { background: rgb(var(--ink-rgb) / .08); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .site-header.is-scrolled[data-theme="dark"] { background: var(--glass-solid-dark); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .site-header.is-scrolled[data-theme="light"] { background: var(--glass-solid-light); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass-nav::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(var(--navy-900-rgb) / .9); }
+  .site-header[data-theme="light"] .glass-nav::before { background: var(--ms-mist); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header { transition: none; }
+}

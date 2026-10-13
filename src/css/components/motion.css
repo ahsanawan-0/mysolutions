@@ -1,0 +1,129 @@
+/* Motion core (docs/06 §3, §5, §5b; docs/10 §9): structural CSS for the data-anim catalogue.
+   Initial hidden states exist ONLY under html.js and ONLY when motion is not reduced, so no-JS, crawlers and
+   reduced-motion users always see the final, server-rendered state. Each pre-state also carries a 0s safety
+   animation that restores the final state after 2.5s unless the JS runner has claimed the element (.is-anim),
+   so a script error can never leave content hidden. */
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-anim~="fade-up"]:not(.is-done),
+  html.js [data-anim~="stagger"] > :not(.is-done) {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: anim-safety 0s linear 2.5s forwards;
+  }
+  html.js [data-anim~="img-reveal"]:not(.is-anim) {
+    clip-path: inset(100% 0 0 0 round var(--r-xl));
+    animation: anim-safety-clip 0s linear 2.5s forwards;
+  }
+  html.js [data-anim~="split-lines"]:not(.is-done),
+  html.js [data-anim~="split-chars"]:not(.is-done),
+  html.js [data-anim~="two-voice"]:not(.is-done) {
+    visibility: hidden;
+    animation: anim-safety-visible 0s linear 2.5s forwards;
+  }
+  /* The runner has the element: GSAP's inline styles take over and the safety timer is cancelled */
+  html.js [data-anim~="fade-up"].is-anim,
+  html.js [data-anim~="stagger"].is-anim > *,
+  html.js [data-anim~="img-reveal"].is-anim,
+  html.js [data-anim~="split-lines"].is-anim,
+  html.js [data-anim~="split-chars"].is-anim,
+  html.js [data-anim~="two-voice"].is-anim { animation: none; }
+}
+@keyframes anim-safety { to { opacity: 1; transform: none; } }
+@keyframes anim-safety-clip { to { clip-path: inset(0 round var(--r-xl)); } }
+@keyframes anim-safety-visible { to { visibility: visible; } }
+
+/* ---------- Structural rules per effect ---------- */
+/* split-lines: SplitText masks clip each line; nothing else to style */
+.split-line { will-change: transform; }
+
+/* two-voice: the accent clips in, so it must be a box */
+[data-anim~="two-voice"] em { display: inline-block; }
+
+/* img-reveal / img-zoom-out: the inner image scales inside the wrapper */
+[data-anim~="img-reveal"],
+[data-anim~="img-zoom-out"] { overflow: hidden; }
+[data-anim~="img-reveal"] img, [data-anim~="img-reveal"] .img-placeholder,
+[data-anim~="img-zoom-out"] img, [data-anim~="img-zoom-out"] .img-placeholder { transform-origin: 50% 50%; }
+
+/* fill-text: gradient-filled numerals whose background pans on scroll */
+.fill-text {
+  background: var(--ms-grad-brand);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* draw: stroked line art inherits the text colour */
+[data-anim~="draw"] { color: var(--azure-500); }
+[data-anim~="draw"] path, [data-anim~="draw"] line, [data-anim~="draw"] polyline, [data-anim~="draw"] polygon,
+[data-anim~="draw"] circle, [data-anim~="draw"] ellipse, [data-anim~="draw"] rect {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* pin-steps: steps stack by default (mobile, no-JS, reduced motion); the page styles .is-active */
+[data-step-progress] { transform-origin: 0 0; }
+
+/* h-scroll: a native swipe row unless the desktop pin takes over */
+[data-h-track] {
+  display: flex;
+  gap: var(--space-6);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  padding-bottom: var(--space-2);
+}
+[data-h-track] > * { flex: 0 0 auto; scroll-snap-align: start; }
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.js [data-anim~="h-scroll"] { overflow: hidden; }
+  html.js [data-anim~="h-scroll"] [data-h-track] { width: max-content; overflow: visible; scroll-snap-type: none; padding-bottom: 0; }
+}
+
+/* stack-cards: sticky stacking works without JS; JS adds the scale + dim of covered cards */
+[data-anim~="stack-cards"] {
+  --stack-top: calc(var(--header-h-initial) + var(--space-6));
+  display: grid;
+  gap: var(--space-6);
+}
+[data-anim~="stack-cards"] > * {
+  position: sticky;
+  top: var(--stack-top);
+  transform-origin: 50% 0;
+}
+
+/* magnetic / tilt: GSAP drives the transform every frame, so no CSS transition may smooth it */
+html.js [data-anim~="magnetic"],
+html.js [data-anim~="tilt"] { transition: none; }
+[data-anim~="magnetic"] { display: inline-block; }
+[data-anim~="tilt"] { position: relative; }
+.tilt__glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(var(--white-rgb) / .28), transparent 55%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* velocity-skew: keep the image inside its box while it skews */
+[data-anim~="velocity-skew"] { overflow: hidden; }
+
+/* read-along: characters must not break mid-word (SplitText wraps words too) */
+[data-anim~="read-along"] .read-char { display: inline-block; }
+
+/* blur-zoom: the heading is scaled from its centre */
+[data-anim~="blur-zoom"] { transform-origin: 50% 50%; }
+
+/* logo-assembly pieces transform around their own centre (GSAP sets transformOrigin; this keeps them crisp) */
+[data-anim~="logo-assembly"] [data-piece] { transform-box: fill-box; }
+
+/* Scrubbed layers (parallax, rise-rotate, micro-arrow) only ever change transform */
+[data-anim~="parallax"], [data-anim~="rise-rotate"], [data-anim~="cta-mark"] { will-change: transform; }

@@ -68,6 +68,7 @@ $typeScale = [
       <?php foreach (['colours' => 'Colours', 'type' => 'Type', 'buttons' => 'Buttons', 'icons' => 'Icons', 'components' => 'Components', 'glass' => 'Glass', 'images' => 'Images', 'closing' => 'Closing'] as $id => $label): ?>
         <a class="chip chip--outline" href="#<?= $id ?>"><?= $label ?></a>
       <?php endforeach; ?>
+      <a class="chip chip--outline" href="<?= e(url('/styleguide/motion/')) ?>">Motion →</a>
     </nav>
   </header>
 

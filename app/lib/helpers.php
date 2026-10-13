@@ -320,11 +320,18 @@ function component(string $name, array $vars = []): string
 /**
  * Two-voice heading (C02): heading(2, 'Our Approach to', 'Business Growth')
  * → <h2>Our Approach to <em>Business Growth</em></h2>. The accent is max 2–3 words.
+ * $attrs adds attributes, e.g. ['data-anim' => 'two-voice'] (P06 motion hooks).
  */
-function heading(int $level, string $text, ?string $accent = null, string $class = '', ?string $id = null): string
+function heading(int $level, string $text, ?string $accent = null, string $class = '', ?string $id = null, array $attrs = []): string
 {
     $level = max(1, min(6, $level));
-    $open = '<h' . $level . ($class !== '' ? ' class="' . e($class) . '"' : '') . ($id !== null ? ' id="' . e($id) . '"' : '') . '>';
+    $open = '<h' . $level . ($class !== '' ? ' class="' . e($class) . '"' : '') . ($id !== null ? ' id="' . e($id) . '"' : '');
+    foreach ($attrs as $name => $value) {
+        if (preg_match('/^[a-zA-Z][\w-]*$/', (string) $name) === 1) {
+            $open .= ' ' . $name . ($value === true ? '' : '="' . e((string) $value) . '"');
+        }
+    }
+    $open .= '>';
     $inner = e($text);
     if ($accent !== null && $accent !== '') {
         $inner .= ' <em>' . e($accent) . '</em>';

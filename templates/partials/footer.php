@@ -101,8 +101,10 @@ $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u
       </div>
     </address>
 
-    <div class="site-footer__strip" aria-hidden="true">
-      <div class="site-footer__strip-track">
+    <?php /* Decorative word strip: a CSS marquee without JS; src/js/anim/marquee.js takes over (velocity-aware loop)
+             and reveals the pause button, which sits outside the aria-hidden strip so it stays reachable. */ ?>
+    <div class="site-footer__strip" id="footer-strip" aria-hidden="true" data-anim="marquee" data-speed="90">
+      <div class="site-footer__strip-track" data-marquee-track>
         <?php for ($i = 0; $i < 2; $i++): ?>
         <ul class="site-footer__strip-list">
           <?php foreach ($marquee as $word): ?>
@@ -112,6 +114,10 @@ $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u
         <?php endfor; ?>
       </div>
     </div>
+    <button class="marquee__pause site-footer__strip-pause" type="button" data-marquee-pause data-marquee-for="footer-strip" aria-pressed="false" hidden>
+      <?= icon('pause', 'regular', ['size' => 18]) ?><?= icon('play', 'regular', ['size' => 18]) ?>
+      <span class="visually-hidden" data-marquee-label>Pause the moving text</span>
+    </button>
   </div>
 
   <div class="site-footer__bottom">

@@ -208,6 +208,23 @@
 @keyframes footer-strip {
   to { transform: translate(-50%, 14%); }
 }
+/* With JS the GSAP marquee drives the strip (velocity-aware, pause button); the CSS loop is the no-JS fallback */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .site-footer__strip-track { animation: none; }
+  html.js .site-footer__strip:hover .site-footer__strip-track { animation: none; }
+}
+.site-footer__strip-pause {
+  top: auto;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  translate: 0 0;
+  background: rgb(var(--white-rgb) / .12);
+  color: var(--ms-white);
+  border-color: rgb(var(--white-rgb) / .2);
+  box-shadow: none;
+}
+.site-footer__strip-pause:hover { background: var(--azure-650); }
+.site-footer__strip-pause:focus-visible { outline-color: var(--sky-300); }
 
 /* ---------- Bottom bar: disclosure + legal links (on the canvas) ---------- */
 .site-footer__bottom {

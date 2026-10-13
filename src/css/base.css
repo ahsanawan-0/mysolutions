@@ -147,7 +147,7 @@ a:hover { color: var(--link-hover); }
 .skip-link:focus-visible { transform: none; outline-color: var(--sky-300); }
 
 /* ---------- Initial animation states exist ONLY under html.js (docs/10 §9) ---------- */
-/* (populated by P06's data-anim catalogue) */
+/* See components/motion.css (the data-anim catalogue's pre-states and safety timers). */
 
 /* ---------- User preferences ---------- */
 @media (prefers-reduced-motion: reduce) {

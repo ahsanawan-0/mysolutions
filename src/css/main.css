@@ -24,5 +24,9 @@
 @import '/src/css/components/cta-band.css';
 @import '/src/css/components/footer.css';
 @import '/src/css/components/back-to-top.css';
+@import '/src/css/components/motion.css';
+@import '/src/css/components/marquee.css';
+@import '/src/css/components/nodes.css';
 
 @import '/src/css/pages/styleguide.css';
+@import '/src/css/pages/styleguide-motion.css';

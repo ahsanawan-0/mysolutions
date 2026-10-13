@@ -1,0 +1,80 @@
+/* Marquee (data-anim="marquee", templates/components/marquee.php): one row of items that loops when JS runs and
+   motion is allowed; a static wrapped list otherwise. The pause button (WCAG 2.2.2) is revealed by JS. */
+.marquee {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+}
+.marquee__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.marquee__track > li {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: clamp(var(--space-5), 2.5vw, var(--space-10));
+  padding-right: clamp(var(--space-5), 2.5vw, var(--space-10));
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h4);
+  color: var(--text-2);
+}
+/* Hexagon bullet between items (brand motif) */
+.marquee__track > li::after {
+  content: "";
+  flex: none;
+  width: .55em;
+  height: .6em;
+  background: var(--azure-500);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='8' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='8' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.marquee--display .marquee__track > li {
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ms-ink);
+}
+.on-dark .marquee__track > li, .marquee--dark .marquee__track > li { color: rgb(var(--white-rgb) / .9); }
+
+/* Pause / play control */
+.marquee__pause {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  translate: 0 -50%;
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  color: var(--navy-900);
+  border: 1px solid var(--ms-line);
+  box-shadow: var(--shadow-1);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.marquee__pause:hover { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+.marquee__pause .icon--play { display: none; }
+.is-paused > .marquee__pause .icon--pause, .marquee__pause[aria-pressed="true"] .icon--pause { display: none; }
+.is-paused > .marquee__pause .icon--play, .marquee__pause[aria-pressed="true"] .icon--play { display: block; }
+
+/* Static wrapped list: no JS or reduced motion */
+html.no-js .marquee__track { width: auto; flex-wrap: wrap; row-gap: var(--space-2); }
+html.no-js .marquee { -webkit-mask-image: none; mask-image: none; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track { width: auto; flex-wrap: wrap; row-gap: var(--space-2); transform: none !important; }
+  .marquee { -webkit-mask-image: none; mask-image: none; }
+  .marquee__pause { display: none; }
+}

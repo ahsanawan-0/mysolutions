@@ -1,0 +1,22 @@
+/* Network-node background (data-module="nodes", src/js/modules/nodes.js). The canvas (or the static SVG fallback)
+   sits behind the container's content; colours are tokens read by the module through the custom properties. */
+.nodes {
+  --nodes-line: var(--navy-200);
+  --nodes-dot: var(--azure-500);
+  position: relative;
+  isolation: isolate;
+}
+.nodes--dark {
+  --nodes-line: var(--navy-700);
+  --nodes-dot: var(--sky-300);
+}
+.nodes__canvas, .nodes__static {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.nodes__static .nodes__lines { stroke: var(--nodes-line); stroke-width: 1; }
+.nodes__static .nodes__dots { fill: var(--nodes-dot); }

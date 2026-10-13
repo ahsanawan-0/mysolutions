@@ -1,0 +1,64 @@
+/* C25 Back-to-top: Azure 650 square (radius 12, arrow-up) inside a 56px circular scroll-progress ring.
+   --progress (0–1) is set by src/js/modules/back-to-top.js; .is-visible after one viewport. */
+.back-to-top {
+  --ring-c: 163.36;   /* 2π × r(26) */
+  --size: 56px;
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 700;
+  width: var(--size);
+  height: var(--size);
+  display: grid;
+  place-items: center;
+  color: var(--ms-white);
+  opacity: 0;
+  transform: translateY(12px) scale(.9);
+  pointer-events: none;
+  transition: opacity var(--dur-ui) var(--ease-apple), transform var(--dur-ui) var(--ease-apple);
+}
+.back-to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+html.no-js .back-to-top { display: none; }
+
+.back-to-top__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  fill: none;
+  stroke-width: 2;
+}
+.back-to-top__track { stroke: rgb(var(--azure-500-rgb) / .22); }
+.back-to-top__progress {
+  stroke: var(--azure-500);
+  stroke-linecap: round;
+  stroke-dasharray: var(--ring-c);
+  stroke-dashoffset: calc(var(--ring-c) * (1 - var(--progress, 0)));
+}
+.back-to-top__square {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--azure-650);
+  box-shadow: var(--shadow-2);
+  transition: background-color var(--dur-hover) var(--ease-apple), transform var(--dur-hover) var(--ease-apple);
+}
+@media (hover: hover) {
+  .back-to-top:hover .back-to-top__square { background: var(--navy-700); transform: translateY(-2px); }
+}
+.back-to-top:active .back-to-top__square { transform: scale(.96); }
+.back-to-top:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius: var(--r-pill); }
+
+/* Mobile: sit above the sticky action bar */
+@media (max-width: 767px) {
+  .back-to-top { bottom: calc(var(--action-bar-h) + env(safe-area-inset-bottom) + var(--space-4)); right: var(--space-4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top { transition: none; }
+}
+@media print {
+  .back-to-top { display: none; }
+}

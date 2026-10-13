@@ -1,0 +1,35 @@
+/* C22 Breadcrumbs: small, ink-2, caret separators. .breadcrumbs--white over dark/photo heroes. */
+.breadcrumbs {
+  --crumb-fg: var(--text-2);
+  --crumb-current: var(--ms-ink);
+  --crumb-sep: var(--ms-ink-3);
+  --crumb-hover: var(--azure-700);
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+  color: var(--crumb-fg);
+}
+.breadcrumbs--white {
+  --crumb-fg: var(--navy-200);
+  --crumb-current: var(--ms-white);
+  --crumb-sep: rgb(var(--white-rgb) / .5);
+  --crumb-hover: var(--ms-white);
+}
+.breadcrumbs__list { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-1); }
+.breadcrumbs__item { display: inline-flex; align-items: center; gap: var(--space-1); min-width: 0; }
+.breadcrumbs__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding-inline: var(--space-1);
+  margin-inline: calc(-1 * var(--space-1));
+  color: var(--crumb-fg);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: .2em;
+  white-space: nowrap;
+  transition: color var(--dur-hover) var(--ease-apple), text-decoration-color var(--dur-hover) var(--ease-apple);
+}
+.breadcrumbs__link:hover { color: var(--crumb-hover); text-decoration-color: currentColor; }
+.breadcrumbs--white .breadcrumbs__link:focus-visible { outline-color: var(--sky-300); }
+.breadcrumbs__sep { color: var(--crumb-sep); flex: none; }
+.breadcrumbs__current { color: var(--crumb-current); font-weight: var(--fw-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60vw; }

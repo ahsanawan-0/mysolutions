@@ -28,6 +28,7 @@ $showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page
 <?= $content ?>
 </main>
 <?php include templates_path('partials/footer'); ?>
+<?= component('back-to-top') ?>
 <?php if ($showDraftRibbon) include templates_path('partials/draft-ribbon'); ?>
 </body>
 </html>

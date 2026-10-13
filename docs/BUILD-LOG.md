@@ -170,3 +170,46 @@
 
 **Follow-ups**
 - P06 absorbs `core/eases.js` into the motion core and exposes `window.lenis` for the sheet's scroll lock. P07 swaps the text logo for the SVG lockups (white version for `data-theme="dark"`). P08 renders the `hero` variant inside the hero panel and sets `header_theme: 'dark'`, `header_overlay: true`. P17 does the same for inner heroes.
+
+**Fix (13 October 2026, before P05, commit `P04 fix: nav pill offset, caret in pill, mega-menu hover bridge`)**
+- The sliding pill used `link.offsetLeft`, which is measured against the link's `position: relative` `<li>`, so the pill always sat at the far left while the hovered link turned white over the light glass ("text disappears on hover"). `header.js` now measures the link against the list with `getBoundingClientRect()`.
+- The pill now spans the link **and** its caret toggle, and the caret turns white under the pill (client request); the no-JS fallback joins the caret to the solid active pill.
+- An invisible hover bridge (`.has-menu.is-open::after`, half the header height) keeps the Services/Sectors item hovered while the pointer crosses the header strip and the 8px gap to the panel, so the menu no longer closes mid-way.
+
+---
+
+## P05 — Footer, CTA band, breadcrumbs, back-to-top, dividers, micro-CTA
+**Date:** 13 October 2026
+**Commit:** `P05: footer, CTA band, breadcrumbs, back-to-top, dividers, micro-CTA`
+
+**Files created / changed**
+- `templates/partials/footer.php` (replaces the stub): Navy 900 footer with the grid-wave art strip on the top edge (fades out downwards), 4 columns from the data files (brand: text logo + tagline + provisional description + 3 social `btn-icon`s with `aria-label`s · Services: 3 category links each followed by its sub-services in Navy 200 · Sectors: 7 + "All sectors" · Contact: `<address>` with the NAP, `tel:`, WhatsApp, `mailto:`, provisional office hours, "Get a Free Quote" button) and the bottom bar with the exact disclosure sentence built from `config()` + Privacy · Cookies · **Cookie settings** (`<button data-cookie-settings>`) · Terms · Accessibility · Sitemap. Carries `data-header-theme="dark"` so the header switches theme over it, and `data-anim="fade-up"` for P06.
+- `templates/components/cta-band.php` + `src/css/components/cta-band.css` (C21): Navy 900 → Navy 800 → Azure 800 gradient at 120°, animated grid-wave layer (masked away from the copy), large faded hexagon mark (`data-anim="cta-mark"`, P06 = docs/06 S10, P07 swaps in the real mark), eyebrow + two-voice heading + text, primary button + glass phone button (+ optional WhatsApp). Params `eyebrow, heading, accent, text, primary, secondary (false hides), show_whatsapp, level, class`.
+- `templates/components/breadcrumbs.php` + `breadcrumbs.css` (C22): `<nav aria-label="Breadcrumb"><ol>`, `caret-right` separators, current item `aria-current="page"`, `ink` (default) and `white` variants, 44px link targets. Usage: `component('breadcrumbs', ['items' => $page['breadcrumbs']])`.
+- `templates/components/back-to-top.php` + `back-to-top.css` + `src/js/modules/back-to-top.js` (C25): Azure 650 40px square (radius 12, `arrow-up`) inside a 56px progress ring (`stroke-dashoffset` from `--progress`); appears after one viewport; scrolls via `window.lenis.scrollTo` when P06 provides it, else native smooth (instant under reduced motion); moves focus to `#main`; sits above the mobile action bar; hidden without JS. Printed once by `base.php` after the footer.
+- `templates/components/divider.php` + `divider.css` (C29): `wave` (path + `data-anim="wave"` + `data-wave-alt` for P06's scrubbed MorphSVG) and `diagonal` (edge rises to the right); `to`/`from` take token names (`navy-900`, `ms-canvas`…) and are validated before becoming `var(--…)`.
+- `templates/components/micro-cta.php` + `micro-cta.css`: statement · 56px `arrow-right` (`data-anim="micro-arrow"`, points right until P06's S2 timeline) · split button; hairlines above/below; `dark` variant; stacks and centres < 768px.
+- `templates/components/grid-wave.php` + `grid-wave.css` + `scripts/art.mjs` → `public/assets/img/art/grid-wave.svg` (16 KB, cached once): the `inspirations/… 9.34.03 PM.jpeg` perspective grid-wave rebuilt as 11 wave rows × 41 sheet columns of line art, referenced with `<use href="…#grid-wave">`. Colours reach the external tree as `--gw-h` (Sky 300) / `--gw-v` (Azure 400) custom properties with `currentColor` fallback, so no colour lives in the SVG. `grid-wave--animated` drifts one wave period (600 units) over 36s via CSS, off under reduced motion. `npm run art` runs in `prebuild`.
+- `app/data/ui.php` + helper `ui()`: default copy for the CTA band, micro-CTA and footer (description `// PROVISIONAL`, legal links), so templates stay copy-free.
+- Styleguide: new "Closing" section (breadcrumbs ink/white, wave + diagonal dividers between three bands, micro-CTA light/dark, CTA band with WhatsApp). `main.css` imports the 7 new component files; `main.js` boots `initBackToTop()`; `.gitignore` ignores the preview `storage/*.log` files; `CLAUDE.md` helper list updated.
+
+**Decisions**
+- The CTA band, breadcrumbs and divider live in `templates/components/` (called through `component()`), not `partials/` as the docs/11 tree suggested, because they take parameters like the other components; the footer stays a partial.
+- The grid-wave is a static external SVG referenced by `<use>` rather than inline markup: two instances per page would have added ~30 KB to every HTML response (docs/12 budget: HTML ≤ 40 KB).
+- The 120° "diagonal" divider uses the brand *direction* (low left → high right) at a usable aspect (1440×96); a literal 60°-steep edge would need a 2,500px-tall divider.
+- Footer links are 44px tall on touch/mobile and 36px on desktop pointers (`@media (hover: hover) and (min-width: 1024px)`) so the 15-link services column stays compact.
+- Scroll motion (mark rise/rotate S10, micro-arrow S2, wave morph, footer fade-up) is declared as `data-anim` hooks only; P06 implements them in the one motion system (no second ScrollTrigger bootstrap here).
+
+**Deviations**
+- The footer disclosure follows the prompt's exact sentence (no "Email:" suffix as in docs/13 §1); the email address is in the Contact column, which satisfies the trading-disclosure rule.
+
+**Checks**
+- `php -l` clean; `npm run build` clean (CSS 54.7 KB / 11.1 KB gz, JS 82.6 KB / 32.6 KB gz); `check-content` runs (90 findings: +1 for the provisional footer description); no PHP notices in the page or logs; Network: every asset 200 (the one 404 was `grid-wave.svg?v=0` before the art was generated).
+- DOM checks at 360 / 768 / 1024 / 1440: `scrollWidth === clientWidth` everywhere; footer grid 1 / 2 / 4 / 4 columns; micro-CTA 3 columns from 768; no footer link under 44px at 360; back-to-top sits 80px up above the action bar on mobile; the disclosure text matches character for character; the legal list is `A, A, BUTTON(Cookie settings), A, A, A`; 36 footer links, none `href="#"`; one `h1`.
+- Screenshots at 1440: the footer renders with the grid-wave strip fading from the top edge and the four columns laid out as specified; the CTA band shows the gradient, wave layer and faded mark. The desktop Browser pane froze `requestAnimationFrame` for part of the session (as in P04), so GSAP tweens were verified from their target values rather than mid-animation frames.
+
+**Follow-ups**
+- P06: implement `cta-mark` (S10), `micro-arrow` (S2), `wave` (MorphSVG) and `fade-up` on the footer; switch the back-to-top to `window.lenis.scrollTo` (already wired) and optionally ScrollTrigger for the ring.
+- P07: replace the hexagon stand-in in the CTA band and the text logo in the footer with the SVG mark/lockup.
+- P28: the consent module listens for `[data-cookie-settings]`. P29 builds `/sitemap/` which the footer already links.
+- Client: office hours and the footer description are provisional (`check-content` lists both).

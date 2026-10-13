@@ -1,0 +1,52 @@
+/* C21 CTA band: Navy 900 → Azure 800 gradient (120° brand angle), animated grid-wave layer, faded logo mark right. */
+.cta-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(120deg, var(--navy-900) 0%, var(--navy-800) 55%, var(--azure-800) 100%);
+  color: var(--ms-white);
+  padding-block: var(--section-y);
+}
+.cta-band__bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.cta-band__wave {
+  opacity: .5;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 55%);
+  mask-image: linear-gradient(to right, transparent 0%, black 55%);
+}
+/* Temporary hexagon stand-in for the logo mark (P07). P06 scrubs its rise + rotation (docs/06 §6 S10). */
+.cta-band__mark {
+  position: absolute;
+  right: -6%;
+  bottom: -30%;
+  width: clamp(260px, 36vw, 560px);
+  height: auto;
+  fill: var(--sky-300);
+  stroke: var(--sky-300);
+  opacity: .08;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.cta-band__inner {
+  position: relative;
+  display: grid;
+  gap: var(--space-8);
+  align-items: center;
+}
+.cta-band__copy { max-width: 36ch; }
+.cta-band__heading { margin-top: var(--space-4); }
+.cta-band__text { margin-top: var(--space-5); max-width: 48ch; font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--navy-200); }
+.cta-band__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+
+@media (min-width: 1024px) {
+  .cta-band__inner { grid-template-columns: 1.4fr 1fr; gap: var(--space-12); }
+  .cta-band__actions { justify-content: flex-end; }
+  .cta-band__copy { max-width: 40ch; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .cta-band__wave { display: none; }
+}
+@media print {
+  .cta-band { background: var(--ms-white); color: var(--ms-ink); }
+  .cta-band__bg { display: none; }
+}

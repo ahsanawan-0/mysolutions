@@ -1,0 +1,24 @@
+/* Grid-wave background art (templates/components/grid-wave.php → public/assets/img/art/grid-wave.svg).
+   Colours are passed into the external <use> tree as custom properties (currentColor is the fallback).
+   Decorative: always absolutely positioned by its parent, never behind body text at full strength. */
+.grid-wave {
+  --gw-h: var(--sky-300);     /* horizontal wave lines */
+  --gw-v: var(--azure-400);   /* vertical sheet lines */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--sky-300);
+  pointer-events: none;
+  overflow: hidden;
+}
+.grid-wave__art { transform-box: view-box; }
+
+/* Slow drift: the art is 4 wave periods wide, one period = 600 user units, so the loop is seamless */
+.grid-wave--animated .grid-wave__art { animation: grid-wave-drift 36s linear infinite; }
+@keyframes grid-wave-drift {
+  to { transform: translateX(-600px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid-wave--animated .grid-wave__art { animation: none; }
+}

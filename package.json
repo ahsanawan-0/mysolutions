@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run icons",
+    "prebuild": "npm run icons && npm run art",
     "build": "vite build",
     "icons": "node scripts/build-icons.mjs",
+    "art": "node scripts/art.mjs",
     "images": "node scripts/images.mjs",
     "og": "node scripts/og.mjs",
     "fonts": "python -I scripts/fonts.py ."

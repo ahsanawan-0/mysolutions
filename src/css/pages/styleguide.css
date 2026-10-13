@@ -124,6 +124,14 @@
 .sg__images { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: start; }
 .sg__images figcaption { margin-top: var(--space-2); color: var(--text-2); }
 
+/* Closing components */
+.sg__dividers { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--ms-line); }
+.sg__band { padding: var(--space-8) var(--space-6); background: var(--ms-white); }
+.sg__band--mist { background: var(--ms-mist); }
+.sg__band--navy { background: var(--navy-900); }
+.sg__bleed { border-radius: var(--r-xl); overflow: hidden; }
+.sg__row > .micro-cta { border: 0; padding-block: var(--space-2); }
+
 @media (max-width: 767px) {
   .sg__type-row { grid-template-columns: 1fr; }
 }

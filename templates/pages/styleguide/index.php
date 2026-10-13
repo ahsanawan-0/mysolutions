@@ -65,7 +65,7 @@ $typeScale = [
     <?= heading(1, 'Foundations, tokens and', 'components') ?>
     <p class="lead">Local-only reference built by P02. Everything here comes from <code>tokens.css</code>, the Phosphor sprite and the foundation partials.</p>
     <nav class="sg__nav cluster" aria-label="Styleguide sections">
-      <?php foreach (['colours' => 'Colours', 'type' => 'Type', 'buttons' => 'Buttons', 'icons' => 'Icons', 'components' => 'Components', 'glass' => 'Glass', 'images' => 'Images'] as $id => $label): ?>
+      <?php foreach (['colours' => 'Colours', 'type' => 'Type', 'buttons' => 'Buttons', 'icons' => 'Icons', 'components' => 'Components', 'glass' => 'Glass', 'images' => 'Images', 'closing' => 'Closing'] as $id => $label): ?>
         <a class="chip chip--outline" href="#<?= $id ?>"><?= $label ?></a>
       <?php endforeach; ?>
     </nav>
@@ -252,6 +252,42 @@ $typeScale = [
       <figure class="media-rounded"><?= img('hero/london-office', ['alt' => 'London office building at dusk', 'ratio' => '16/9']) ?><figcaption class="small">16/9 placeholder</figcaption></figure>
       <figure class="media-rounded"><?= img('about/team-meeting', ['alt' => 'Team reviewing a tender', 'ratio' => '4/3']) ?><figcaption class="small">4/3 placeholder</figcaption></figure>
       <figure class="media-rounded"><?= img('services/tender-writing', ['decorative' => true, 'ratio' => '1/1']) ?><figcaption class="small">1/1 decorative (aria-hidden)</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ Closing components (P05) ============ -->
+  <section class="sg__section" id="closing">
+    <?= heading(2, 'Closing', 'components') ?>
+    <p class="lead">Breadcrumbs, dividers, the micro-CTA row and the CTA band. The footer and the back-to-top button are on every page.</p>
+
+    <h3 class="sg__h3">C22 Breadcrumbs</h3>
+    <div class="sg__row">
+      <?= component('breadcrumbs', ['items' => [['Home', '/'], ['Services', '/services/'], ['Bid & Proposal Management', '/services/bid-proposal-management/'], ['Tender & Bid Writing', null]]]) ?>
+    </div>
+    <div class="sg__row sg__row--dark on-dark">
+      <?= component('breadcrumbs', ['items' => [['Home', '/'], ['Sectors', '/sectors/'], ['Healthcare & Social Care', null]], 'variant' => 'white']) ?>
+    </div>
+
+    <h3 class="sg__h3">C29 Section dividers</h3>
+    <div class="sg__dividers">
+      <div class="sg__band sg__band--mist"><span class="small">Section on mist</span></div>
+      <?= component('divider', ['variant' => 'wave', 'from' => 'ms-mist', 'to' => 'navy-900']) ?>
+      <div class="sg__band sg__band--navy on-dark"><span class="small">Section on Navy 900 (wave above morphs on scroll from P06)</span></div>
+      <?= component('divider', ['variant' => 'diagonal', 'from' => 'navy-900', 'to' => 'ms-white']) ?>
+      <div class="sg__band"><span class="small">Section on white (diagonal above, 120° brand angle)</span></div>
+    </div>
+
+    <h3 class="sg__h3">Micro-CTA row</h3>
+    <div class="sg__row">
+      <?= component('micro-cta') ?>
+    </div>
+    <div class="sg__row sg__row--dark on-dark">
+      <?= component('micro-cta', ['text' => 'Ready to win your next tender?', 'dark' => true]) ?>
+    </div>
+
+    <h3 class="sg__h3">C21 CTA band</h3>
+    <div class="sg__bleed">
+      <?= component('cta-band', ['show_whatsapp' => true, 'level' => 3]) ?>
     </div>
   </section>
 </div>

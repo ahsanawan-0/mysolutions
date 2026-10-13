@@ -12,6 +12,7 @@
 !/storage/cache/.gitkeep
 /storage/mail/*
 !/storage/mail/.gitkeep
+/storage/*.log
 
 # Environment and local tooling
 .env

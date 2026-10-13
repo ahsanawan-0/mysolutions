@@ -270,6 +270,21 @@ function navigation(): array
     return $nav ??= require base_path('app/data/navigation.php');
 }
 
+/** Site-wide UI copy for reusable components (app/data/ui.php): ui('cta_band'), ui('footer.description'). */
+function ui(string $key, mixed $default = null): mixed
+{
+    static $ui = null;
+    $ui ??= require base_path('app/data/ui.php');
+    $value = $ui;
+    foreach (explode('.', $key) as $segment) {
+        if (!is_array($value) || !array_key_exists($segment, $value)) {
+            return $default;
+        }
+        $value = $value[$segment];
+    }
+    return $value;
+}
+
 /** Responsive <picture> (or branded placeholder) from the image manifest. See App\Image::render(). */
 function img(string $key, array $o = []): string
 {

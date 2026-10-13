@@ -17,5 +17,12 @@
 @import '/src/css/components/mega-menu.css';
 @import '/src/css/components/mobile-menu.css';
 @import '/src/css/components/action-bar.css';
+@import '/src/css/components/grid-wave.css';
+@import '/src/css/components/breadcrumbs.css';
+@import '/src/css/components/divider.css';
+@import '/src/css/components/micro-cta.css';
+@import '/src/css/components/cta-band.css';
+@import '/src/css/components/footer.css';
+@import '/src/css/components/back-to-top.css';
 
 @import '/src/css/pages/styleguide.css';

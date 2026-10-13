@@ -12,7 +12,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/lib/"
+            "App\\": "app/lib/",
+            "App\\Controllers\\": "app/controllers/"
         },
         "files": [
             "app/lib/helpers.php"

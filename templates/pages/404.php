@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
-/** Not found. Real 404 status (set by the Router); the designed page arrives in P29. */
+/** Not found. Real 404 status (set by the Router); no canonical, no structured data. The designed page arrives in P29. */
 $page = [
-    'title'      => 'Page not found | My Solutionz',
+    'title'      => 'Sorry, that page was not found | My Solutionz',
+    'canonical'  => false,
     'robots'     => 'noindex, follow',
     'status'     => 'published',
     'body_class' => 'page-404',

@@ -7,7 +7,7 @@ namespace App;
  * Request dispatcher, applied in this order:
  *  1. Normalise the path (lowercase, trailing slash for pages) — one 301 at most.
  *  2. app/redirects.php: old-site URLs → one-hop 301 or 410.
- *  3. app/routes.php: exact paths and {param} patterns → template.
+ *  3. app/routes.php: exact paths and {param} patterns → template or controller.
  *  4. Real 404.
  */
 final class Router
@@ -45,6 +45,12 @@ final class Router
 
             if (!empty($route['local_only']) && !is_local()) {
                 self::render('pages/404', [], 404);
+            }
+
+            if (isset($route['controller'])) {
+                [$class, $method] = $route['controller'];
+                (new $class())->$method($params, $route);
+                exit;
             }
 
             $template = $route['template'];
@@ -102,7 +108,7 @@ final class Router
     }
 
     /** @return array{0:array,1:array<string,string>}|null */
-    private static function matchRoute(string $path, array $routes): ?array
+    public static function matchRoute(string $path, array $routes): ?array
     {
         if (isset($routes[$path])) {
             return [$routes[$path], $routes[$path]['params'] ?? []];
@@ -150,7 +156,6 @@ final class Router
     private static function redirect(string $target, int $status): never
     {
         $location = str_starts_with($target, 'http') ? $target : url($target);
-        // url() adds a trailing slash to page paths; keep a query string intact
         http_response_code($status);
         header('Location: ' . $location);
         header('Cache-Control: ' . ($status === 301 ? 'public, max-age=31536000' : 'no-cache'));
@@ -159,7 +164,8 @@ final class Router
 
     /**
      * Render a page template inside the base layout.
-     * The page template sets `$page` (title, description, canonical, robots, …) and prints its body.
+     * The page template sets `$page` (title, description, canonical, robots, …) and prints its body;
+     * Seo::prepare() normalises and validates it before the layout renders the <head>.
      */
     private static function render(string $__template, array $__vars, int $__status): never
     {
@@ -171,6 +177,8 @@ final class Router
         ob_start();
         include templates_path($__template);
         $content = (string) ob_get_clean();
+
+        $page = Seo::prepare($page, current_path());
 
         if (($page['layout'] ?? 'base') !== false) {
             include templates_path('layouts/' . ($page['layout'] ?? 'base'));

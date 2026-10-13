@@ -1,0 +1,24 @@
+/* Draft ribbon: non-production only (templates/partials/draft-ribbon.php) */
+.draft-ribbon {
+  position: fixed;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 900;
+  max-width: min(420px, calc(100vw - 2 * var(--space-3)));
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--r-sm);
+  background: var(--ms-warning);
+  color: var(--ms-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+.draft-ribbon__badge { text-transform: uppercase; letter-spacing: var(--ls-eyebrow); font-size: var(--fs-eyebrow); }
+.draft-ribbon__text { opacity: .85; }
+.draft-ribbon__list { width: 100%; padding-left: 1.2em; margin-top: var(--space-1); list-style: disc; }
+@media print { .draft-ribbon { display: none; } }

@@ -5,10 +5,13 @@ declare(strict_types=1);
  * Colour values are read from src/css/tokens.css so this page never duplicates a hex.
  */
 $page = [
-    'title'      => 'Styleguide | My Solutionz (dev)',
-    'robots'     => 'noindex, nofollow',
-    'status'     => 'draft',
-    'body_class' => 'page-styleguide',
+    'title'       => 'Styleguide | My Solutionz (dev)',
+    'description' => 'Developer styleguide for the My Solutionz website: colour tokens with contrast, type scale, buttons, icon sprite and foundation components.',
+    'canonical'   => '/styleguide/',
+    'robots'      => 'noindex, nofollow',
+    'status'      => 'draft',
+    'breadcrumbs' => [['Home', '/'], ['Styleguide', null]],
+    'body_class'  => 'page-styleguide',
 ];
 
 // ---- tokens.css → colour groups --------------------------------------------------------
@@ -152,15 +155,15 @@ $typeScale = [
     <h3 class="sg__h3">On dark</h3>
     <div class="sg__row sg__row--dark on-dark cluster">
       <?= component('button', ['label' => 'Get a Free Quote', 'href' => '/contact-us/']) ?>
-      <?= component('button', ['label' => 'Watch how it works', 'href' => '#', 'variant' => 'glass', 'icon' => 'play']) ?>
+      <?= component('button', ['label' => 'Watch how it works', 'href' => '/about-us/', 'variant' => 'glass', 'icon' => 'play']) ?>
       <?= component('button', ['label' => 'Explore Services', 'href' => '/services/', 'variant' => 'split', 'class' => 'btn--glass']) ?>
       <?= component('button', ['label' => 'View all services', 'href' => '/services/', 'variant' => 'link']) ?>
     </div>
     <h3 class="sg__h3">Sizes and icon buttons</h3>
     <div class="sg__row cluster">
-      <?= component('button', ['label' => 'Small', 'href' => '#', 'size' => 'sm']) ?>
-      <?= component('button', ['label' => 'Default', 'href' => '#']) ?>
-      <?= component('button', ['label' => 'Large', 'href' => '#', 'size' => 'lg']) ?>
+      <?= component('button', ['label' => 'Small', 'href' => '/services/', 'size' => 'sm']) ?>
+      <?= component('button', ['label' => 'Default', 'href' => '/services/']) ?>
+      <?= component('button', ['label' => 'Large', 'href' => '/services/', 'size' => 'lg']) ?>
       <button class="btn-icon" type="button"><?= icon('x', 'regular', ['label' => 'Close']) ?></button>
       <button class="btn-icon" type="button"><?= icon('list', 'regular', ['label' => 'Open menu']) ?></button>
       <button class="btn-icon" type="button"><?= icon('arrow-up', 'regular', ['label' => 'Back to top']) ?></button>
@@ -244,7 +247,7 @@ $typeScale = [
   <!-- ============ Images ============ -->
   <section class="sg__section" id="images">
     <?= heading(2, 'Images and', 'placeholders') ?>
-    <p class="lead"><code>img('key', [...])</code> prints a <code>&lt;picture&gt;</code> from <code>public/assets/img/manifest.json</code>; unknown keys show the branded placeholder at the requested ratio.</p>
+    <p class="lead"><code>img($key, [...])</code> prints a <code>&lt;picture&gt;</code> from <code>public/assets/img/manifest.json</code>; unknown keys show the branded placeholder at the requested ratio.</p>
     <div class="sg__images">
       <figure class="media-rounded"><?= img('hero/london-office', ['alt' => 'London office building at dusk', 'ratio' => '16/9']) ?><figcaption class="small">16/9 placeholder</figcaption></figure>
       <figure class="media-rounded"><?= img('about/team-meeting', ['alt' => 'Team reviewing a tender', 'ratio' => '4/3']) ?><figcaption class="small">4/3 placeholder</figcaption></figure>

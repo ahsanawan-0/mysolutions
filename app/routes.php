@@ -1,82 +1,87 @@
 <?php
 declare(strict_types=1);
 
+use App\Controllers\LlmsController;
+use App\Controllers\RobotsController;
+use App\Controllers\SitemapController;
+
 /**
- * URL → template map (docs/08 §1). Keys are exact paths or patterns with {param}.
- * Each route: template (templates/<template>.php), built_by (the prompt that builds it),
- * optional params, where (param constraints), local_only.
+ * URL → template/controller map (docs/08 §1). Keys are exact paths or patterns with {param}.
+ * Each route: template (templates/<template>.php) OR controller ([class, method]), built_by (the prompt
+ * that builds it), optional params, where (param constraints), local_only, sitemap (pages|services|sectors|insights).
  * Until a template exists, the Router serves a dev stub on local and a 404 elsewhere.
  */
 
-$categories = [
-    'bid-proposal-management'       => ['tender-bid-writing', 'opportunity-identification', 'expert-review'],
-    'compliance-virtual-assistance' => ['cqc-registration', 'policy-management', 'carbon-reduction-plan', 'data-entry-management', 'care-plans'],
-    'digital-presence'              => ['website-development', 'social-media-management', 'email-marketing', 'seo-analytics'],
-];
-
-$sectors = [
-    'healthcare-social-care', 'transport', 'cleaning', 'education-training',
-    'security', 'facilities-management', 'building-maintenance',
-];
+$services = require __DIR__ . '/data/services.php';
+$sectors = require __DIR__ . '/data/sectors.php';
 
 $routes = [
-    '/'          => ['template' => 'pages/home',  'built_by' => 'P08–P16'],
-    '/about-us/' => ['template' => 'pages/about', 'built_by' => 'P18–P19'],
-    '/services/' => ['template' => 'pages/services/index', 'built_by' => 'P20'],
+    '/'          => ['template' => 'pages/home',  'built_by' => 'P08–P16', 'sitemap' => 'pages'],
+    '/about-us/' => ['template' => 'pages/about', 'built_by' => 'P18–P19', 'sitemap' => 'pages'],
+    '/services/' => ['template' => 'pages/services/index', 'built_by' => 'P20', 'sitemap' => 'services'],
 ];
 
 // 3 category landing pages + 12 sub-service pages (exact paths, generated from the locked structure)
-foreach ($categories as $category => $subs) {
-    $routes["/services/{$category}/"] = [
+foreach ($services as $category) {
+    $routes["/services/{$category['slug']}/"] = [
         'template' => 'pages/services/category',
         'built_by' => 'P20',
-        'params'   => ['category' => $category],
+        'params'   => ['category' => $category['slug']],
+        'sitemap'  => 'services',
     ];
-    foreach ($subs as $sub) {
-        $routes["/services/{$category}/{$sub}/"] = [
+    foreach ($category['subs'] as $sub) {
+        $routes["/services/{$category['slug']}/{$sub['slug']}/"] = [
             'template' => 'pages/services/single',
             'built_by' => 'P21',
-            'params'   => ['category' => $category, 'sub' => $sub],
+            'params'   => ['category' => $category['slug'], 'sub' => $sub['slug']],
+            'sitemap'  => 'services',
         ];
     }
 }
 
-$routes['/sectors/'] = ['template' => 'pages/sectors/index', 'built_by' => 'P22'];
-foreach ($sectors as $slug) {
-    $routes["/sectors/{$slug}/"] = [
+$routes['/sectors/'] = ['template' => 'pages/sectors/index', 'built_by' => 'P22', 'sitemap' => 'sectors'];
+foreach ($sectors as $sector) {
+    $routes["/sectors/{$sector['slug']}/"] = [
         'template' => 'pages/sectors/single',
         'built_by' => 'P22',
-        'params'   => ['slug' => $slug],
+        'params'   => ['slug' => $sector['slug']],
+        'sitemap'  => 'sectors',
     ];
 }
 
 $routes += [
-    '/insights/'                  => ['template' => 'pages/insights/index',    'built_by' => 'P25'],
+    '/insights/'                  => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'sitemap' => 'insights'],
     '/insights/page/{n}/'         => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'where' => ['n' => '/^[1-9][0-9]*$/']],
     '/insights/category/{slug}/'  => ['template' => 'pages/insights/category', 'built_by' => 'P25'],
     '/insights/feed.xml'          => ['template' => 'feeds/rss',               'built_by' => 'P25'],
     '/insights/{slug}/'           => ['template' => 'pages/insights/single',   'built_by' => 'P26'],
 
-    '/faq/'        => ['template' => 'pages/faq',       'built_by' => 'P27'],
-    '/contact-us/' => ['template' => 'pages/contact',   'built_by' => 'P23'],
-    '/thank-you/'  => ['template' => 'pages/thank-you', 'built_by' => 'P24'],
+    '/faq/'        => ['template' => 'pages/faq',       'built_by' => 'P27', 'sitemap' => 'pages'],
+    '/contact-us/' => ['template' => 'pages/contact',   'built_by' => 'P23', 'sitemap' => 'pages'],
+    '/thank-you/'  => ['template' => 'pages/thank-you', 'built_by' => 'P24'],   // noindex: never in the sitemap
 
-    '/privacy-policy/'       => ['template' => 'pages/legal/privacy-policy',       'built_by' => 'P28'],
-    '/cookie-policy/'        => ['template' => 'pages/legal/cookie-policy',        'built_by' => 'P28'],
-    '/terms-and-conditions/' => ['template' => 'pages/legal/terms-and-conditions', 'built_by' => 'P28'],
-    '/accessibility/'        => ['template' => 'pages/legal/accessibility',        'built_by' => 'P28'],
+    '/privacy-policy/'       => ['template' => 'pages/legal/privacy-policy',       'built_by' => 'P28', 'sitemap' => 'pages'],
+    '/cookie-policy/'        => ['template' => 'pages/legal/cookie-policy',        'built_by' => 'P28', 'sitemap' => 'pages'],
+    '/terms-and-conditions/' => ['template' => 'pages/legal/terms-and-conditions', 'built_by' => 'P28', 'sitemap' => 'pages'],
+    '/accessibility/'        => ['template' => 'pages/legal/accessibility',        'built_by' => 'P28', 'sitemap' => 'pages'],
 
-    '/sitemap/'    => ['template' => 'pages/sitemap',       'built_by' => 'P29'],
-    '/sitemap.xml' => ['template' => 'machine/sitemap-xml', 'built_by' => 'P03'],
-    '/robots.txt'  => ['template' => 'machine/robots-txt',  'built_by' => 'P03'],
-    '/llms.txt'    => ['template' => 'machine/llms-txt',    'built_by' => 'P03'],
+    '/sitemap/'    => ['template' => 'pages/sitemap', 'built_by' => 'P29', 'sitemap' => 'pages'],
+
+    // Machine files (P03 controllers)
+    '/sitemap.xml'          => ['controller' => [SitemapController::class, 'index'],    'built_by' => 'P03'],
+    '/sitemap-pages.xml'    => ['controller' => [SitemapController::class, 'pages'],    'built_by' => 'P03'],
+    '/sitemap-services.xml' => ['controller' => [SitemapController::class, 'services'], 'built_by' => 'P03'],
+    '/sitemap-sectors.xml'  => ['controller' => [SitemapController::class, 'sectors'],  'built_by' => 'P03'],
+    '/sitemap-insights.xml' => ['controller' => [SitemapController::class, 'insights'], 'built_by' => 'P03'],
+    '/legacy-sitemap.xml'   => ['controller' => [SitemapController::class, 'legacy'],   'built_by' => 'P03'],
+    '/robots.txt'           => ['controller' => [RobotsController::class, 'show'],      'built_by' => 'P03'],
+    '/llms.txt'             => ['controller' => [LlmsController::class, 'show'],        'built_by' => 'P03'],
 
     // Local-only developer pages
     '/styleguide/'        => ['template' => 'pages/styleguide/index',  'built_by' => 'P02', 'local_only' => true],
     '/styleguide/motion/' => ['template' => 'pages/styleguide/motion', 'built_by' => 'P06', 'local_only' => true],
 ];
 
-// Patterns for any category/sub-service/sector slug not listed above fall through to 404 on purpose
-// (no doorway pages): the explicit entries are the only valid ones.
+// Any category/sub-service/sector slug not listed above falls through to 404 on purpose (no doorway pages).
 
 return $routes;

@@ -104,3 +104,37 @@
 **Follow-ups**
 - P03: preload `mona-sans-var.woff2` + `google-sans-var.woff2` in the head partial; `bin/check-content.php` should also report `data-pending-image` placeholders.
 - Real photos: drop files into `assets-src/images/<section>/<name>.jpg` and run `npm run images`; the `img()` keys used so far are `hero/london-office`, `about/team-meeting`, `services/tender-writing`, `team/member-1..3`.
+
+---
+
+## P03 — SEO engine: head, schema, sitemaps, robots, llms.txt, content checker
+**Date:** 13 October 2026
+**Commit:** `P03: SEO engine`
+
+**Files created / changed**
+- `app/lib/Page.php`: the page contract (defaults from config, canonical built from `SITE_URL` + path with the query stripped, OG defaults, `og_title` = title without the brand suffix, `indexable` flag computed from the page's own status/robots, environment override to `noindex, follow` for drafts and non-production, ISO dates) + `Page::probe()` (loads a template only to read its `$page`; used by sitemaps and the CLI tools).
+- `app/lib/Seo.php`: validation (title 30–65, description 70–170, canonical absolute https + trailing slash in production, `og_image_alt`, breadcrumbs except home, no `[[PENDING` in title/description; error pages with `canonical => false` + noindex are exempt). Published pages throw on local; drafts log + show warnings in the ribbon. `Seo::head()` renders the partial.
+- `app/lib/Schema.php`: `organization()` (Organization, switchable to LocalBusiness via `seo.organization_type`, logo ImageObject, PostalAddress GB, areaServed, contactPoint, sameAs, foundingDate, Companies House identifier, knowsAbout), `website()` (no SearchAction), `webPage()` (+ AboutPage/ContactPage/CollectionPage, primaryImageOfPage, dates, breadcrumb link), `breadcrumbs()`, `service()`, `serviceCategory()` with `hasOfferCatalog`, `blogPosting()`, `faqPage()` (off by default), `graph()` + `json()` with `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG`.
+- `templates/partials/head-seo.php` in the exact `docs/10` §7 order (charset → viewport → title → description → canonical → robots → js class → consent-mode placeholder → 2 font preloads → Vite → OG incl. `article:*` → Twitter → icons/manifest (printed only when the P07 files exist) → theme-color → RSS → JSON-LD). `templates/partials/draft-ribbon.php` + `src/css/components/draft-ribbon.css` (non-production only). `templates/layouts/base.php` uses `Seo::head()`.
+- Controllers (`app/controllers/`, new PSR-4 namespace `App\Controllers`): `SitemapController` (index → pages/services/sectors/insights; only published, indexable, 200 URLs; `lastmod` from `modified` or the template mtime; optional `<image:image>`; `legacy()` from the exact redirect keys on the production host, gated by `seo.legacy_sitemap`), `RobotsController` (production rules with AI-search bots allowed and training bots commented unless `seo.block_ai_training`; non-production = `Disallow: /`), `LlmsController` (from config + services/sectors data). `Router` now supports `'controller' => [class, method]` routes and runs `Seo::prepare()` before the layout.
+- `app/data/services.php` (3 categories / 12 sub-services with icons + `// PROVISIONAL` summaries) and `app/data/sectors.php` (7 sectors): `app/routes.php` now derives its service/sector routes from them and tags routes with a `sitemap` group. P04 extends these files.
+- `app/config/site.php`: `description`, `alternate_names`, `production_url`, `area_served`, and a `seo` block (title suffix, default robots, default OG image + alt, logo path for P07, theme colour, organization type, legacy sitemap, AI-training block, FAQ schema, knowsAbout).
+- `bin/check-content.php` (markers in config/data/templates/content/src, route title/description lengths + duplicates + "no template yet", missing image keys, missing breadcrumbs; `--strict`) and `bin/seo-audit.php` (`--base`, `--all`; one h1, head tags, JSON-LD parse, img alt/width/height, dummy links).
+- `scripts/og.mjs` (`npm run og`) → `public/assets/og/default.jpg` 1200×630 (82 KB): gradient + hex pattern + a temporary three-shape mark and text, colours read from `tokens.css`.
+- Templates: home gets a provisional description; 404/410/stub use `canonical => false` (no canonical, no JSON-LD); styleguide gets description + breadcrumbs and no `href="#"` links. `composer.json` autoload + `CLAUDE.md` updated.
+
+**Decisions**
+- Indexability for sitemaps is computed from the page's own status/robots (what it would be in production), separately from the environment override, so the sitemap can be verified locally.
+- `theme-color` lives in config (`seo.theme_color`, documented as `--navy-900`) because browser-UI colour can't come from CSS.
+- Favicon/manifest links are conditional on the files existing, so the Network tab stays free of 404s until P07 creates them.
+- The legacy sitemap always uses `production_url`, since the old URLs only exist on the live host.
+
+**Deviations**
+- The default OG image is the temporary text-only version (P07 hasn't produced the logo SVG yet), rendered with Arial because librsvg can't load the self-hosted WOFF2; P07/P30 replace it.
+- `validator.schema.org` wasn't run from this session (it would mean submitting a form on a third-party site); the graph was verified to parse and to follow `docs/10` §6. Paste the `/` JSON-LD into the validator before launch (P30).
+
+**Checks**
+- `/` head is in the §7 order with valid JSON-LD (Organization + WebSite + WebPage); `/sitemap.xml`, `/sitemap-*.xml`, `/legacy-sitemap.xml` → `application/xml`; `/robots.txt`, `/llms.txt` → `text/plain`. With home temporarily published, the index and pages sitemap list `/` with an accurate `lastmod`. Drafts render `noindex, follow` + the ribbon. `/nope/` 404, `/pxl-template/x/` 410. `php bin/check-content.php` runs (69 findings, all expected at this stage); `php bin/seo-audit.php --all` → 2 pages PASS. `php -l` clean; no console errors, no failed or third-party requests.
+
+**Follow-ups**
+- P04: extend `app/data/services.php` / `sectors.php` with menu copy; P07: favicon set, `site.webmanifest`, `logo-mark-512.png`, replace the OG mark; P25: add blog posts/categories to the insights sitemap via `App\Blog`; P30: per-page OG images, validator run, `legacy_sitemap` off ~6 weeks after launch.

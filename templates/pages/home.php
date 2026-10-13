@@ -3,8 +3,8 @@ declare(strict_types=1);
 /** Home page. Placeholder until P08–P16 build the hero and sections. */
 $page = [
     'title'       => 'Tender Writing and Bid Management Services UK | My Solutionz',
-    'description' => '[[PENDING: home meta description (P16)]]',
-    'canonical'   => url('/'),
+    'description' => 'UK tender writing, bid management, compliance and digital presence services from My Solutionz, London. Evidence-led bids that help businesses win public-sector contracts.', // PROVISIONAL
+    'canonical'   => '/',
     'status'      => 'draft',
     'body_class'  => 'page-home',
 ];

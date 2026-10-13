@@ -9,6 +9,7 @@ declare(strict_types=1);
  */
 $page = [
     'title'      => 'Not built yet: ' . $path . ' | My Solutionz (dev)',
+    'canonical'  => false,
     'robots'     => 'noindex, nofollow',
     'status'     => 'draft',
     'body_class' => 'page-stub',

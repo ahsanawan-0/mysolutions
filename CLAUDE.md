@@ -69,11 +69,14 @@ The client is still delivering content, so structure and content are separated:
 | Images | `npm run images` → `scripts/images.mjs` (sharp) turns `assets-src/images/**` into AVIF/WebP/JPEG at 400–1920w in `public/assets/img/` + `manifest.json` |
 | Fonts | `npm run fonts` → `scripts/fonts.py` (fontTools) re-subsets Mona Sans / Google Sans / Playfair into `public/assets/fonts/` and prints the fallback metrics for `src/css/fonts.css` |
 | Styleguide | http://localhost:8000/styleguide/ (local only): colours + contrast, type, buttons, every icon, components, glass, image placeholder |
-| Content check | `php bin/check-content.php` (from P03; launch gate = zero results) |
-| SEO audit | `php bin/seo-audit.php` (from P03/P30), plus `/seo page <url>` and `/seo audit` from the claude-seo plugin (`docs/10` §0) |
+| Content check | `php bin/check-content.php` (`--strict` exits 1): markers, route title/description lengths + duplicates, missing images, missing breadcrumbs. Launch gate = zero findings |
+| SEO audit | `php bin/seo-audit.php [--base=http://localhost:8000] [--all]` against the running server: one h1, head tags, JSON-LD parses, img alt/width/height, no `href="#"`. Plus `/seo page <url>` and `/seo audit` from the claude-seo plugin (`docs/10` §0) |
+| OG image | `npm run og` → `scripts/og.mjs` renders `public/assets/og/default.jpg` (1200×630) from the tokens |
 | Lint | `php -l <file>` on every changed PHP file (Standard check 1) |
 
 Request flow: `public/index.php` → `app/bootstrap.php` → `App\Router::dispatch()` (normalise → `app/redirects.php` → `app/routes.php` → 404). Page templates set `$page` and print their body; `templates/layouts/base.php` wraps it. On `local`, a planned route without a template shows `templates/pages/_stub.php`.
+
+Page contract (`docs/11` §4, `app/lib/Page.php`): every template sets `$page` with `title` (30–65 chars), `description` (70–170), `canonical` (path; `false` only for error pages), `status` (`published|draft`), `breadcrumbs` (`[[label, path|null], …]`, required except home), optional `og_*`, `og_type`, `robots`, `schema` (extra JSON-LD nodes from `App\Schema::service()/serviceCategory()/blogPosting()`), `published`/`modified`, `primary_image`, `web_page_type`, `body_class`, `js_modules`. `App\Seo::prepare()` validates it: published pages throw on local; draft pages show warnings in the draft ribbon. Machine files: `/sitemap.xml` (+ `-pages/-services/-sectors/-insights`, `/legacy-sitemap.xml`), `/robots.txt`, `/llms.txt` are controllers in `app/controllers/` driven by `app/routes.php` (`sitemap` group) and `app/data/{services,sectors}.php`.
 
 Template helpers: `e()`, `config('address.postcode')`, `url()`, `asset()`, `vite()`, `icon('name', 'light|regular', ['label' => …])`, `img('key', ['alt' => …, 'sizes' => …, 'priority' => true, 'ratio' => '16/9'])` (placeholder when the key isn't in the image manifest), `heading(2, 'Our Approach to', 'Winning Contracts')`, `component('button'|'eyebrow'|'hex-tile'|'chip'|'avatar-stack', [...])` (parameters documented at the top of each `templates/components/*.php`). CSS: `src/css/tokens.css` → `fonts.css` → `base.css` → `components/*.css` → `pages/*.css`, all imported by `src/css/main.css` with root-relative `/src/css/…` paths.
 

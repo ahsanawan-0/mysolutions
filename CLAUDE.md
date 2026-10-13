@@ -59,18 +59,19 @@ The client is still delivering content, so structure and content are separated:
 4. `php bin/check-content.php` lists every `PROVISIONAL`, `[[PENDING` and `draft` item, so nothing slips through. **Launch gate: zero results.**
 5. When the client's content arrives, the **content-fill prompts (C01–C07)** replace data only. No template rework.
 
-## Commands
-> Planned per `docs/11` and the Standard checks. **P01 fills this section in properly** once the scaffold exists; until then these are the intended commands, not verified ones.
-
+## Commands (run from the project root; set up by P01)
 | Task | Command |
 |---|---|
-| Install | `composer install` + `npm install` |
-| Dev servers | `php -S localhost:8000 -t public public/index.php` + `npm run dev` (Vite) |
-| Production build | `npm run build` (hashed assets → `public/assets/build/` + `manifest.json`) |
-| Icons | `npm run icons` → builds `public/assets/icons/sprite.svg` from `@phosphor-icons/core` |
-| Images | `npm run images` → optimised AVIF/WebP/JPEG + responsive sizes in `public/assets/img/` |
+| Install | `composer install` then `npm install`; copy `.env.example` → `.env` (`APP_ENV=local`, `VITE_DEV=true`) |
+| Dev servers | `php -S localhost:8000 -t public public/index.php` **and** `npm run dev` (Vite on :5173). Both are in `.claude/launch.json` (`php`, `vite`) for the desktop preview |
+| Production build | `npm run build` → hashed JS/CSS + `public/assets/build/manifest.json`; set `VITE_DEV=false` to load them locally |
+| Icons | `npm run icons` → `scripts/build-icons.mjs` builds `public/assets/icons/sprite.svg` (stub until P02) |
+| Images | `npm run images` → `scripts/build-images.mjs` optimises `assets-src/` into `public/assets/img/` (stub until P02) |
 | Content check | `php bin/check-content.php` (from P03; launch gate = zero results) |
-| SEO audit | `php bin/seo-audit.php` (from P03/P30; every page's title, description, canonical, OG, JSON-LD) |
+| SEO audit | `php bin/seo-audit.php` (from P03/P30), plus `/seo page <url>` and `/seo audit` from the claude-seo plugin (`docs/10` §0) |
+| Lint | `php -l <file>` on every changed PHP file (Standard check 1) |
+
+Request flow: `public/index.php` → `app/bootstrap.php` → `App\Router::dispatch()` (normalise → `app/redirects.php` → `app/routes.php` → 404). Page templates set `$page` and print their body; `templates/layouts/base.php` wraps it. On `local`, a planned route without a template shows `templates/pages/_stub.php`.
 
 ## Folder map (from `docs/11-tech-architecture-php.md` §2)
 ```

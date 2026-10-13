@@ -1,0 +1,28 @@
+{
+    "name": "mysolutionz/website",
+    "description": "My Solutionz website: custom PHP + GSAP (no framework, no WordPress)",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.3",
+        "league/commonmark": "^2.10",
+        "phpmailer/phpmailer": "^7.1",
+        "spatie/yaml-front-matter": "^2.1",
+        "vlucas/phpdotenv": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/lib/"
+        },
+        "files": [
+            "app/lib/helpers.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform-check": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

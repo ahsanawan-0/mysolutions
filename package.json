@@ -1,0 +1,21 @@
+{
+  "name": "mysolutionz-website",
+  "private": true,
+  "version": "0.1.0",
+  "description": "My Solutionz website front-end build (Vite + GSAP + Lenis)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "icons": "node scripts/build-icons.mjs",
+    "images": "node scripts/build-images.mjs"
+  },
+  "dependencies": {
+    "@phosphor-icons/core": "^2.1.1",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.26"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}

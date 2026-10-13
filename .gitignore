@@ -16,6 +16,7 @@
 # Environment and local tooling
 .env
 /.venv/
+/.claude/settings.local.json
 
 # pixel2motion render outputs (splash-screen animation)
 /design/logo-motion/outputs/

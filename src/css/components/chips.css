@@ -1,0 +1,49 @@
+/* Chips / pills: neutral, outline, category-coloured. 32px high (44px when interactive). */
+.chip {
+  --chip-bg: var(--ms-mist);
+  --chip-fg: var(--ms-ink);
+  --chip-border: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--chip-border);
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.chip .icon { width: 16px; height: 16px; }
+a.chip, button.chip { min-height: var(--target-min); padding-inline: var(--space-4); transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple); }
+a.chip:hover, button.chip:hover { --chip-bg: var(--azure-100); --chip-fg: var(--azure-800); }
+
+.chip--outline { --chip-bg: transparent; --chip-border: var(--ms-line); --chip-fg: var(--text-2); }
+.chip--outline:is(a, button):hover { --chip-border: var(--azure-600); }
+
+/* Category colours: tinted fill + readable ink (never Azure 500 as small text) */
+.chip--bid        { --chip-bg: var(--azure-100); --chip-fg: var(--azure-800); }
+.chip--compliance { --chip-bg: var(--navy-100);  --chip-fg: var(--navy-800); }
+.chip--digital    { --chip-bg: var(--sky-100);   --chip-fg: var(--sky-700); }
+.chip--solid-bid        { --chip-bg: var(--cat-bid); --chip-fg: var(--ms-white); }
+.chip--solid-compliance { --chip-bg: var(--cat-compliance); --chip-fg: var(--ms-white); }
+.chip--solid-digital    { --chip-bg: var(--cat-digital); --chip-fg: var(--navy-900); }
+
+/* On dark */
+.on-dark .chip { --chip-bg: rgb(var(--white-rgb) / .10); --chip-fg: var(--ms-white); }
+.on-dark .chip--outline { --chip-bg: transparent; --chip-border: rgb(var(--white-rgb) / .24); --chip-fg: var(--navy-200); }
+.on-dark .chip--bid        { --chip-bg: rgb(var(--azure-500-rgb) / .22); --chip-fg: var(--azure-200); }
+.on-dark .chip--compliance { --chip-bg: rgb(var(--white-rgb) / .10); --chip-fg: var(--navy-200); }
+.on-dark .chip--digital    { --chip-bg: rgb(var(--sky-300-rgb) / .18); --chip-fg: var(--sky-300); }
+
+/* Chip dot (category marker) */
+.chip__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chip-dot, currentColor); flex: none; }
+
+@media (prefers-contrast: more) {
+  .chip { --chip-border: currentColor; }
+}

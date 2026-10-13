@@ -11,6 +11,8 @@ export default defineConfig({
     manifest: 'manifest.json',
     rollupOptions: {
       input: 'src/js/main.js',
+      // /assets/fonts|icons|img are static files served by PHP from public/, not build inputs
+      external: [/^\/assets\/(fonts|icons|img)\//],
     },
   },
   server: {

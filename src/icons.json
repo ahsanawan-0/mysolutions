@@ -1,0 +1,20 @@
+{
+  "$comment": "Every Phosphor icon used on the site, by weight. 'light' = content icons, 'regular' = UI controls (docs/02 §4, docs/09 §4–§6). Rebuild the sprite with `npm run icons`.",
+  "light": [
+    "kanban", "pen-nib", "binoculars", "list-checks",
+    "seal-check", "shield-check", "files", "leaf", "database", "clipboard-text",
+    "devices", "browser", "share-network", "envelope-open", "chart-line-up",
+    "first-aid-kit", "heartbeat", "bus", "truck", "broom", "graduation-cap", "shield-star", "buildings", "wrench",
+    "envelope-simple", "map-pin", "phone", "whatsapp-logo", "linkedin-logo", "instagram-logo", "facebook-logo",
+    "trophy", "users-three", "check-circle", "arrows-clockwise", "handshake", "chats-circle", "medal", "user-focus",
+    "calendar-check", "briefcase", "rocket-launch", "lightning", "magnifying-glass",
+    "strategy", "paper-plane-tilt", "trend-up", "squares-four", "fingerprint", "target", "hand-heart",
+    "sliders-horizontal", "compass", "eye", "clock", "quotes", "hexagon"
+  ],
+  "regular": [
+    "caret-down", "caret-right", "caret-left", "list", "x", "arrow-right", "arrow-left", "arrow-up-right", "arrow-up",
+    "plus", "minus", "phone", "whatsapp-logo", "envelope-simple", "map-pin", "clock", "share-network",
+    "linkedin-logo", "instagram-logo", "facebook-logo", "check-circle", "magnifying-glass", "play", "pause",
+    "check", "warning-circle", "info", "x-circle", "cookie", "copy", "link"
+  ]
+}

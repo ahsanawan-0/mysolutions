@@ -1,0 +1,5 @@
+/* Responsive images from img(): <picture> and the branded placeholder SVG */
+picture { display: block; }
+picture img { width: 100%; height: auto; }
+.img-placeholder { width: 100%; height: auto; border-radius: inherit; }
+.media-rounded { border-radius: var(--r-xl); overflow: hidden; }

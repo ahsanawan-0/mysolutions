@@ -1,0 +1,58 @@
+/* ==========================================================================
+   FONTS — self-hosted, Latin-subset WOFF2 (built by `npm run fonts` → scripts/fonts.py).
+   Mona Sans (variable 500–700, headings), Google Sans (variable 400–500, body),
+   Playfair Display Italic 500 (accent words). font-display: swap + metric-matched
+   fallbacks (size-adjust / ascent / descent / line-gap computed against Arial and Georgia)
+   so the swap causes no layout shift. P03 preloads Mona Sans + Google Sans in the head.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Mona Sans";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("/assets/fonts/mona-sans-var.woff2") format("woff2-variations"),
+       url("/assets/fonts/mona-sans-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Mona Sans Fallback";
+  src: local("Arial"), local("Segoe UI");
+  size-adjust: 106.74%;
+  ascent-override: 102.12%;
+  descent-override: 29.98%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Google Sans";
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url("/assets/fonts/google-sans-var.woff2") format("woff2-variations"),
+       url("/assets/fonts/google-sans-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Google Sans Fallback";
+  src: local("Arial"), local("Segoe UI");
+  size-adjust: 101.92%;
+  ascent-override: 94.78%;
+  descent-override: 28.06%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Playfair Display";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/playfair-display-italic-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Playfair Display Fallback";
+  font-style: italic;
+  src: local("Georgia"), local("Times New Roman");
+  size-adjust: 97.96%;
+  ascent-override: 110.46%;
+  descent-override: 25.62%;
+  line-gap-override: 0%;
+}

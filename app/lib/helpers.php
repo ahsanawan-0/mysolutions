@@ -191,12 +191,66 @@ function render(string $template, array $vars = []): string
 }
 
 /**
- * Inline SVG icon from the Phosphor sprite. Stub until P02 builds the sprite:
- * prints an empty, hidden placeholder so templates can already call icon().
+ * Inline SVG icon from the Phosphor sprite (public/assets/icons/sprite.svg, built by `npm run icons`).
+ * icon('handshake')                     → light weight, decorative (aria-hidden)
+ * icon('x', 'regular', ['label' => 'Close']) → role="img" + <title>
+ * Other $attrs: class, size (px, default 24). Unknown icon on local → throws.
  */
-function icon(string $name, string $class = '', ?string $label = null): string
+function icon(string $name, string $weight = 'light', array $attrs = []): string
 {
-    $attrs = 'class="icon icon-' . e($name) . ($class !== '' ? ' ' . e($class) : '') . '"';
-    $attrs .= $label === null ? ' aria-hidden="true" focusable="false"' : ' role="img" aria-label="' . e($label) . '"';
-    return '<svg ' . $attrs . ' width="24" height="24"><use href="/assets/icons/sprite.svg#' . e($name) . '"></use></svg>';
+    static $known = null;
+    if ($known === null) {
+        $file = base_path('src/icons.json');
+        $known = is_file($file) ? (json_decode((string) file_get_contents($file), true) ?: []) : [];
+    }
+    if (is_local() && $known !== [] && !in_array($name, $known[$weight] ?? [], true)) {
+        throw new RuntimeException("icon('{$name}', '{$weight}'): not in src/icons.json. Add it and run `npm run icons`.");
+    }
+
+    static $spriteUrl = null;
+    if ($spriteUrl === null) {
+        $spriteUrl = asset('icons/sprite.svg');
+    }
+
+    $size = (int) ($attrs['size'] ?? 24);
+    $class = 'icon icon--' . $name . (isset($attrs['class']) ? ' ' . $attrs['class'] : '');
+    $label = $attrs['label'] ?? null;
+
+    $svg = '<svg class="' . e($class) . '" width="' . $size . '" height="' . $size . '"';
+    $svg .= $label === null
+        ? ' aria-hidden="true" focusable="false"'
+        : ' role="img" focusable="false"';
+    $svg .= '>';
+    if ($label !== null) {
+        $svg .= '<title>' . e($label) . '</title>';
+    }
+    $svg .= '<use href="' . e($spriteUrl) . '#' . e($name . '-' . $weight) . '"></use></svg>';
+    return $svg;
+}
+
+/** Responsive <picture> (or branded placeholder) from the image manifest. See App\Image::render(). */
+function img(string $key, array $o = []): string
+{
+    return App\Image::render($key, $o);
+}
+
+/** Render a foundation component partial: component('button', ['label' => 'Get a Free Quote', 'href' => '/contact-us/']). */
+function component(string $name, array $vars = []): string
+{
+    return render('components/' . $name, $vars);
+}
+
+/**
+ * Two-voice heading (C02): heading(2, 'Our Approach to', 'Business Growth')
+ * → <h2>Our Approach to <em>Business Growth</em></h2>. The accent is max 2–3 words.
+ */
+function heading(int $level, string $text, ?string $accent = null, string $class = '', ?string $id = null): string
+{
+    $level = max(1, min(6, $level));
+    $open = '<h' . $level . ($class !== '' ? ' class="' . e($class) . '"' : '') . ($id !== null ? ' id="' . e($id) . '"' : '') . '>';
+    $inner = e($text);
+    if ($accent !== null && $accent !== '') {
+        $inner .= ' <em>' . e($accent) . '</em>';
+    }
+    return $open . $inner . '</h' . $level . '>';
 }

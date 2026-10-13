@@ -1,0 +1,136 @@
+/* C03 Buttons: all 48px high, ≥ 44px targets, pill radius.
+   .btn            primary   Azure 650 → Navy 700 on hover (white label passes AA)
+   .btn--secondary outline   ink border on light
+   .btn--glass     glass     for dark/photo backgrounds
+   .btn--split     label + 44×44 white square tile holding arrow-up-right
+   .link-arrow     text link whose arrow slides 4px on hover */
+
+.btn {
+  --btn-bg: var(--azure-650);
+  --btn-bg-hover: var(--navy-700);
+  --btn-fg: var(--ms-white);
+  --btn-border: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-h);
+  min-width: var(--target-min);
+  padding: 0 var(--space-6);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-hover) var(--ease-apple),
+    color var(--dur-hover) var(--ease-apple),
+    border-color var(--dur-hover) var(--ease-apple),
+    transform var(--dur-hover) var(--ease-apple),
+    box-shadow var(--dur-hover) var(--ease-apple);
+}
+.btn .icon { width: 20px; height: 20px; }
+
+@media (hover: hover) {
+  .btn:hover { background: var(--btn-bg-hover); color: var(--btn-fg); transform: translateY(-2px); box-shadow: var(--shadow-2); }
+}
+.btn:active { transform: scale(.98); transition-duration: var(--dur-micro); }
+.btn:focus-visible { outline: var(--focus-ring); outline-offset: 3px; border-radius: var(--r-pill); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+/* Secondary: outline */
+.btn--secondary {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--ms-ink);
+  --btn-fg: var(--ms-ink);
+  --btn-border: var(--ms-ink);
+}
+@media (hover: hover) {
+  .btn--secondary:hover { --btn-fg: var(--ms-white); }
+}
+
+/* Glass: for dark / photographic backgrounds */
+.btn--glass {
+  --btn-bg: var(--glass-thin-dark-bg);
+  --btn-bg-hover: rgb(var(--white-rgb) / .18);
+  --btn-fg: var(--ms-white);
+  --btn-border: var(--glass-thin-dark-border);
+  -webkit-backdrop-filter: var(--glass-thin-dark-blur);
+  backdrop-filter: var(--glass-thin-dark-blur);
+  box-shadow: inset 0 1px 0 var(--glass-thin-dark-highlight);
+}
+.btn--glass:focus-visible { outline-color: var(--sky-300); }
+
+/* Sizes */
+.btn--sm { min-height: var(--target-min); padding-inline: var(--space-5); font-size: var(--fs-small); }
+.btn--lg { min-height: 56px; padding-inline: var(--space-8); font-size: var(--fs-lead); }
+.btn--block { display: flex; width: 100%; }
+
+/* Split button (Innovax): label + white arrow tile */
+.btn--split {
+  padding: 2px 2px 2px var(--space-6);
+  gap: var(--space-4);
+}
+.btn--split .btn__tile {
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  color: var(--navy-700);
+  transition: transform var(--dur-hover) var(--ease-apple), background-color var(--dur-hover) var(--ease-apple);
+}
+.btn--split .btn__tile .icon { width: 20px; height: 20px; transition: transform var(--dur-hover) var(--ease-apple); }
+@media (hover: hover) {
+  .btn--split:hover .btn__tile .icon { transform: translate(2px, -2px); }
+}
+.btn--split.btn--secondary .btn__tile { background: var(--ms-ink); color: var(--ms-white); }
+.btn--split.btn--secondary:hover .btn__tile { background: var(--ms-white); color: var(--ms-ink); }
+.btn--split.btn--glass .btn__tile { background: var(--ms-white); color: var(--navy-700); }
+
+/* Text link with sliding arrow */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  color: var(--link);
+  text-decoration: none;
+}
+.link-arrow .icon { width: 20px; height: 20px; transition: transform var(--dur-hover) var(--ease-apple); }
+.link-arrow:hover { color: var(--link-hover); }
+.link-arrow:hover .icon { transform: translateX(4px); }
+.link-arrow .link-arrow__label { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: .2em; transition: text-decoration-color var(--dur-hover) var(--ease-apple); }
+.link-arrow:hover .link-arrow__label { text-decoration-color: currentColor; }
+.on-dark .link-arrow { color: var(--sky-300); }
+.on-dark .link-arrow:hover { color: var(--ms-white); }
+
+/* Icon-only button (44×44) */
+.btn-icon {
+  display: inline-grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--r-pill);
+  color: inherit;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.btn-icon:hover { background: var(--azure-100); color: var(--azure-800); }
+.on-dark .btn-icon:hover { background: rgb(var(--white-rgb) / .12); color: var(--ms-white); }
+
+@media (prefers-reduced-transparency: reduce) {
+  .btn--glass { --btn-bg: var(--navy-800); --btn-bg-hover: var(--navy-700); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .btn--glass { --btn-bg: rgb(var(--white-rgb) / .35); }
+}

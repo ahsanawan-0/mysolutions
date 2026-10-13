@@ -1,4 +1,186 @@
-/* Design tokens: every colour, spacing, radius, shadow and motion value lives here (filled by P02). */
+/* ==========================================================================
+   DESIGN TOKENS — the only file allowed to contain hex values.
+   Sources: docs/02-brand-identity.md §2–§3, docs/03-design-system-apple.md §2.
+   ========================================================================== */
+
+/* Registered so the glow-border conic gradient angle can be animated */
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 :root {
-  --ms-tokens: 'stub';
+  /* ---------- Colour: logo anchors (pixel-sampled) ---------- */
+  --ms-sky:   #8DD6FF;
+  --ms-azure: #009AF0;
+  --ms-navy:  #003C8C;
+
+  /* ---------- Azure scale (anchor 500) ---------- */
+  --azure-50:  #F5FBFE;
+  --azure-100: #C4E8FC;
+  --azure-200: #93D4F9;
+  --azure-300: #62C1F6;
+  --azure-400: #31ADF3;
+  --azure-500: #009AF0;   /* accent, large display words, icons, glows. Never small text on white */
+  --azure-600: #0080CA;   /* large text, focus rings */
+  --azure-650: #0072BC;   /* primary button background (white label passes AA) */
+  --azure-700: #0067A4;   /* text links on white */
+  --azure-800: #004D7F;   /* link hover */
+  --azure-900: #003459;
+  --azure-950: #001A33;
+
+  /* ---------- Navy scale (anchor 700) ---------- */
+  --navy-50:  #F5F7FA;
+  --navy-100: #D2DCEB;
+  --navy-200: #AFC2DB;   /* muted text on dark */
+  --navy-300: #8CA7CB;
+  --navy-400: #698CBB;
+  --navy-500: #4671AC;   /* secondary text on light */
+  --navy-600: #23579C;
+  --navy-700: #003C8C;   /* headline accent, button hover, dark cards */
+  --navy-800: #012C68;   /* dark sections */
+  --navy-900: #011B43;   /* hero / footer base */
+  --navy-950: #020B1F;   /* deepest shadow, splash background */
+
+  /* ---------- Sky scale (anchor 300) ---------- */
+  --sky-50:  #FAFDFF;
+  --sky-100: #D6F0FF;
+  --sky-200: #B1E3FF;
+  --sky-300: #8DD6FF;   /* accent on dark backgrounds only */
+  --sky-700: #427A9B;   /* Digital Presence on light backgrounds */
+
+  /* ---------- Neutrals (cool-tinted) ---------- */
+  --ms-white:    #FFFFFF;
+  --ms-canvas:   #F5F7FB;   /* default page background */
+  --ms-mist:     #EEF2F8;   /* alternate section background */
+  --ms-line:     #E3E8F0;   /* hairline borders */
+  --ms-ink:      #0B1220;   /* primary text */
+  --ms-ink-2:    #5B6474;   /* secondary text */
+  --ms-ink-3:    #8A93A3;   /* placeholder, captions (decorative only) */
+  --ms-midnight: #04163A;   /* dark glass surfaces in hero */
+
+  /* ---------- Semantic ---------- */
+  --ms-success: #16A34A;
+  --ms-warning: #D97706;
+  --ms-danger:  #DC2626;
+  --ms-focus:   #0080CA;
+
+  /* ---------- Text roles ---------- */
+  --text:        var(--ms-ink);
+  --text-2:      var(--ms-ink-2);
+  --text-on-dark:   var(--ms-white);
+  --text-2-on-dark: var(--navy-200);
+  --link:        var(--azure-700);
+  --link-hover:  var(--azure-800);
+  --surface:     var(--ms-white);
+  --surface-dark: var(--navy-900);
+
+  /* ---------- Category colours (docs/08 §2) ---------- */
+  --cat-bid:         var(--azure-500);
+  --cat-compliance:  var(--navy-700);
+  --cat-digital:     var(--sky-300);
+  --cat-digital-ink: var(--sky-700);   /* Digital Presence when it must carry text/icons on light */
+
+  /* ---------- Signature gradients ---------- */
+  --ms-grad-brand: linear-gradient(120deg, #8DD6FF 0%, #009AF0 45%, #003C8C 100%);
+  --ms-grad-glow:  conic-gradient(from var(--angle), transparent 0 70%, #8DD6FF 80%, #009AF0 88%, transparent 100%);
+  --ms-grad-hero:  radial-gradient(1200px 600px at 75% 20%, rgba(0, 154, 240, .28), transparent 60%),
+                   radial-gradient(900px 500px at 10% 90%, rgba(141, 214, 255, .14), transparent 60%),
+                   #011B43;
+  --ms-grad-text:  linear-gradient(100deg, #009AF0, #003C8C);
+
+  /* RGB triplets for rgba() composition in components */
+  --navy-900-rgb: 1 27 67;
+  --azure-500-rgb: 0 154 240;
+  --sky-300-rgb: 141 214 255;
+  --ink-rgb: 11 18 32;
+  --white-rgb: 255 255 255;
+
+  /* ---------- Spacing (4-pt base) ---------- */
+  --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;  --space-5: 20px;
+  --space-6: 24px; --space-8: 32px;  --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --space-20: 80px; --space-24: 96px; --space-32: 128px; --space-40: 160px;
+  --section-y: clamp(80px, 10vw, 160px);
+  --gutter:    clamp(16px, 4vw, 40px);
+
+  /* ---------- Layout ---------- */
+  --container:      1280px;
+  --container-wide: 1440px;
+  --container-text: 720px;
+  --grid-gap:       var(--space-6);
+  --header-h:       80px;
+
+  /* ---------- Radii (concentric: child = parent − padding) ---------- */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 28px;
+  --r-2xl: 32px;
+  --r-pill: 999px;
+
+  /* ---------- Shadows (blue-tinted) ---------- */
+  --shadow-1: 0 1px 2px rgba(1, 27, 67, .04), 0 2px 8px rgba(1, 27, 67, .04);
+  --shadow-2: 0 2px 4px rgba(1, 27, 67, .04), 0 12px 32px rgba(1, 27, 67, .08);
+  --shadow-3: 0 8px 16px rgba(1, 27, 67, .06), 0 32px 64px rgba(1, 27, 67, .14);
+  --shadow-glow: 0 0 0 1px rgba(0, 154, 240, .25), 0 12px 40px rgba(0, 154, 240, .28);
+
+  /* ---------- Materials (glass). Fallbacks: see components/glass.css ---------- */
+  --glass-ultrathin-dark-bg:   rgba(255, 255, 255, .06);
+  --glass-ultrathin-dark-blur: blur(12px) saturate(140%);
+  --glass-thin-dark-bg:        rgba(255, 255, 255, .10);
+  --glass-thin-dark-blur:      blur(16px) saturate(150%);
+  --glass-thin-dark-border:    rgba(255, 255, 255, .14);
+  --glass-thin-dark-highlight: rgba(255, 255, 255, .18);
+  --glass-regular-light-bg:    rgba(245, 247, 251, .72);
+  --glass-regular-light-blur:  blur(20px) saturate(180%);
+  --glass-regular-light-line:  rgba(11, 18, 32, .08);
+  --glass-thick-dark-bg:       rgba(1, 27, 67, .72);
+  --glass-thick-dark-blur:     blur(24px) saturate(160%);
+  --glass-solid-dark:          #011B43;   /* reduced-transparency replacement */
+  --glass-solid-light:         #FFFFFF;
+
+  /* ---------- Motion ---------- */
+  --dur-micro:  150ms;
+  --dur-hover:  250ms;
+  --dur-ui:     400ms;
+  --dur-reveal: 700ms;
+  --dur-hero:   1200ms;
+  --ease-apple:  cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout:  cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---------- Typography ---------- */
+  --font-display: "Mona Sans", "Mona Sans Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body:    "Google Sans", "Google Sans Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-accent:  "Playfair Display", "Playfair Display Fallback", Georgia, "Times New Roman", serif;
+
+  /* Fluid scale (360px → 1440px viewport; 1rem = 16px) */
+  --fs-display: clamp(3rem, 2rem + 4.444vw, 6rem);          /* 48 → 96 */
+  --fs-h1:      clamp(2.5rem, 1.833rem + 2.963vw, 4.5rem);  /* 40 → 72 */
+  --fs-h2:      clamp(2rem, 1.5rem + 2.222vw, 3.5rem);      /* 32 → 56 */
+  --fs-h3:      clamp(1.5rem, 1.333rem + 0.741vw, 2rem);    /* 24 → 32 */
+  --fs-h4:      clamp(1.25rem, 1.167rem + 0.370vw, 1.5rem); /* 20 → 24 */
+  --fs-lead:    clamp(1.125rem, 1.0625rem + 0.278vw, 1.3125rem); /* 18 → 21 */
+  --fs-body:    clamp(1rem, 0.979rem + 0.093vw, 1.0625rem);  /* 16 → 17 */
+  --fs-small:   0.875rem;                                    /* 14 */
+  --fs-eyebrow: clamp(0.75rem, 0.729rem + 0.093vw, 0.8125rem); /* 12 → 13 */
+
+  --lh-display: 1.02; --lh-h1: 1.05; --lh-h2: 1.08; --lh-h3: 1.15; --lh-h4: 1.25;
+  --lh-lead: 1.5; --lh-body: 1.6; --lh-small: 1.5; --lh-eyebrow: 1.2;
+
+  --ls-display: -0.035em; --ls-h1: -0.03em; --ls-h2: -0.025em; --ls-h3: -0.015em; --ls-h4: -0.01em;
+  --ls-eyebrow: 0.12em;
+
+  --fw-display: 500; --fw-h1: 500; --fw-h2: 500; --fw-h3: 600; --fw-h4: 600;
+  --fw-body: 400; --fw-medium: 500; --fw-bold: 700; --fw-eyebrow: 600;
+
+  /* ---------- Controls ---------- */
+  --control-h: 48px;     /* buttons */
+  --target-min: 44px;    /* minimum touch target */
+  --input-h: 52px;
+  --focus-ring: 2px solid var(--ms-focus);
+  --focus-offset: 2px;
 }

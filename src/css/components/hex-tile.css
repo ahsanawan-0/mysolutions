@@ -1,0 +1,50 @@
+/* C07 Hex icon tile: 64px rounded hexagon (mask-image), Azure 50 fill, Azure 600 icon.
+   --tile-colour sets the category colour; hover fills with the brand gradient and the icon turns white. */
+.hex-tile {
+  --tile-size: 64px;
+  --tile-fill: var(--azure-50);
+  --tile-colour: var(--azure-600);
+  --hex-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='10' stroke-linejoin='round'/%3E%3C/svg%3E");
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--tile-size);
+  height: calc(var(--tile-size) * 1.1);
+  flex: none;
+  color: var(--tile-colour);
+  -webkit-mask: var(--hex-mask) center / contain no-repeat;
+  mask: var(--hex-mask) center / contain no-repeat;
+  isolation: isolate;
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+.hex-tile::before, .hex-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transition: opacity var(--dur-hover) var(--ease-apple);
+}
+.hex-tile::before { background: var(--tile-fill); }
+.hex-tile::after  { background: var(--ms-grad-brand); opacity: 0; }
+.hex-tile .icon { width: calc(var(--tile-size) * .5); height: calc(var(--tile-size) * .5); }
+
+@media (hover: hover) {
+  .hex-tile:hover, a:hover > .hex-tile, .hex-tile-trigger:hover .hex-tile {
+    color: var(--ms-white);
+  }
+  .hex-tile:hover::after, a:hover > .hex-tile::after, .hex-tile-trigger:hover .hex-tile::after { opacity: 1; }
+}
+
+/* Category colouring (docs/08 §2) */
+.hex-tile--bid        { --tile-colour: var(--cat-bid); --tile-fill: var(--azure-50); }
+.hex-tile--compliance { --tile-colour: var(--cat-compliance); --tile-fill: var(--navy-50); }
+.hex-tile--digital    { --tile-colour: var(--cat-digital-ink); --tile-fill: var(--sky-100); }
+
+/* On dark surfaces: glass fill, light icon (Digital uses Sky itself) */
+.on-dark .hex-tile { --tile-fill: rgb(var(--white-rgb) / .10); --tile-colour: var(--sky-300); }
+.on-dark .hex-tile--bid { --tile-colour: var(--azure-300); }
+.on-dark .hex-tile--compliance { --tile-colour: var(--navy-200); }
+.on-dark .hex-tile--digital { --tile-colour: var(--cat-digital); }
+
+.hex-tile--sm { --tile-size: 48px; }
+.hex-tile--lg { --tile-size: 88px; }

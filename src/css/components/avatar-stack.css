@@ -1,0 +1,42 @@
+/* C14 Avatar stack: 3–4 overlapping 40px circles with a 3px white ring, optional "+N" count */
+.avatar-stack {
+  --avatar-size: 40px;
+  --avatar-ring: var(--ms-white);
+  display: inline-flex;
+  align-items: center;
+}
+.avatar-stack__list { display: inline-flex; padding-left: 8px; }
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-left: calc(var(--avatar-size) * -0.3);
+  border-radius: 50%;
+  border: 3px solid var(--avatar-ring);
+  background: var(--navy-100);
+  color: var(--navy-800);
+  font-family: var(--font-display);
+  font-size: calc(var(--avatar-size) * .34);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+.avatar:first-child { margin-left: 0; }
+.avatar img, .avatar picture { width: 100%; height: 100%; object-fit: cover; }
+.avatar--more { background: var(--navy-900); color: var(--ms-white); font-size: calc(var(--avatar-size) * .3); }
+.avatar-stack__label {
+  margin-left: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-2);
+  max-width: 14ch;
+  line-height: 1.3;
+}
+.on-dark .avatar-stack { --avatar-ring: var(--navy-900); }
+.on-dark .avatar-stack__label { color: var(--navy-200); }
+.avatar-stack--lg { --avatar-size: 52px; }

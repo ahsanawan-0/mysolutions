@@ -65,13 +65,17 @@ The client is still delivering content, so structure and content are separated:
 | Install | `composer install` then `npm install`; copy `.env.example` → `.env` (`APP_ENV=local`, `VITE_DEV=true`) |
 | Dev servers | `php -S localhost:8000 -t public public/index.php` **and** `npm run dev` (Vite on :5173). Both are in `.claude/launch.json` (`php`, `vite`) for the desktop preview |
 | Production build | `npm run build` → hashed JS/CSS + `public/assets/build/manifest.json`; set `VITE_DEV=false` to load them locally |
-| Icons | `npm run icons` → `scripts/build-icons.mjs` builds `public/assets/icons/sprite.svg` (stub until P02) |
-| Images | `npm run images` → `scripts/build-images.mjs` optimises `assets-src/` into `public/assets/img/` (stub until P02) |
+| Icons | `npm run icons` → `scripts/build-icons.mjs` builds `public/assets/icons/sprite.svg` from `src/icons.json` (runs automatically before `build`) |
+| Images | `npm run images` → `scripts/images.mjs` (sharp) turns `assets-src/images/**` into AVIF/WebP/JPEG at 400–1920w in `public/assets/img/` + `manifest.json` |
+| Fonts | `npm run fonts` → `scripts/fonts.py` (fontTools) re-subsets Mona Sans / Google Sans / Playfair into `public/assets/fonts/` and prints the fallback metrics for `src/css/fonts.css` |
+| Styleguide | http://localhost:8000/styleguide/ (local only): colours + contrast, type, buttons, every icon, components, glass, image placeholder |
 | Content check | `php bin/check-content.php` (from P03; launch gate = zero results) |
 | SEO audit | `php bin/seo-audit.php` (from P03/P30), plus `/seo page <url>` and `/seo audit` from the claude-seo plugin (`docs/10` §0) |
 | Lint | `php -l <file>` on every changed PHP file (Standard check 1) |
 
 Request flow: `public/index.php` → `app/bootstrap.php` → `App\Router::dispatch()` (normalise → `app/redirects.php` → `app/routes.php` → 404). Page templates set `$page` and print their body; `templates/layouts/base.php` wraps it. On `local`, a planned route without a template shows `templates/pages/_stub.php`.
+
+Template helpers: `e()`, `config('address.postcode')`, `url()`, `asset()`, `vite()`, `icon('name', 'light|regular', ['label' => …])`, `img('key', ['alt' => …, 'sizes' => …, 'priority' => true, 'ratio' => '16/9'])` (placeholder when the key isn't in the image manifest), `heading(2, 'Our Approach to', 'Winning Contracts')`, `component('button'|'eyebrow'|'hex-tile'|'chip'|'avatar-stack', [...])` (parameters documented at the top of each `templates/components/*.php`). CSS: `src/css/tokens.css` → `fonts.css` → `base.css` → `components/*.css` → `pages/*.css`, all imported by `src/css/main.css` with root-relative `/src/css/…` paths.
 
 ## Folder map (from `docs/11-tech-architecture-php.md` §2)
 ```

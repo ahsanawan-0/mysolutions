@@ -1,4 +1,172 @@
-/* Base styles: reset, typography, layout primitives (filled by P02). Stub only. */
+/* ==========================================================================
+   BASE — reset, typography, links, focus, utilities, preference media queries.
+   Values come from tokens.css only.
+   ========================================================================== */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
 html {
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--header-h);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--ms-canvas);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-body);
+  overflow-x: clip;
+}
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+img, video { height: auto; }
+input, button, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+ul[class], ol[class] { list-style: none; padding: 0; }
+address { font-style: normal; }
+hr { border: 0; border-top: 1px solid var(--ms-line); }
+::selection { background: var(--azure-100); color: var(--ms-ink); }
+
+/* ---------- Typography ---------- */
+h1, h2, h3, h4, .display {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  color: inherit;
+}
+.display { font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-display); font-weight: var(--fw-display); }
+h1 { font-size: var(--fs-h1); line-height: var(--lh-h1); letter-spacing: var(--ls-h1); font-weight: var(--fw-h1); }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); font-weight: var(--fw-h2); }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); font-weight: var(--fw-h3); }
+h4 { font-size: var(--fs-h4); line-height: var(--lh-h4); letter-spacing: var(--ls-h4); font-weight: var(--fw-h4); }
+h5, h6 { font-family: var(--font-display); font-size: var(--fs-body); font-weight: var(--fw-h4); }
+
+.lead  { font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.small { font-size: var(--fs-small); line-height: var(--lh-small); }
+p { text-wrap: pretty; }
+p + p { margin-top: 1em; }
+strong, b { font-weight: var(--fw-medium); }
+
+/* Two-voice heading: the accent words are an <em> inside the heading.
+   Playfair Display Italic 500, Azure 500 (large sizes only, ≥ 24px), gradient text once the line is ≥ 48px. */
+h1 em, h2 em, h3 em, .display em {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--azure-500);
+}
+.display em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (min-width: 640px) {   /* --fs-h1 reaches 48px here */
+  h1 em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+}
+@media (min-width: 1080px) {  /* --fs-h2 reaches 48px here */
+  h2 em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+}
+/* On dark surfaces the accent stays Sky (readable) rather than a navy gradient */
+.on-dark h1 em, .on-dark h2 em, .on-dark h3 em, .on-dark .display em {
+  background: none; color: var(--sky-300);
+}
+
+/* ---------- Links and focus ---------- */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+a:hover { color: var(--link-hover); }
+.on-dark a { color: var(--sky-300); }
+.on-dark a:hover { color: var(--ms-white); }
+
+:focus { outline: none; }
+:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); border-radius: var(--r-xs); }
+.on-dark :focus-visible { outline-color: var(--sky-300); }
+
+/* ---------- Dark surfaces ---------- */
+.on-dark { background: var(--surface-dark); color: var(--text-on-dark); }
+.on-dark .lead { color: var(--text-2-on-dark); }
+
+/* ---------- Layout utilities ---------- */
+.container, .container--wide, .container--text {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container { max-width: calc(var(--container) + 2 * var(--gutter)); }
+.container--wide { max-width: calc(var(--container-wide) + 2 * var(--gutter)); }
+.container--text { max-width: calc(var(--container-text) + 2 * var(--gutter)); }
+
+.section { padding-block: var(--section-y); }
+.section--tight { padding-block: calc(var(--section-y) * .6); }
+.stack > * + * { margin-top: var(--stack-gap, var(--space-4)); }
+.cluster { display: flex; flex-wrap: wrap; gap: var(--cluster-gap, var(--space-3)); align-items: center; }
+
+/* ---------- Accessibility utilities ---------- */
+.visually-hidden:not(:focus):not(:active) {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1000;
+  padding: var(--space-3) var(--space-5);
+  min-height: var(--target-min);
+  display: inline-flex;
+  align-items: center;
+  background: var(--navy-900);
+  color: var(--ms-white);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-3);
+  transform: translateY(calc(-100% - var(--space-6)));
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.skip-link:focus-visible { transform: none; outline-color: var(--sky-300); }
+
+/* ---------- Initial animation states exist ONLY under html.js (docs/10 §9) ---------- */
+/* (populated by P06's data-anim catalogue) */
+
+/* ---------- User preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root { --ms-line: var(--ms-ink-3); }
+  a { text-decoration-thickness: 2px; }
+  :focus-visible { outline-width: 3px; }
+}
+
+@media print {
+  .skip-link { display: none; }
+  body { background: var(--ms-white); }
 }

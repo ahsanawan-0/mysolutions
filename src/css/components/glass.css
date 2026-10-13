@@ -1,0 +1,55 @@
+/* Glass materials (docs/03 §2.5). Use only over imagery or colour, max 3 visible at once,
+   never on elements that move every frame. Fallbacks: reduced transparency → solid fills;
+   no backdrop-filter support → same rgba with alpha +0.25. */
+
+.glass-thin-dark {
+  background: var(--glass-thin-dark-bg);
+  -webkit-backdrop-filter: var(--glass-thin-dark-blur);
+  backdrop-filter: var(--glass-thin-dark-blur);
+  border: 1px solid var(--glass-thin-dark-border);
+  box-shadow: inset 0 1px 0 var(--glass-thin-dark-highlight);
+  color: var(--ms-white);
+}
+.glass-ultrathin-dark {
+  background: var(--glass-ultrathin-dark-bg);
+  -webkit-backdrop-filter: var(--glass-ultrathin-dark-blur);
+  backdrop-filter: var(--glass-ultrathin-dark-blur);
+  color: var(--ms-white);
+}
+.glass-regular-light {
+  background: var(--glass-regular-light-bg);
+  -webkit-backdrop-filter: var(--glass-regular-light-blur);
+  backdrop-filter: var(--glass-regular-light-blur);
+  box-shadow: 0 1px 0 var(--glass-regular-light-line);
+  color: var(--ms-ink);
+}
+.glass-thick-dark {
+  background: var(--glass-thick-dark-bg);
+  -webkit-backdrop-filter: var(--glass-thick-dark-blur);
+  backdrop-filter: var(--glass-thick-dark-blur);
+  color: var(--ms-white);
+}
+
+/* Rounded glass panel convenience */
+.glass-panel { border-radius: var(--r-lg); padding: var(--space-6); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-ultrathin-dark { background: rgb(var(--white-rgb) / .31); }
+  .glass-thin-dark      { background: rgb(var(--white-rgb) / .35); }
+  .glass-regular-light  { background: rgb(245 247 251 / .97); }
+  .glass-thick-dark     { background: rgb(var(--navy-900-rgb) / .97); }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-ultrathin-dark, .glass-thin-dark, .glass-thick-dark {
+    background: var(--glass-solid-dark);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: rgb(var(--white-rgb) / .2);
+  }
+  .glass-regular-light {
+    background: var(--glass-solid-light);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

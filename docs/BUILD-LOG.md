@@ -70,3 +70,37 @@
 - P02: real `tokens.css`/`base.css`, the Phosphor sprite builder and the image pipeline (`scripts/*.mjs` are stubs).
 - P03: `partials/head-seo.php` becomes the full `docs/10` §7 head via `App\Seo`; `machine/*` templates (`sitemap.xml`, `robots.txt`, `llms.txt`), `bin/check-content.php`.
 - Composer on this machine is a development build over 60 days old (`composer self-update` recommended); not a project issue.
+
+---
+
+## P02 — Design tokens, base CSS, fonts, icons, image pipeline, styleguide
+**Date:** 13 October 2026
+**Commit:** `P02: design tokens, base CSS, fonts, icons, image pipeline, styleguide`
+
+**Files created / changed**
+- `src/css/tokens.css`: every token from `docs/02` §2–§3 and `docs/03` §2 (Azure 50–950 incl. 650, Navy 50–950, Sky 50/100/200/300/700, neutrals, semantic, text roles, category colours incl. `--cat-digital-ink`, gradients + `@property --angle`, RGB triplets, spacing, layout, `--header-h`, radii, shadows, glass material values, motion, font stacks, fluid type scale with line-heights/tracking/weights, control sizes).
+- `src/css/base.css`: reset, `scroll-padding-top`, typography, two-voice `em` (Playfair Italic 500, Azure 500; gradient text at ≥ 48px via the breakpoints where the clamp reaches 48px; Sky on `.on-dark`), links Azure 700, `:focus-visible` ring, `::selection`, `.container*`, `.section`, `.stack`, `.cluster`, `.visually-hidden`, `.skip-link`, reduced-motion / reduced-transparency / contrast-more / print media queries.
+- `src/css/fonts.css` + `public/assets/fonts/`: Mona Sans variable 500–700 (35 KB), Google Sans variable 400–500 (32 KB), Playfair Display Italic 500 (22 KB) = **89 KB total** (budget ≤ 120 KB). Latin subsets produced by `scripts/fonts.py` (fontTools instancer + subsetter) from the Fontsource packages (`@fontsource-variable/mona-sans`, `@fontsource-variable/google-sans`, `@fontsource/playfair-display`); metric-matched fallbacks computed against Arial / Georgia (`size-adjust`, `ascent/descent/line-gap-override`).
+- `src/icons.json` (57 light + 31 regular) and `scripts/build-icons.mjs` → `public/assets/icons/sprite.svg` (88 symbols, 41 KB). `npm run icons` also runs as `prebuild`. `icon($name, $weight, $attrs)` rewritten: `<use href="/assets/icons/sprite.svg?v=…#name-weight">`, `label` → `role="img"` + `<title>`, unknown icon throws on local.
+- `scripts/images.mjs` (sharp) + `app/lib/Image.php` + `img()` helper: AVIF/WebP/JPEG at 400/800/1200/1600/1920 (no upscaling), `public/assets/img/manifest.json`, `<picture>` with srcset/sizes/width/height/lazy or `fetchpriority="high"`, alt required on local (or `decorative`), branded SVG placeholder (`[[PENDING IMAGE: key]]`, navy→azure gradient, hex pattern, requested ratio) for unknown keys.
+- Components: `templates/components/{eyebrow,heading,button,hex-tile,chip,avatar-stack}.php` + `src/css/components/{icon,eyebrow,buttons,hex-tile,chips,avatar-stack,glass,image}.css`; helpers `component()` and `heading()`.
+- `templates/pages/styleguide/index.php` + `src/css/pages/styleguide.css`: swatches with hex + contrast vs white/ink (values parsed from `tokens.css`, so no hex is duplicated), gradients, type scale with live px readout, two-voice demos (light + dark), buttons (default/disabled/on-dark/sizes/icon buttons), every sprite icon, hex tiles ×3 categories (+ dark), chips, avatar stacks, 4 glass panels on a dark stage, 3 placeholder images.
+- `vite.config.js`: `/assets/(fonts|icons|img)/` marked external so CSS `url()`s to PHP-served files build without warnings. `src/css/main.css` imports use root-relative `/src/css/…` paths (Vite's postcss-import resolved `./components/…` against the project root).
+- `package.json`: scripts `prebuild`, `images` → `scripts/images.mjs`, `fonts`; dev deps sharp + the three Fontsource packages. `CLAUDE.md` Commands + helper notes updated.
+
+**Decisions**
+- Fonts come from Fontsource (OFL) and are re-subset locally rather than shipping Fontsource's files, so the weight axes are trimmed (Mona 500–700, Google Sans 400–500) and the fallback metrics are computed from the exact shipped files.
+- Digital Presence chips/tiles on light use `--cat-digital-ink` (Sky 700); Sky 300 itself only appears on dark surfaces (docs/02 §2.6 rule 4). No component sets small text in Azure 500.
+- Hex tile and eyebrow bullet use a CSS `mask-image` data-URI hexagon with `stroke-linejoin: round` for the rounded corners; `--tile-colour` / `--tile-fill` drive category colouring.
+- The placeholder SVG uses `style="fill:var(--…)"` so even inline SVG carries no hex.
+- Dynamic HTML caching, preloads and the full `<head>` remain for P03 as planned.
+
+**Deviations**
+- `scripts/images.mjs` is the file name from the prompt; the P01 stub `scripts/build-images.mjs` was removed. Added a `fonts` npm script (Python) because fonts need re-subsetting whenever the character set changes.
+
+**Checks**
+- Styleguide: all six `@font-face`s report `loaded` from `/assets/fonts/`; **zero third-party requests**; 88/88 icons render; no console errors after the import fix; no horizontal overflow at 360 or 1280; buttons are 48px high with a visible `:focus-visible` ring; reduced-motion and reduced-transparency rules present. `php -l` clean; `npm run build` clean (CSS 28 KB / 6.8 KB gz); `npm run icons` regenerates the sprite; hex scan outside `tokens.css` returns nothing.
+
+**Follow-ups**
+- P03: preload `mona-sans-var.woff2` + `google-sans-var.woff2` in the head partial; `bin/check-content.php` should also report `data-pending-image` placeholders.
+- Real photos: drop files into `assets-src/images/<section>/<name>.jpg` and run `npm run images`; the `img()` keys used so far are `hero/london-office`, `about/team-meeting`, `services/tender-writing`, `team/member-1..3`.

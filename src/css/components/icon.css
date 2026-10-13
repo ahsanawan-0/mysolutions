@@ -1,0 +1,10 @@
+/* Phosphor sprite icons: <svg class="icon"><use href="/assets/icons/sprite.svg#name-weight"></use></svg> */
+.icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  flex: none;
+  fill: currentColor;
+  vertical-align: middle;
+}
+.icon[width] { width: auto; height: auto; }   /* explicit size attributes win */

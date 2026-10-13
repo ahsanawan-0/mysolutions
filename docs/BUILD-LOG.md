@@ -370,3 +370,7 @@
 - P31: Lighthouse LCP / CLS on the host once the real photo is in; the controls' pause button could gain a visible label on hover.
 - P33: Safari check of `mask-composite` with three layers and the `@property` fallback path.
 - Client: the hero photo (needed for the LCP target), headline choice, tag wording ("Our Special Service" vs "Our Core Services").
+
+**Fix (14 October 2026, client feedback, commit `P09 fix: notch S-curve, plain hero placeholder`)**
+- The notch showed a dark spike where the two curves met: the panel-corner fillet (28 px) and the tab's top-left radius (28 px) overlapped vertically inside a 32 px notch. The S-curve needs `notch ≥ fillet + tab radius`, so the notch is now 60 px at ≥ 1024 (close to the reference's ~7 % of the panel height) and 52 px on tablet; docs/05 §3's "32 px" is superseded by this rule.
+- "Remove the background pattern": the hexagon pattern was the branded image placeholder showing through the right 68 % of the panel. `img()` gains `pattern => false` (placeholder without the hex pattern); the hero photo and the mini-card thumbnail use it. The real photo replaces the placeholder entirely.

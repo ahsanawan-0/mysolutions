@@ -43,7 +43,7 @@ $helper = str_replace(
 <section class="hero" data-header-theme="dark" data-hero data-module="hero-intro">
   <div class="hero__panel on-dark">
     <div class="hero__photo">
-      <?= img($h['photo']['key'], ['alt' => $h['photo']['alt'], 'priority' => true, 'sizes' => '(min-width: 1024px) 60vw, 100vw', 'ratio' => '4/3', 'cover' => true, 'class' => 'hero__photo-img']) ?>
+      <?= img($h['photo']['key'], ['alt' => $h['photo']['alt'], 'priority' => true, 'sizes' => '(min-width: 1024px) 60vw, 100vw', 'ratio' => '4/3', 'cover' => true, 'pattern' => false, 'class' => 'hero__photo-img']) ?>
     </div>
 
     <?= render('partials/header', ['variant' => 'hero', 'theme' => 'dark']) ?>
@@ -151,7 +151,7 @@ $helper = str_replace(
 
   <div class="hero__bottom">
     <article class="hero__mini">
-      <div class="hero__mini-thumb"><?= img($h['mini']['image'], ['alt' => $h['mini']['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true]) ?></div>
+      <div class="hero__mini-thumb"><?= img($h['mini']['image'], ['alt' => $h['mini']['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true, 'pattern' => false]) ?></div>
       <div class="hero__mini-body">
         <?= component('eyebrow', ['text' => $h['mini']['eyebrow'], 'tag' => 'span', 'class' => 'hero__mini-eyebrow']) ?>
         <p class="hero__mini-title"><?= e($h['mini']['title']) ?></p>

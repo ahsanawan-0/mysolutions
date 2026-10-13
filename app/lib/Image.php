@@ -21,7 +21,8 @@ final class Image
     /**
      * @param array{
      *   alt?: string, decorative?: bool, sizes?: string, priority?: bool, class?: string,
-     *   ratio?: string, width?: int, height?: int, loading?: string, attrs?: array<string,string>, cover?: bool
+     *   ratio?: string, width?: int, height?: int, loading?: string, attrs?: array<string,string>, cover?: bool,
+     *   pattern?: bool   (placeholder only: false drops the hexagon pattern, e.g. where it would read as a design)
      * } $o
      */
     public static function render(string $key, array $o = []): string
@@ -126,7 +127,7 @@ final class Image
             . '</pattern>'
             . '</defs>'
             . '<rect width="100%" height="100%" fill="url(#' . $id . '-g)"/>'
-            . '<rect width="100%" height="100%" fill="url(#' . $id . '-p)"/>'
+            . (($o['pattern'] ?? true) ? '<rect width="100%" height="100%" fill="url(#' . $id . '-p)"/>' : '')
             . '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" '
             . 'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="' . $fontSize . '" '
             . 'style="fill:var(--sky-300)" fill-opacity="0.9">' . e($label) . '</text>'

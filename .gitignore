@@ -1,0 +1,25 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Build output (Vite)
+/public/assets/build/
+
+# Runtime data (keep the .gitkeep files)
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+/storage/mail/*
+!/storage/mail/.gitkeep
+
+# Environment and local tooling
+.env
+/.venv/
+
+# pixel2motion render outputs (splash-screen animation)
+/design/logo-motion/outputs/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -302,3 +302,38 @@
 - P28/P34: the splash partial's inline sessionStorage script needs a CSP nonce (same as the js-class script).
 - P31: Lighthouse LCP with the splash on vs off on the real host; P33: check the splash on iOS Safari (clip-path on SVG children, `touchmove` hold).
 - Client: the original vector logo is still welcome as a cross-check of the rebuilt SVGs.
+
+---
+
+## P08 — Home hero: structure 1:1 with `hero_should`
+**Date:** 14 October 2026
+**Commit:** `P08: home hero structure`
+
+**Files created / changed**
+- `app/data/home.php` (new): every home-page string keyed by section (`hero` filled; the other nine keys are empty with a `[[PENDING]]` marker until P10–P16). Hero copy as the prompt specified, all `// PROVISIONAL`; the two alternative headlines are kept in a comment; Quick-Start labels, default option labels ("Any sector" / "Any service", empty values), quick links, helper text with `{phone}` / `{consult}` tokens, tag, mini card, chip slugs, photo key + alt. Helper `home('hero.links')` + a shared `data_get()` in `helpers.php` (also used by `ui()`).
+- `templates/sections/home/hero.php` (new): the docs/05 §1 anatomy. Canvas frame → `.hero__panel` (`--ms-grad-hero`, radius 28, `min-height: max(720px, min(100svh − 40px, 860px))`) → the photo layer (`img('home/hero-building', priority, cover)`, right 68 % of the panel, masked into the navy on the left + a navy wash) → the header's **`hero` variant rendered inside the panel** → 5/12 copy column (glass badge with the mark SVG filled by three gradients + drop shadow, two-line `<h1>` with the italic accent, lead in Navy 100, the **Quick-Start `<form method="get" action="/contact-us/#quote">`** with `<label for>`-ed selects for the 7 sectors + Other and `<optgroup>`s per category with the 12 sub-service slugs, "Get Started" submit, two quick links with white chevron circles) → 7/12 stage (`role="region" aria-label="Our services"`; **all 12 cards server-rendered** from `services.php`: category chip in its colour, hex tile, name, summary, link to the sub-service page; card 2 is `.is-active`, neighbours faded/scaled/blurred and masked at the column edges; the "Our Special Service" tag with the static `.special-frame` ring hugging it and extending behind the active card) → helper text bottom-right → `.hero__notch` (canvas tab, `border-top-left-radius` + two radial-gradient fillets = the S-curve) → below the panel: the mini insight card (placeholder thumb, eyebrow, title, Read) and the sector tiles (4 featured at ≥ 1024; all 7 as a marquee below).
+- `templates/pages/home.php`: `header: 'hero'`, `header_theme: 'dark'`, `header_overlay: true`, `primary_image`; renders the hero then seven anchored placeholder sections (`#services #approach #sectors #process #why #faq #insights`) so the quick links already scroll.
+- `src/css/pages/home.css` (new, imported by `main.css`): the layout above with the docs/05 §3 table as breakpoints (frame 20/16/12/8, radius 28/28/24/22, columns 5/7 → 6/6 → stacked, cards 300×190 → 280×180 → 76vw×180, notch 32/32/24/removed). Stage mask, card states, special frame ring (mask-composite), notch fillets, bottom row, mobile marquee rules, reduced-motion / reduced-transparency fallbacks.
+- `src/js/anim/marquee.js`: new option `data-marquee-only="mobile|desktop"` (the effect returns early on the other breakpoint) so the chips loop only below 1024 px. `app/lib/Image.php`: `cover => true` gives the placeholder `preserveAspectRatio="xMidYMid slice"` so it fills a box like `object-fit: cover`. `CLAUDE.md`: `home()` helper + sections folder.
+
+**Decisions**
+- Headline size: `--fs-display` (96 px at 1440) cannot fit "Tenders, Crafted" (16 characters) inside the 5/12 column; the hero uses `clamp(3.75rem, 1rem + 3.6vw, 4.5rem)` ≥ 1280 (68 px at 1440, 72 px cap) and the table's 56 / 48 / 40 px below. Recorded as a deviation.
+- Sector icons and the Quick-Start label icons come from the **light** sprite set (the category/sector icons only exist in that weight).
+- The photo gets its own clipped layer (`overflow: hidden; border-radius: inherit`) so the panel itself can let the mega menu and, later, the frame glow overflow.
+- The bottom row is 4/8 rather than 5/7 so the four tiles fit one row at 1440; mobile card width is 76vw (spec 82) so the next card visibly peeks inside the panel.
+- The hero header variant keeps `.site-header__logo-svg` with the `hl-` ids, so the splash still has its Flip target on the home page.
+
+**Deviations**
+- The prompt lists "splash partial → hero → `<main id="main">`"; the base layout already wraps every page in `<main>` and prints the splash, so the hero renders inside `<main>` (the `<header>` inside it is not a banner landmark; the nav is still a navigation landmark). No template rework.
+- Side-by-side check: the reference (`hero_should.jfif`, 736 px) and our 1440 px render match in composition, element placement, proportions and the notch; the vertical rhythm is taller because the real nav row and the 190 px cards take more height than the mock's.
+
+**Checks**
+- `php -l` clean; `npm run build` clean; `php bin/seo-audit.php --all` PASS (one `<h1>`); `check-content` +13 findings (the provisional hero copy, the `[[PENDING]]` placeholders, the two new image keys).
+- Playwright (dev servers, splash pre-skipped): `scrollWidth === clientWidth` at **360 / 768 / 1024 / 1440**; 12 cards in the HTML; the form action is `/contact-us/#quote` (GET → `?sector=…&service=…#quote`); headline 40 / 48 / 56 / 67.8 px; panel 1153 / 996 / 696 / 860 px; the active card centred in the stage at 1024+ and leading at the left with the next card peeking at 360 / 768; marquee clones 7 below 1024 with the pause button shown, 0 at 1024+ with the extra tiles hidden; no console errors. Tab order: skip link → logo → nav links/toggles → phone → quote → the two selects → submit → quick links → cards, every stop with the 2 px focus ring.
+- Browser pane at 1440×1000: nav inside the panel, badge, headline, bar, links, tag + frame + cards, helper text, notch stepping up on the right, mini card + 4 tiles below; 360: stacked, straight bottom, stacked Quick-Start with a full-width button, chips marquee.
+
+**Follow-ups**
+- P09: `src/js/modules/hero-slider.js` on `[data-hero-slider]` / `[data-hero-track]` / `[data-hero-card]` (take over `.is-active` and the track offset), animate `.special-frame` (`@property --angle`), listen for `splash:done` for the entrance timeline, parallax on `.hero__photo`.
+- P16: make the mini card the latest insight (`home.hero.mini`).
+- P23: `/contact-us/` reads `sector` / `service` from the query to pre-select the form.
+- Client: real hero photo (`assets-src/images/home/hero-building.jpg`) and the mini-card thumbnail; headline choice (A / B / C) and the free-consultation claim.

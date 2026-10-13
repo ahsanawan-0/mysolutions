@@ -30,5 +30,6 @@
 @import '/src/css/components/marquee.css';
 @import '/src/css/components/nodes.css';
 
+@import '/src/css/pages/home.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

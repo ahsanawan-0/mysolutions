@@ -21,7 +21,7 @@ final class Image
     /**
      * @param array{
      *   alt?: string, decorative?: bool, sizes?: string, priority?: bool, class?: string,
-     *   ratio?: string, width?: int, height?: int, loading?: string, attrs?: array<string,string>
+     *   ratio?: string, width?: int, height?: int, loading?: string, attrs?: array<string,string>, cover?: bool
      * } $o
      */
     public static function render(string $key, array $o = []): string
@@ -105,6 +105,10 @@ final class Image
         $a11y = $alt === ''
             ? 'aria-hidden="true"'
             : 'role="img" aria-label="' . e($alt) . '"';
+        // cover => true: the placeholder fills its box like object-fit: cover (real images use CSS for that)
+        if (!empty($o['cover'])) {
+            $a11y .= ' preserveAspectRatio="xMidYMid slice"';
+        }
 
         // Hexagon tile for the pattern (pointy-top, 48×56 cell)
         $hex = 'M24 2 L46 15 L46 41 L24 54 L2 41 L2 15 Z';

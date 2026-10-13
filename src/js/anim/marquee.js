@@ -2,11 +2,14 @@
 // viewport + one set). Direction and speed follow the scroll velocity, hover slows it, focus inside pauses it, and a
 // pause/play button ([data-marquee-pause], inside or linked with data-marquee-for="<id>") satisfies WCAG 2.2.2.
 // Without JS or under reduced motion the track is a static wrapped list (motion.css / marquee.css).
-// Options: data-speed="60" (px/s), data-direction="-1" (right to left is the default).
+// Options: data-speed="60" (px/s), data-direction="-1" (right to left is the default),
+// data-marquee-only="mobile|desktop" (loop only on that breakpoint; the other keeps the server-rendered row).
 import { gsap, ScrollTrigger } from '../core/motion.js';
 import { num, clamp } from './_util.js';
 
-export default function marquee(el) {
+export default function marquee(el, { mobile = false, desktop = true } = {}) {
+  const only = el.dataset.marqueeOnly;
+  if ((only === 'mobile' && !mobile) || (only === 'desktop' && !desktop)) return;
   const track = el.querySelector('[data-marquee-track]');
   if (!track || !track.children.length) return;
   const button = el.querySelector('[data-marquee-pause]')

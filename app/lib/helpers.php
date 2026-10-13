@@ -376,7 +376,21 @@ function ui(string $key, mixed $default = null): mixed
 {
     static $ui = null;
     $ui ??= require base_path('app/data/ui.php');
-    $value = $ui;
+    return data_get($ui, $key, $default);
+}
+
+/** Home page copy (app/data/home.php): home('hero'), home('hero.links'). */
+function home(string $key, mixed $default = null): mixed
+{
+    static $home = null;
+    $home ??= require base_path('app/data/home.php');
+    return data_get($home, $key, $default);
+}
+
+/** Dot-path lookup in a nested array: data_get($arr, 'a.b.c'). */
+function data_get(array $data, string $key, mixed $default = null): mixed
+{
+    $value = $data;
     foreach (explode('.', $key) as $segment) {
         if (!is_array($value) || !array_key_exists($segment, $value)) {
             return $default;

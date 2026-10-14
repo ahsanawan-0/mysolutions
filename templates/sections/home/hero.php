@@ -146,20 +146,9 @@ $helper = str_replace(
       <p class="hero__helper"><?= $helper ?></p>
     </div>
 
-    <div class="hero__notch" aria-hidden="true"></div>
-  </div>
-
-  <div class="hero__bottom">
-    <article class="hero__mini">
-      <div class="hero__mini-thumb"><?= img($h['mini']['image'], ['alt' => $h['mini']['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true, 'pattern' => false]) ?></div>
-      <div class="hero__mini-body">
-        <?= component('eyebrow', ['text' => $h['mini']['eyebrow'], 'tag' => 'span', 'class' => 'hero__mini-eyebrow']) ?>
-        <p class="hero__mini-title"><?= e($h['mini']['title']) ?></p>
-        <?= component('button', ['label' => $h['mini']['button'], 'href' => url($h['mini']['url']), 'size' => 'sm', 'class' => 'hero__mini-btn', 'attrs' => ['aria-label' => $h['mini']['button'] . ': ' . $h['mini']['title']]]) ?>
-      </div>
-    </article>
-
-    <div class="hero__chips" id="hero-chips" data-anim="marquee" data-marquee-only="mobile" data-speed="40" role="group" aria-label="Sectors we serve">
+    <!-- The canvas notch tab (S-curve) holds the sector tiles; below 1024px it becomes a plain strip under the panel -->
+    <div class="hero__notch">
+      <div class="hero__chips" id="hero-chips" data-anim="marquee" data-marquee-only="mobile" data-speed="40" role="group" aria-label="Sectors we serve">
       <ul class="hero__chip-list" role="list" data-marquee-track>
         <?php foreach ($chips as $i => $sector): ?>
         <li class="hero__chip-item<?= $i >= count($featured) ? ' hero__chip-item--extra' : '' ?>">
@@ -171,6 +160,18 @@ $helper = str_replace(
         <?= icon('pause', 'regular', ['size' => 18]) ?><?= icon('play', 'regular', ['size' => 18]) ?>
         <span class="visually-hidden" data-marquee-label>Pause the moving sectors</span>
       </button>
+      </div>
     </div>
+  </div>
+
+  <div class="hero__bottom">
+    <article class="hero__mini">
+      <div class="hero__mini-thumb"><?= img($h['mini']['image'], ['alt' => $h['mini']['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true, 'pattern' => false]) ?></div>
+      <div class="hero__mini-body">
+        <?= component('eyebrow', ['text' => $h['mini']['eyebrow'], 'tag' => 'span', 'class' => 'hero__mini-eyebrow']) ?>
+        <p class="hero__mini-title"><?= e($h['mini']['title']) ?></p>
+        <?= component('button', ['label' => $h['mini']['button'], 'href' => url($h['mini']['url']), 'size' => 'sm', 'class' => 'hero__mini-btn', 'attrs' => ['aria-label' => $h['mini']['button'] . ': ' . $h['mini']['title']]]) ?>
+      </div>
+    </article>
   </div>
 </section>

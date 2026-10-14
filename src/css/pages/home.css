@@ -8,7 +8,7 @@
   --hero-frame: 20px;              /* outer frame padding */
   --hero-radius: var(--r-xl);      /* 28px panel radius */
   --hero-pad: clamp(24px, 3.4vw, 48px);
-  --hero-notch: 60px;              /* ≥ 2 × radius + 4: the two S-curve arcs must not overlap vertically */
+  --hero-notch: 88px;              /* holds the 56px tiles + padding; ≥ 2 × radius + 4 so the S-curve arcs never overlap */
   --hero-title-size: clamp(3.75rem, 1rem + 3.6vw, 4.5rem);  /* 60 → 72px: the two 16-character lines fit 5/12 */
   --card-w: 300px;
   --card-h: 190px;
@@ -356,9 +356,13 @@ html.no-js .hero__controls { display: none; }
   left: 44%;
   right: 0;
   bottom: 0;
+  display: flex;
+  align-items: center;
   height: var(--hero-notch);
+  padding: var(--space-4) 0 0 var(--space-8);   /* the sector tiles sit inside the step, under the curve */
   background: var(--ms-canvas);
   border-top-left-radius: var(--hero-radius);
+  color: var(--ms-ink);
 }
 .hero__notch::before,
 .hero__notch::after {
@@ -374,8 +378,7 @@ html.no-js .hero__controls { display: none; }
 /* ---------- Below the panel: mini card + sector chips ---------- */
 .hero__bottom {
   display: grid;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-  column-gap: var(--space-12);
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   padding: var(--space-5) var(--hero-pad) var(--space-6);
   color: var(--ms-ink);
@@ -388,7 +391,7 @@ html.no-js .hero__controls { display: none; }
 .hero__mini-title { margin: 0; font-family: var(--font-display); font-weight: var(--fw-medium); font-size: 0.9375rem; line-height: 1.3; max-width: 30ch; }
 .hero__mini-btn { min-height: 36px; padding-inline: var(--space-4); margin-top: var(--space-1); }
 
-.hero__chips { position: relative; }
+.hero__chips { position: relative; min-width: 0; flex: 1; }
 .hero__chip-list { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
 .hero__chip {
   display: inline-flex;
@@ -408,22 +411,30 @@ html.no-js .hero__controls { display: none; }
   transition: border-color var(--dur-hover) var(--ease-apple), box-shadow var(--dur-hover) var(--ease-apple), transform var(--dur-hover) var(--ease-apple);
 }
 .hero__chip .icon { color: var(--azure-650); }
-.hero__chip:hover { border-color: var(--azure-300); box-shadow: var(--shadow-1); transform: translateY(-2px); }
+/* the notch sits inside the .on-dark panel: beat base.css `.on-dark a` / `a:hover` (tiles are on the canvas) */
+.hero__panel .hero__chip { color: var(--ms-ink); }
+.hero__panel .hero__chip:hover { color: var(--azure-800); border-color: var(--azure-300); box-shadow: var(--shadow-1); transform: translateY(-2px); }
 .hero__chip-item--extra { display: none; }       /* desktop shows the four featured sectors (the reference's 4 tiles) */
 .hero__chips-pause { display: none; }
 
 /* Placeholders for the sections P10–P16 build (anchors for the quick links) */
 .home-placeholder { padding-block: var(--space-10); border-top: 1px solid var(--ms-line); }
 
-@media (min-width: 1280px) {
-  .hero__chip-list { flex-wrap: nowrap; }   /* the four tiles on one row, as in the reference */
+@media (min-width: 1024px) {
+  .hero__chip-list { flex-wrap: nowrap; }   /* the four tiles on one row inside the notch, as in the reference */
+  .hero__notch { padding-right: var(--space-4); }
+}
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .hero__chip { padding-inline: var(--space-3); font-size: 0.8125rem; gap: 6px; }
+  .hero__chip-list { gap: var(--space-2); }
 }
 
 /* ---------- Laptop 1024–1279 ---------- */
 @media (max-width: 1279px) {
   .hero { --hero-frame: 16px; --hero-title-size: 3.5rem; --card-w: 280px; --card-h: 180px; }
   .hero__panel { min-height: 680px; }
-  .hero__grid, .hero__bottom { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-8); }
+  .hero__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--space-8); }
+  .hero__notch { left: 36%; padding-left: var(--space-6); }
 }
 
 /* ---------- Tablet and mobile < 1024: stacked ---------- */
@@ -440,8 +451,11 @@ html.no-js .hero__controls { display: none; }
   .hero__viewport { margin-inline: calc(-1 * var(--hero-pad)); padding-inline: var(--hero-pad); -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%); mask-image: linear-gradient(90deg, #000 0%, #000 82%, transparent 100%); }
   .hero__cards { margin-left: calc(-1 * (var(--card-w) + var(--card-gap))); }
   .special { left: 0; }
-  .hero__notch { left: auto; width: 46%; }
-  .hero__bottom { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-6); padding-inline: var(--space-4); }
+  /* the notch becomes a plain full-width strip under the panel (stacked layout; the S-curve is a ≥ 1024 detail) */
+  .hero__panel { padding-bottom: var(--hero-pad); }
+  .hero__notch { position: static; height: auto; padding: var(--space-4) var(--space-4) 0; border-radius: 0; background: transparent; }
+  .hero__notch::before, .hero__notch::after { display: none; }
+  .hero__bottom { padding: var(--space-4) var(--space-4) var(--space-6); }
   /* chips become a marquee of all seven sectors (marquee.js, data-marquee-only="mobile") */
   .hero__chip-item--extra { display: block; }
   .hero__chips { overflow: hidden; margin-inline: calc(-1 * var(--space-4)); padding-inline: var(--space-4); -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
@@ -454,8 +468,6 @@ html.no-js .hero__controls { display: none; }
 /* ---------- Mobile < 768 ---------- */
 @media (max-width: 767px) {
   .hero { --hero-frame: 8px; --hero-radius: 22px; --hero-title-size: 2.5rem; --card-w: min(76vw, 300px); --card-h: 180px; --card-gap: 16px; }  /* 76vw (spec: 82) so the next card peeks */
-  .hero__panel { padding-bottom: var(--hero-pad); }
-  .hero__notch { display: none; }               /* straight bottom edge */
   .hero__copy { gap: var(--space-4); }
   .hero__lead { font-size: var(--fs-body); }
   .hero__badge-text { font-size: 0.6875rem; letter-spacing: 0.08em; }
@@ -464,6 +476,7 @@ html.no-js .hero__controls { display: none; }
   .quick-start__field + .quick-start__field { padding-left: var(--space-2); border-left: 0; border-top: 1px solid var(--ms-line); }
   .quick-start__submit { width: 100%; }
   .hero__links { gap: var(--space-3) var(--space-5); }
+  .hero__notch { padding-inline: var(--space-3); }
   .hero__bottom { padding-inline: var(--space-3); }
   .hero__chips { margin-inline: calc(-1 * var(--space-3)); padding-inline: var(--space-3); }
 }

@@ -540,3 +540,43 @@
 **Follow-ups**
 - P15: triage row, testimonials (hidden until supplied) and the FAQ teaser.
 - P19: the About page's Why Us section reuses the seven titles with the full paragraphs.
+
+---
+
+## P15 — Home: triage row, testimonials (hidden until supplied), FAQ teaser
+**Date:** 15 October 2026
+**Commit:** `P15: home triage, testimonials and FAQ teaser`
+
+**Files created / changed**
+- `app/data/faqs.php` (new): `groups` (basics, services, pricing-process, sectors → labels) + `items` (id, q, a, group, pages). Seeded with the five prompt questions, each `// PROVISIONAL`, tagged `home`, `faq` and the service slugs they apply to (`bid-proposal-management`, `tender-bid-writing`, `expert-review`, `compliance-virtual-assistance`, `digital-presence`). Helpers in `app/lib/helpers.php`: `faqs(?page, ?group)` and `faq_groups()`.
+- `app/data/testimonials.php` (new): returns `[]` with the commented item structure (quote, name, role, company, sector slug, permission_date) and the permission rule. Helper `testimonials()`.
+- `templates/components/accordion.php` (new, C17) + `src/css/components/accordion.css` + `src/js/modules/accordion.js`: native `<details>/<summary>` rows (question as `h3` by default, `level` option), a CSS plus → minus morph on a 40 px circle, GSAP height animation (0.45 s open / 0.32 s close, `apple`), `name` → one open at a time animated by the module (it lifts the native `name` while running and restores it under reduced motion, where the browser's own toggle is used); deep links `#faq-<id>` open their item; `.on-dark` variant.
+- `templates/components/testimonials.php` (new, C16) + `src/css/components/testimonials.css`: quote cards (Phosphor `quotes`, blockquote, name / role, company, sector chip from `sectors()`) on the existing `marquee` effect (`data-anim="marquee"`, `[data-marquee-track]`, `.marquee__pause` button with its own labels), edge-fade mask, wrapped grid without JS or under reduced motion. Returns nothing without items.
+- `templates/sections/home/triage.php` (new) + `src/css/pages/home-triage.css`: `section.triage.on-dark#help`, Navy 900 with two Azure radial glows (so the glass has something to blur), the eyebrow as the `h2`, `ul[data-anim="stagger"]` of three `article.triage-card.glass-thin-dark[data-anim="tilt" data-tilt="4"]` (hex tile, question, line, one action: primary button with the phone icon → `tel:`, glass split button → `/contact-us/#quote`, link-arrow → `/services/`). Stacked on phones, one row per card on tablets (tile · text · action), three columns on desktop.
+- `templates/sections/home/testimonials.php` (new): header (`home('testimonials')`) + the component; `return`s before printing anything while `testimonials()` is empty.
+- `templates/sections/home/faq.php` (new) + `src/css/pages/home-faq.css`: `section.faq#faq`, 5/7 grid on desktop with a sticky intro column (eyebrow "FAQ", `heading(2, 'Questions,', 'Answered')`, a line, split button "View all FAQs" → `/faq/`) and the accordion of `faqs('home')` with `name="home-faq"`.
+- `templates/sections/home/micro-cta.php` (new): the P05 micro-CTA with its `ui('micro_cta')` copy, placed between Our Approach and Sectors (docs/08 H4).
+- `templates/components/eyebrow.php`: optional `id` (and a heading `tag`) so an eyebrow can be a labelled section's heading.
+- `app/data/home.php`: `triage` (eyebrow, three cards with icons `clock` / `compass` / `shield-check`, labels, URLs, action styles; the consultation label `// PROVISIONAL`), `testimonials` (header only), `faq` (eyebrow, heading, line `// PROVISIONAL`, button); the stale empty keys removed; the pending comment now covers P16 only.
+- `templates/pages/home.php`: `$sections` → micro-cta, triage, testimonials, faq templates; only Insights (P16) is still a placeholder. `src/css/main.css` imports the four new stylesheets.
+- `templates/pages/styleguide/index.php`: C17 accordion (light + dark) and a C16 layout sample built from obviously-sample data (local styleguide only; the live data file stays empty). `docs/06` row for the `accordion` module; CLAUDE.md pointers.
+
+**Decisions**
+- Testimonials are gated at the data, not with a flag: the section template returns before any output when `testimonials()` is empty, so nothing (no heading, no empty band) reaches the HTML. No `Review` / `AggregateRating` schema anywhere (docs/10 §6, docs/13 §7).
+- The accordion keeps the native element as the source of truth: the answers are in the server HTML inside `<details>`, Enter / Space work through the summary's own click event, and `<details name>` gives one-open-at-a-time without JS. The module only adds the height tween and animates sibling closes.
+- FAQ items carry `pages` tags instead of per-page copies, so `/faq/` (P27) and the service pages (P20–P22) reuse the same list; group labels live with the data for the `/faq/` headings.
+- The triage eyebrow doubles as the section heading (`h2.eyebrow`), as the prompt specifies an eyebrow and cards only; the card questions are `h3`.
+- The micro-CTA sits where docs/08 §4 puts it (H4, between Approach and Sectors) with the P05 default copy.
+
+**Deviations**
+- None against the prompt. The P15 marquee uses the existing `marquee` effect rather than a new slider, as docs/08 H9 asks for a marquee.
+
+**Checks**
+- `php -l` clean on all PHP files; `npm run build` clean, 0 warnings; `seo-audit --all` PASS; `check-content` 118 findings (111 + the five FAQ items, the consultation label and the FAQ line).
+- No testimonials section in the HTML while the data is empty (`#testimonials` absent); FAQ answers present in the page source; the styleguide sample marquee builds 4 clones, moves, stops on the pause button and relabels it.
+- Playwright 1440: the three cards reveal 0 → 1 in sequence; hovering the first card's corner gives a `matrix3d` tilt and a glare element; the accordion lifts `name`, opens item 1 by click (icon bar rotated 180°, `[open]`), opening item 2 closes item 1, Enter on the focused third summary opens it and Space closes it, inline styles cleared after each tween; the focus ring on the summary is the 2 px solid outline; tab order is the five summaries only. 360: cards stacked at 328 px, the same accordion results. 768: cards as rows 707 × 129 px. 1024: three columns 299 px. Reduced motion 1440: cards visible from the start, no tilt, `name` kept, the native toggle still opens one at a time. Document width equals the viewport at 360 / 768 / 1024 / 1440; no console errors; no failed requests on `/` or `/styleguide/`.
+- Renders inspected: triage at 1440 / 768 / 360, FAQ at 1440 / 360, the micro-CTA row, the styleguide testimonials sample and dark accordion.
+
+**Follow-ups**
+- Client: confirm the free consultation (triage card 2, hero helper); approve or replace the five FAQ answers; supply permissioned testimonials (quote, name, role, company, sector, permission date) → C04 fills `app/data/testimonials.php` and the section appears.
+- P16: Latest Insights + the final CTA band; P27: `/faq/` from `faq_groups()` + `faqs('faq')`; service pages: `faqs($slug)`.

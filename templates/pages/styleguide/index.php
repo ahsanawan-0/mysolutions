@@ -308,6 +308,25 @@ $typeScale = [
       <?= component('micro-cta', ['text' => 'Ready to win your next tender?', 'dark' => true]) ?>
     </div>
 
+    <h3 class="sg__h3">C17 Accordion (FAQ, native &lt;details&gt; + GSAP height, one open at a time)</h3>
+    <div class="sg__row">
+      <?= component('accordion', ['items' => faqs('home'), 'name' => 'sg-faq', 'level' => 0, 'id_prefix' => 'sg-faq']) ?>
+    </div>
+    <div class="sg__row sg__row--dark on-dark">
+      <?= component('accordion', ['items' => array_slice(faqs('home'), 0, 2), 'level' => 0, 'id_prefix' => 'sg-faq-dark']) ?>
+    </div>
+
+    <h3 class="sg__h3">C16 Testimonials marquee (layout sample only: the live data file is empty until the client supplies permissioned quotes)</h3>
+    <div class="sg__bleed">
+      <?= component('testimonials', ['label' => 'Sample testimonials', 'items' => array_map(static fn (int $i): array => [
+          'quote'   => 'Sample quote ' . $i . ' to check the card layout, the edge fade and the pause control. Real quotes come from app/data/testimonials.php only.',
+          'name'    => 'Sample name',
+          'role'    => 'Role',
+          'company' => 'Company',
+          'sector'  => ['healthcare-social-care', 'transport', 'security'][$i % 3],
+      ], [1, 2, 3, 4])]) ?>
+    </div>
+
     <h3 class="sg__h3">C21 CTA band</h3>
     <div class="sg__bleed">
       <?= component('cta-band', ['show_whatsapp' => true, 'level' => 3]) ?>

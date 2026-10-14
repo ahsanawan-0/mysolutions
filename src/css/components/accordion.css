@@ -1,0 +1,92 @@
+/* C17 Accordion (templates/components/accordion.php): hairline rows, question + a plus that morphs to a minus,
+   the answer panel animated by src/js/modules/accordion.js (height); native <details> without JS. */
+.accordion {
+  --acc-line: var(--ms-line);
+  --acc-q: var(--ms-ink);
+  --acc-a: var(--text-2);
+  --acc-icon-bg: var(--navy-50);
+  --acc-icon-fg: var(--navy-800);
+  --acc-icon-open-bg: var(--azure-650);
+  --acc-icon-open-fg: var(--ms-white);
+  border-top: 1px solid var(--acc-line);
+}
+.on-dark .accordion {
+  --acc-line: rgb(var(--white-rgb) / .14);
+  --acc-q: var(--ms-white);
+  --acc-a: var(--text-2-on-dark);
+  --acc-icon-bg: rgb(var(--white-rgb) / .10);
+  --acc-icon-fg: var(--sky-300);
+  --acc-icon-open-bg: var(--sky-300);
+  --acc-icon-open-fg: var(--navy-900);
+}
+.accordion__item { border-bottom: 1px solid var(--acc-line); }
+.accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: var(--target-min);
+  padding: var(--space-5) 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--acc-q);
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+.accordion__summary::-webkit-details-marker { display: none; }
+.accordion__summary::marker { content: ""; }
+.accordion__summary:hover { color: var(--azure-700); }
+.on-dark .accordion__summary:hover { color: var(--sky-300); }
+.accordion__summary:focus-visible { outline-offset: 4px; }
+.accordion__q {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+
+/* Plus → minus: the vertical bar turns onto the horizontal one */
+.accordion__icon {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  background: var(--acc-icon-bg);
+  color: var(--acc-icon-fg);
+  transition: background-color var(--dur-ui) var(--ease-apple), color var(--dur-ui) var(--ease-apple), transform var(--dur-ui) var(--ease-apple);
+}
+.accordion__icon::before, .accordion__icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  translate: -50% -50%;
+  transition: rotate var(--dur-ui) var(--ease-apple);
+}
+.accordion__icon::after { rotate: 90deg; }
+.accordion__item[open]:not(.is-closing) .accordion__icon { background: var(--acc-icon-open-bg); color: var(--acc-icon-open-fg); }
+.accordion__item[open]:not(.is-closing) .accordion__icon::after { rotate: 180deg; }
+.accordion__summary:hover .accordion__icon { transform: scale(1.06); }
+
+.accordion__panel { overflow: hidden; }
+.accordion__body {
+  padding: 0 calc(40px + var(--space-5)) var(--space-6) 0;
+  max-width: 62ch;
+  color: var(--acc-a);
+}
+.accordion__body p { margin: 0; }
+.accordion__body p + p { margin-top: var(--space-3); }
+
+@media (max-width: 767px) {
+  .accordion__body { padding-right: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .accordion__icon, .accordion__icon::before, .accordion__icon::after, .accordion__summary { transition: none; }
+}

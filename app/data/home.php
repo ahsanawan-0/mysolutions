@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Home page copy (PROMPTS P08–P16), read via home('hero'), home('hero.title'). Sections are keyed hero, services,
- * approach, sectors, process, why, triage, faq, insights, cta; each section is filled by its prompt and replaced
+ * approach, sectors, process, why, triage, testimonials, faq, insights, cta; each section is filled by its prompt and replaced
  * by the client's final copy in C01. Everything below is // PROVISIONAL until then.
  * Links use site paths (url() is applied in the templates); phone/e-mail come from config().
  */
@@ -53,8 +53,6 @@ return [
             'alt' => 'Glass office building in the City of London at dusk',
         ],
     ],
-
-    // [[PENDING: triage + faq (P15), insights + cta (P16)]]
 
     // P14 — "Why Work With Us" bento (docs/08 §4 H7). Titles verbatim from about-us-content.md §4 (client-approved);
     // the one-liners are condensed from the same copy. Counters are derived from data in the template (never typed).
@@ -162,8 +160,56 @@ return [
         'text'   => 'At My Solutionz, we help businesses compete for new opportunities through professional tender writing, bid management and business support services. We take the time to understand your services, strengths and objectives, then build responses that reflect what you can genuinely deliver.',
         'button' => ['label' => 'More About Us', 'url' => '/about-us/'],
     ],
-    'triage'   => [],
-    'faq'      => [],
+    // P15 — "How Can We Help?" triage row (docs/08 §4 H8, docs/04 §8 strategicproposals triage): three question-led
+    // glass cards on navy, each with one intent-led action. Phone comes from config().
+    'triage' => [
+        'eyebrow' => 'How Can We Help?',
+        'cards' => [
+            [
+                'icon'   => 'clock',
+                'title'  => 'Tender deadline coming up?',
+                'text'   => 'Talk to us today about the opportunity and your deadline.',
+                'label'  => 'Call now',
+                'url'    => 'tel:',          // completed with config('phone_e164') in the template
+                'style'  => 'primary',
+            ],
+            [
+                'icon'   => 'compass',
+                'title'  => 'Bidding for the first time?',
+                'text'   => "We'll guide you through every document and step.",
+                'label'  => 'Book a free consultation', // PROVISIONAL: free consultation to be confirmed by the client
+                'url'    => '/contact-us/#quote',
+                'style'  => 'split',
+            ],
+            [
+                'icon'   => 'shield-check',
+                'title'  => 'Need compliance or digital support?',
+                'text'   => 'From CQC registration to websites and SEO.',
+                'label'  => 'Explore services',
+                'url'    => '/services/',
+                'style'  => 'link',
+            ],
+        ],
+    ],
+
+    // P15 — Testimonials (docs/08 §4 H9): header only; the quotes live in app/data/testimonials.php and the section
+    // is absent while that file is empty.
+    'testimonials' => [
+        'eyebrow' => 'Client Stories',
+        'title'   => 'What Our Clients',
+        'accent'  => 'Say',
+    ],
+
+    // P15 — FAQ teaser (docs/08 §4 H10): the `home`-tagged questions from app/data/faqs.php in an accordion.
+    'faq' => [
+        'eyebrow' => 'FAQ',
+        'title'   => 'Questions,',
+        'accent'  => 'Answered',
+        'text'    => 'Straight answers to the questions we hear most from businesses bidding for contracts. Something else on your mind? Ask us.', // PROVISIONAL
+        'button'  => ['label' => 'View all FAQs', 'url' => '/faq/'],
+    ],
+
+    // [[PENDING: insights + cta (P16)]]
     'insights' => [],
     'cta'      => [],
 ];

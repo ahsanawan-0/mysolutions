@@ -263,6 +263,33 @@ function sectors(): array
     return $sectors ??= require base_path('app/data/sectors.php');
 }
 
+/**
+ * FAQ items (app/data/faqs.php): faqs() → all, faqs('home') → items tagged with that page, faqs(null, 'basics') → one
+ * group, faqs('bid-proposal-management', 'services') → both. Each item: id, q, a, group, pages.
+ */
+function faqs(?string $page = null, ?string $group = null): array
+{
+    static $data = null;
+    $data ??= require base_path('app/data/faqs.php');
+    return array_values(array_filter($data['items'], static fn (array $f): bool =>
+        ($page === null || in_array($page, $f['pages'], true)) && ($group === null || $f['group'] === $group)));
+}
+
+/** FAQ group labels in display order (app/data/faqs.php → groups): slug → label. */
+function faq_groups(): array
+{
+    static $data = null;
+    $data ??= require base_path('app/data/faqs.php');
+    return $data['groups'];
+}
+
+/** Permissioned client testimonials (app/data/testimonials.php). Empty until the client supplies them. */
+function testimonials(): array
+{
+    static $items = null;
+    return $items ??= require base_path('app/data/testimonials.php');
+}
+
 /** Primary navigation items (app/data/navigation.php). */
 function navigation(): array
 {

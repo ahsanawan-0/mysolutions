@@ -73,6 +73,7 @@ Each effect is a module activated by a `data-anim` attribute in the PHP template
 | `tilt` | 3D tilt cards | max 6°, glare highlight, pointer devices only |
 | `wave` | Section divider morph | MorphSVG between 2 wave paths, scrubbed |
 | `nodes` | Network-node background | canvas, slow drift, pointer repulsion, paused off-screen |
+| `accordion` (`data-module`) | C17 FAQ accordion | native `<details>`; JS animates the panel height (0.45s open / 0.32s close, `apple`), closes siblings sharing a `name` with the same tween; plus → minus is CSS; reduced motion = native toggle |
 | `velocity-skew` | Scroll-velocity skew | images skew up to 4° with scroll velocity, then settle |
 
 ---

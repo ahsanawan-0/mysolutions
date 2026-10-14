@@ -2,8 +2,8 @@
 declare(strict_types=1);
 /**
  * Home page. P08: hero (templates/sections/home/hero.php, which renders the header's `hero` variant inside the
- * panel). P11: "Our Services", P10: "Our Approach". The remaining sections (P12–P16) are anchored placeholders so the hero's
- * quick links already work. Section order follows docs/08 §4 (H1 hero → H2 services → H3 approach → H4 sectors …).
+ * panel). P10–P15 built services, approach, the micro-CTA row, sectors, process, why, triage, testimonials (absent until
+ * supplied) and the FAQ teaser; Insights + the final CTA (P16) are still placeholders. Order follows docs/08 §4 (H1–H13).
  * Copy: app/data/home.php.
  */
 $page = [
@@ -20,13 +20,16 @@ $page = [
 
 // id → [label, prompt] for sections not built yet, or a section template name once built
 $sections = [
-    'services' => 'sections/home/services',
-    'approach' => 'sections/home/approach',
-    'sectors'  => 'sections/home/sectors',
-    'process'  => 'sections/home/process',
-    'why'      => 'sections/home/why',
-    'faq'      => ['FAQ', 'P15'],
-    'insights' => ['Latest Insights', 'P16'],
+    'services'     => 'sections/home/services',
+    'approach'     => 'sections/home/approach',
+    'micro'        => 'sections/home/micro-cta',
+    'sectors'      => 'sections/home/sectors',
+    'process'      => 'sections/home/process',
+    'why'          => 'sections/home/why',
+    'triage'       => 'sections/home/triage',
+    'testimonials' => 'sections/home/testimonials',   // renders nothing until app/data/testimonials.php has items
+    'faq'          => 'sections/home/faq',
+    'insights'     => ['Latest Insights', 'P16'],
 ];
 ?>
 <?= render('sections/home/hero') ?>

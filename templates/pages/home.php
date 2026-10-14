@@ -24,7 +24,7 @@ $sections = [
     'approach' => 'sections/home/approach',
     'sectors'  => 'sections/home/sectors',
     'process'  => 'sections/home/process',
-    'why'      => ['Why Work With Us', 'P14'],
+    'why'      => 'sections/home/why',
     'faq'      => ['FAQ', 'P15'],
     'insights' => ['Latest Insights', 'P16'],
 ];

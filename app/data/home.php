@@ -54,7 +54,30 @@ return [
         ],
     ],
 
-    // [[PENDING: why (P14), triage + faq (P15), insights + cta (P16)]]
+    // [[PENDING: triage + faq (P15), insights + cta (P16)]]
+
+    // P14 — "Why Work With Us" bento (docs/08 §4 H7). Titles verbatim from about-us-content.md §4 (client-approved);
+    // the one-liners are condensed from the same copy. Counters are derived from data in the template (never typed).
+    'why' => [
+        'eyebrow' => 'Why My Solutionz',
+        'title'   => 'Why Work',
+        'accent'  => 'With Us',
+        'lead'    => 'More than tender writers. A partner in your business growth.',
+        'tiles'   => [
+            ['title' => 'Business Development Experience That Matters',  'icon' => 'trend-up',           'text' => 'Over 10 years of business development experience behind every bid.'],
+            ['title' => 'Expertise Across Multiple Industries',            'icon' => 'squares-four',       'text' => 'Healthcare, transport, cleaning, security, education and facilities management.'],
+            ['title' => 'Your Business, Not a Generic Template',           'icon' => 'fingerprint',        'text' => 'Every response is built around your experience, people and evidence.'],
+            ['title' => 'Focused on What Buyers Actually Evaluate',        'icon' => 'target',             'text' => 'We write to the specification, the evaluation criteria and the marking scheme.'],
+            ['title' => 'Professional Support Without the Extra Pressure', 'icon' => 'hand-heart',         'text' => 'We manage the agreed writing and bid activities so your team can keep running the business.'],
+            ['title' => 'Flexible Support That Works Around You',          'icon' => 'sliders-horizontal', 'text' => 'From a single tender to ongoing bid management.'],
+            ['title' => 'Committed to Your Long-Term Success',             'icon' => 'handshake',          'text' => 'Lasting partnerships built on consistent quality and reliable communication.'],
+        ],
+        'stats' => [   // {years} / {sectors} / {services} are filled from config() and the data files
+            'years'    => 'years of business development experience',   // L05c wording
+            'sectors'  => 'sectors served',
+            'services' => 'specialist services',
+        ],
+    ],
 
     // P13 — "Our Process, Step by Step" (docs/08 §4 H6): the five Our Approach steps condensed from
     // about-us-content.md §3 (client-approved headings; one-line summaries are ours). Images: process/step-0N(-detail).
@@ -139,7 +162,6 @@ return [
         'text'   => 'At My Solutionz, we help businesses compete for new opportunities through professional tender writing, bid management and business support services. We take the time to understand your services, strengths and objectives, then build responses that reflect what you can genuinely deliver.',
         'button' => ['label' => 'More About Us', 'url' => '/about-us/'],
     ],
-    'why'      => [],
     'triage'   => [],
     'faq'      => [],
     'insights' => [],

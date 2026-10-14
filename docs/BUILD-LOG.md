@@ -511,3 +511,32 @@
 - Client: ten process photos `process/step-0N` (portrait) + `process/step-0N-detail` (square), or five if the detail image should be shared.
 - P19: reuse `component('process-steps', [... 'variant' => 'full', 'class' => ''])` with the `detail` paragraphs from about-us-content.md §3.
 - P14: Why Work With Us bento below this section.
+
+---
+
+## P14 — Home: Why Work With Us bento + logo assembly
+**Date:** 15 October 2026
+**Commit:** `P14: home why-us bento and logo assembly`
+
+**Files created / changed**
+- `templates/sections/home/why.php` (new): `section.why#why` → header (eyebrow "Why My Solutionz", `heading(2, 'Why Work', 'With Us')` with `two-voice`, the client's heading "More than tender writers. A partner in your business growth." as the lead with `fade-up`) → `.why__grid[data-anim="stagger"]` of seven `article.why__tile.hex-tile-trigger` (C07 hex tile `sm`, H3 title verbatim from about-us-content.md §4, one-line text) with the centre tile inserted after the first: `.why__tile--centre.on-dark[data-assembly-scope]` holding `inline_svg('brand/logo-mark.svg', prefix 'why', data-anim="logo-assembly")` and a `<dl>` of three counters — `10+` (parsed from `config('experience')`), `7` (`count(sectors())`), `12` (the sub-services summed from `services()`) — each `data-anim="counter"` with the final number server-rendered. The seventh tile is the Azure gradient tile.
+- `src/css/pages/home-why.css` (new): tiles white with a hairline border, `--r-lg`, lift + `shadow-2` on hover (the hex tile fills through C07's trigger class); centre tile Navy 900 with a soft Azure radial glow behind the mark (so the navy bar still reads), Sky counters; desktop 4 × 3 bento `[1][C][C][2] / [3][C][C][4] / [5][6][7 7]` with the seventh tile laid out horizontally; tablet two columns with the centre and seventh tiles spanning both; mobile one column.
+- `app/data/home.php`: `why` (eyebrow, heading, lead, the seven tiles with icons `trend-up` / `squares-four` / `fingerprint` / `target` / `hand-heart` / `sliders-horizontal` / `handshake`, the three counter labels); the stale empty `why` key removed. `templates/pages/home.php`: `why` maps to its template. `main.css` imports `home-why.css`.
+
+**Decisions**
+- Counter numbers are never typed: 10 comes from the locked experience string, 7 and 12 from the data files, so they stay true when the client adds a sector or service. The year label uses the L05c wording ("years of business development experience").
+- The assembly uses the colour mark (sky hexagon, azure bar, navy bar) so the three brand pieces stay recognisable; the radial glow lifts the navy bar off the navy tile instead of recolouring the logo.
+- The tiles are not links (the copy is the About page's Why Us section, which P19 builds); hover is the only interaction, so the section adds no tab stops.
+- The assembly keeps the catalogue's defaults (fan-out along the 120° axes, scale 2, scrubbed top-bottom → top 35 %); on mobile the effect already shortens the travel to 60 %.
+
+**Deviations**
+- None against the prompt.
+
+**Checks**
+- `php -l` clean; `npm run build` clean, 0 warnings; `seo-audit --all` PASS; `check-content` unchanged at 111 (no new markers: all copy is client-approved).
+- Playwright: before the section enters, the three pieces sit at their scattered transforms with opacity 0; after the centre tile passes 35 % of the viewport every piece is at `matrix(1, 0, 0, 1, 0, 0)` with opacity 1 (1440 and 360). Counters finish on "10+", "7", "12". All eight tiles at opacity 1 after the stagger. Bento placement at 1440 measured: tile 1 / 3 / 5 in column 1, the centre 628 px wide in columns 2–3 over two rows, tiles 2 / 4 in column 4, tile 7 spanning columns 3–4. Reduced motion: pieces untransformed from the start, counters static, nothing hidden. Document width equals the viewport at 360 / 768 / 1024 / 1440; no console errors.
+- Renders inspected at 1440, 1024, 768 and 360.
+
+**Follow-ups**
+- P15: triage row, testimonials (hidden until supplied) and the FAQ teaser.
+- P19: the About page's Why Us section reuses the seven titles with the full paragraphs.

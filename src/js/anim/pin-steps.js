@@ -2,6 +2,7 @@
 // ([data-step-panel]) change at progress thresholds and the progress line ([data-step-progress="y|x"]) fills.
 // On mobile (and without JS) the steps simply stack; each becomes active as it passes 60% of the viewport.
 // The pin-spacer is created on init (ScrollTrigger.refresh in the runner), before the user reaches the section.
+// Options (P13): data-pin-length="0.6" scales the scroll length per step (0.6 → N × 60vh), data-pin-start="top top".
 import { gsap, ScrollTrigger } from '../core/motion.js';
 import { refreshOnLazyImages } from './_util.js';
 
@@ -27,7 +28,8 @@ export default function pinSteps(el, { desktop }) {
     return;
   }
 
-  const end = () => '+=' + n * window.innerHeight;
+  const k = parseFloat(el.dataset.pinLength) || 1;
+  const end = () => '+=' + Math.round(n * window.innerHeight * k);
   ScrollTrigger.create({
     trigger: el, start: el.dataset.pinStart || 'top top', end,
     pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true,

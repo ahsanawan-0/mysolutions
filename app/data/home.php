@@ -54,7 +54,23 @@ return [
         ],
     ],
 
-    // [[PENDING: process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
+    // [[PENDING: why (P14), triage + faq (P15), insights + cta (P16)]]
+
+    // P13 — "Our Process, Step by Step" (docs/08 §4 H6): the five Our Approach steps condensed from
+    // about-us-content.md §3 (client-approved headings; one-line summaries are ours). Images: process/step-0N(-detail).
+    'process' => [
+        'eyebrow' => 'How We Work',
+        'title'   => 'Our Process,',
+        'accent'  => 'Step by Step',
+        'steps'   => [
+            ['title' => 'Understanding Your Business',         'icon' => 'magnifying-glass', 'text' => 'We learn your services, operations, workforce and objectives to identify your competitive strengths.'],              // PROVISIONAL summary
+            ['title' => 'Tender Analysis & Bid Strategy',      'icon' => 'strategy',         'text' => 'We review the ITT, specification and evaluation criteria, then plan a clear bid strategy.'],                           // PROVISIONAL summary
+            ['title' => 'Evidence-Led Tender Writing',         'icon' => 'pen-nib',          'text' => 'Our writers build specific, persuasive responses around your evidence and the marking scheme.'],                     // PROVISIONAL summary
+            ['title' => 'Quality Review & Compliance Checks',  'icon' => 'seal-check',       'text' => 'Every answer is checked against the specification, scoring criteria, word limits and required documents.'],          // PROVISIONAL summary
+            ['title' => 'Final Submission & Ongoing Support',  'icon' => 'paper-plane-tilt', 'text' => 'We support your submission and stay with you for clarifications, feedback and your next opportunity.'],              // PROVISIONAL summary
+        ],
+        'cta' => ['label' => 'See our full approach', 'url' => '/about-us/#our-approach'],
+    ],
 
     // P12 — "Sectors We Serve": pinned horizontal scroll (docs/08 §4 H5). Cards and URLs come from app/data/sectors.php.
     'sectors' => [
@@ -123,7 +139,6 @@ return [
         'text'   => 'At My Solutionz, we help businesses compete for new opportunities through professional tender writing, bid management and business support services. We take the time to understand your services, strengths and objectives, then build responses that reflect what you can genuinely deliver.',
         'button' => ['label' => 'More About Us', 'url' => '/about-us/'],
     ],
-    'process'  => [],
     'why'      => [],
     'triage'   => [],
     'faq'      => [],

@@ -479,3 +479,35 @@
 - Client: the seven sector photos `sectors/<slug>` (portrait 3:4).
 - P13: Process 01–05 below this section.
 - P33: Safari check of the pin inside Lenis and the `mask-image` fade on the clip wrapper.
+
+---
+
+## P13 — Home: Process 01–05 (pinned steps)
+**Date:** 14 October 2026
+**Commit:** `P13: process steps component and home section`
+
+**Files created / changed**
+- `templates/components/process-steps.php` (new, C15, reusable): params `eyebrow`, `heading`, `accent`, `id`, `steps[]` (`title`, `icon`, `text`, optional `detail[]`, `image`, `detail_image`), `variant` `compact|full` (full prints the detail paragraphs, for the About page in P19), `cta`, `class`, `pin_length`. Markup: `.process-steps[data-anim="pin-steps"][data-pin-length]` → `.container` grid → copy column (eyebrow, two-voice H2 with the given id, `ol.process-steps__list` with the vertical line `[data-step-progress="y"]`, one `li[data-step]` per step with the `aria-hidden` "01" numeral, H3 and text, the link-arrow CTA) + `.process-steps__visual[aria-hidden]` with one `[data-step-panel]` per step: two overlapping decorative images (`process/step-0N` 4:5 and `process/step-0N-detail` 1:1, placeholders) and the icon chip. Step 1 and panel 1 carry `.is-active` from the server so the no-JS / reduced-motion state is complete.
+- `src/css/components/process-steps.css` (new): light default + `.on-dark` navy variant through `--ps-*` custom properties; the list's left padding holds the 48 px right-aligned numerals and the 2 px line (fill scales from the top); visual column = a 10 × 10 grid with image A (cols 1–6, rows 1–8), image B (cols 5–10, rows 4–10, 6 px ring in the surface colour, `shadow-2`) and the 64 px Azure chip at the overlap with `shadow-glow`; panels stack in one grid cell and crossfade on `.is-active` (700 ms). ≥ 1024: 7/5 columns; with JS and motion the block is `min-height: 100vh`, centred, and inactive steps sit at `--ps-dim` (.35, never 0) only once the runner has claimed it (`.is-anim`). Below 1024 the images lead (`order: -1`) and every step stays at full opacity; the active numeral still highlights as the step passes 60 % of the viewport (the effect's mobile branch).
+- `src/js/anim/pin-steps.js`: `data-pin-length` (scroll length per step as a fraction of the viewport; the prompt's 5 × 60vh) and the documented `data-pin-start`. `docs/06` §3 row updated.
+- `templates/sections/home/process.php` (new): `section#process[aria-labelledby="process-title"]` rendering the component (compact, `on-dark`, 0.6). `app/data/home.php`: `process` (eyebrow "How We Work", "Our Process, / Step by Step", the five steps with the client's approved headings, our one-line summaries marked `// PROVISIONAL`, icons `magnifying-glass` / `strategy` / `pen-nib` / `seal-check` / `paper-plane-tilt`, CTA "See our full approach" → `/about-us/#our-approach`); the stale empty `process` key removed. `templates/pages/home.php`: `process` maps to its template. `main.css` imports the component CSS.
+
+**Decisions**
+- Navy surface for this section so the home page alternates (dark hero → three light sections → dark process → P14 bento): the two-voice accent turns Sky on dark as base.css already provides.
+- The step numerals are `aria-hidden`; the `<ol>` gives screen readers the numbering, and the panels are `aria-hidden` with decorative images because every step's meaning is in the list text (acceptance: readable without JS).
+- The chip crossfades with its panel rather than morphing: the icons are sprite `<use>` references, so MorphSVG has nothing to morph; the fade reads the same at 700 ms.
+- Found while checking: base.css's `ul[class], ol[class] { padding: 0 }` outranks a single-class selector, so the list's padding (and the numerals) collapsed; the list rule now carries two classes.
+
+**Deviations**
+- None against the prompt. The `draw` effect listed for H6 in docs/08 is not used: the progress line is the `pin-steps` fill (one scrubbed transform), which is the same visual with one fewer plugin on the page.
+
+**Checks**
+- `php -l` clean on the four PHP files; `npm run build` clean, 0 warnings; `seo-audit --all` PASS; `check-content` 111 findings (106 + the five `PROVISIONAL` step summaries); the About anchor target `/about-us/` returns 200 (the stub until P18/P19).
+- Playwright 1440 (900 px viewport): pin-spacer 3600 px = 900 + 5 × 0.6 × 900; steps activate 1 → 5 and the panels follow in step; the line scales 0 → 1; inactive steps at 0.35 (minimum seen); the next section never moves more than one wheel step per tick across the release. 360: no pin, every step at opacity 1, the active numeral and panel follow as the steps pass; reduced motion 1440: no pin, no transform, line full, all steps visible, panel 1 shown. Document width equals the viewport at 360 / 768 / 1024 / 1440; no console errors.
+- Renders: 1440 mid-pin (step 03 highlighted, line at 48 %, chip = pen-nib), 1024, 768 and 360 (images above the list, every step readable).
+- Keyboard: the CTA link is the only tab stop and shows the Sky ring on navy.
+
+**Follow-ups**
+- Client: ten process photos `process/step-0N` (portrait) + `process/step-0N-detail` (square), or five if the detail image should be shared.
+- P19: reuse `component('process-steps', [... 'variant' => 'full', 'class' => ''])` with the `detail` paragraphs from about-us-content.md §3.
+- P14: Why Work With Us bento below this section.

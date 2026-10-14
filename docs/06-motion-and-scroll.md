@@ -65,7 +65,7 @@ Each effect is a module activated by a `data-anim` attribute in the PHP template
 | `counter` | Number count-up | from 0, 1.6s `out`, formats "10+", "12" |
 | `fill-text` | Image-filled numerals pan | `background-position` 0% → 100% scrubbed |
 | `draw` | SVG line draw | DrawSVG 0 → 100%, scrubbed |
-| `pin-steps` | Pinned process | section pinned for N × 100vh, steps change at progress thresholds, progress line fills |
+| `pin-steps` | Pinned process | section pinned for N × 100vh, steps change at progress thresholds, progress line fills. Options (P13): `data-pin-length="0.6"` (N × 60vh), `data-pin-start` |
 | `h-scroll` | Horizontal scroll track | pinned, track translates x by (track − viewport), scrubbed; disabled < 1024px. Options (P12): `[data-h-viewport]` inner visible window (a fixed intro column beside the track), `[data-h-progress]` bar scaled 0 → 1, `[data-h-item]` items; focusing a link inside the track scrolls the page to show it |
 | `stack-cards` | Sticky stacking cards | each card `position: sticky`; previous cards scale to 0.94 and dim as next covers them |
 | `marquee` | Infinite ticker | GSAP `horizontalLoop` helper, direction follows scroll velocity, hover = slow |

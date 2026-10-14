@@ -1,0 +1,164 @@
+/* C15 Process steps (templates/components/process-steps.php, P13): numbered list + progress line on the left,
+   two overlapping images with an icon chip on the right. pin-steps.js toggles .is-active on steps and panels and
+   scales [data-step-progress]; everything below is the static layout plus the state styles.
+   Colours follow the surface: default light; add .on-dark for the navy variant (the home page). */
+.process-steps {
+  --ps-line: var(--navy-100);
+  --ps-fill: var(--azure-500);
+  --ps-num: var(--navy-100);
+  --ps-num-active: var(--azure-650);
+  --ps-ring: var(--ms-canvas);        /* ring round the overlapping image */
+  --ps-dim: .35;
+  position: relative;
+  padding-block: var(--section-y);
+}
+.process-steps.on-dark {
+  --ps-line: rgb(var(--white-rgb) / .14);
+  --ps-fill: var(--sky-300);
+  --ps-num: rgb(var(--white-rgb) / .22);
+  --ps-num-active: var(--sky-300);
+  --ps-ring: var(--navy-900);
+  background: var(--navy-900);
+  color: var(--ms-white);
+}
+.process-steps__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-12);
+  align-items: center;
+}
+
+/* ---------- Copy column ---------- */
+.process-steps__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); min-width: 0; }
+.process-steps__copy .eyebrow { margin: 0; }
+.process-steps__title { margin: 0; text-wrap: balance; }
+.process-steps .process-steps__list {   /* two classes: base.css resets padding on ol[class] */
+  position: relative;
+  display: grid;
+  gap: var(--space-6);
+  width: 100%;
+  margin: var(--space-4) 0 0;
+  padding: 0 0 0 calc(var(--space-16) + var(--space-4));
+  list-style: none;
+}
+.process-steps__line {
+  position: absolute;
+  left: var(--space-16);
+  top: var(--space-2);
+  bottom: var(--space-2);
+  width: 2px;
+  border-radius: var(--r-pill);
+  background: var(--ps-line);
+}
+.process-steps__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ps-fill);
+  transform-origin: 0 0;
+  transform: scaleY(0);
+}
+.process-steps__step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  transition: opacity var(--dur-ui) var(--ease-apple);
+}
+.process-steps__n {
+  position: absolute;
+  left: calc(-1 * (var(--space-16) + var(--space-4)));
+  top: -0.12em;
+  width: var(--space-12);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h3);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-align: right;
+  color: var(--ps-num);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-ui) var(--ease-apple);
+}
+.process-steps__step.is-active .process-steps__n { color: var(--ps-num-active); }
+.process-steps__step-title { margin: 0; font-size: var(--fs-h4); line-height: var(--lh-h4); }
+.process-steps__text { margin: 0; max-width: 46ch; color: var(--text-2); text-wrap: pretty; }
+.on-dark .process-steps__text { color: var(--text-2-on-dark); }
+.process-steps__detail { margin: var(--space-2) 0 0; max-width: 60ch; color: var(--text-2); }
+.on-dark .process-steps__detail { color: var(--text-2-on-dark); }
+.process-steps__cta { margin-top: var(--space-2); }
+
+/* ---------- Visual column: two overlapping images + the icon chip, one panel per step ---------- */
+.process-steps__visual {
+  position: relative;
+  display: grid;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+}
+.process-steps__panel {
+  grid-area: 1 / 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-rows: repeat(10, auto);
+  opacity: 0;
+  transition: opacity var(--dur-reveal) var(--ease-apple);
+}
+.process-steps__panel.is-active { opacity: 1; }
+.process-steps__img { border-radius: var(--r-xl); overflow: hidden; }
+.process-steps__img picture, .process-steps__img img, .process-steps__img .img-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
+.process-steps__img--a { grid-column: 1 / 7; grid-row: 1 / 9; aspect-ratio: 4 / 5; }
+.process-steps__img--b {
+  grid-column: 5 / 11;
+  grid-row: 4 / 11;
+  align-self: end;
+  aspect-ratio: 1 / 1;
+  border: 6px solid var(--ps-ring);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+}
+.process-steps__chip {
+  position: absolute;
+  left: 40%;
+  top: 36%;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-pill);
+  background: var(--azure-650);
+  color: var(--ms-white);
+  box-shadow: var(--shadow-glow);
+  transform: translate(-50%, -50%);
+}
+.process-steps__chip .icon { width: 28px; height: 28px; }
+
+/* ---------- Desktop ≥ 1024: two columns; the pin dims the inactive steps ---------- */
+@media (min-width: 1024px) {
+  .process-steps__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-20); }
+  .process-steps__visual { margin-inline: 0 auto; }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.js .process-steps { min-height: 100vh; display: grid; align-items: center; padding-block: var(--space-16); }
+  html.js .process-steps.is-anim .process-steps__step:not(.is-active) { opacity: var(--ps-dim); }
+}
+/* Mobile keeps every step readable (the active number still highlights as it passes) */
+
+/* No JS / reduced motion: static list, line full, first panel shown */
+html.no-js .process-steps__fill { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .process-steps__fill { transform: none; }
+  .process-steps__step, .process-steps__panel, .process-steps__n { transition: none; }
+}
+
+/* ---------- Mobile < 768 ---------- */
+@media (max-width: 1023px) {
+  .process-steps__visual { order: -1; }   /* the images lead, then the list */
+}
+@media (max-width: 767px) {
+  .process-steps .process-steps__list { padding-left: calc(var(--space-12) + var(--space-3)); gap: var(--space-5); }
+  .process-steps__line { left: var(--space-12); }
+  .process-steps__n { left: calc(-1 * (var(--space-12) + var(--space-3))); width: var(--space-10); font-size: var(--fs-h4); }
+  .process-steps__visual { max-width: 400px; }
+}

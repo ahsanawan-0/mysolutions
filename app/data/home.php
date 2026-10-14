@@ -54,7 +54,26 @@ return [
         ],
     ],
 
-    // [[PENDING: sectors (P12), process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
+    // [[PENDING: process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
+
+    // P12 — "Sectors We Serve": pinned horizontal scroll (docs/08 §4 H5). Cards and URLs come from app/data/sectors.php.
+    'sectors' => [
+        'eyebrow' => 'Sectors',
+        'title'   => 'Sectors We',
+        'accent'  => 'Serve',
+        // Client-approved copy (about-us-content.md §2 Our Story, verbatim)
+        'text'    => 'Each sector presents different challenges, from regulatory compliance and workforce planning to service delivery, contract mobilisation and performance management. Understanding these differences is central to how we approach our work.',
+        'link'    => ['label' => 'All sectors', 'url' => '/sectors/'],
+        'images'  => [   // PROVISIONAL alt text; keys = sectors/<slug> (placeholders until the photos arrive)
+            'healthcare-social-care' => 'Care worker talking with an older resident in a care home lounge',
+            'transport'              => 'Patient transport vehicle outside a hospital entrance',
+            'cleaning'               => 'Commercial cleaner at work in an office corridor',
+            'education-training'     => 'Trainer leading a workshop for adult learners',
+            'security'               => 'Security officer monitoring a building entrance',
+            'facilities-management'  => 'Facilities manager inspecting plant equipment on a site walk',
+            'building-maintenance'   => 'Maintenance engineer repairing a building system',
+        ],
+    ],
 
     // P11 — "Our Services": three stacking category cards (docs/08 §4 H2 🔒 first section after the hero).
     // Categories, sub-services and URLs come from app/data/services.php; only the section copy lives here.
@@ -104,7 +123,6 @@ return [
         'text'   => 'At My Solutionz, we help businesses compete for new opportunities through professional tender writing, bid management and business support services. We take the time to understand your services, strengths and objectives, then build responses that reflect what you can genuinely deliver.',
         'button' => ['label' => 'More About Us', 'url' => '/about-us/'],
     ],
-    'sectors'  => [],
     'process'  => [],
     'why'      => [],
     'triage'   => [],

@@ -1,0 +1,166 @@
+/* ==========================================================================
+   Home "Sectors We Serve" (docs/08 §4 H5, docs/04 §1.0, P12): a pinned horizontal gallery ≥ 1024 (h-scroll.js:
+   the section pins, the card track slides past the fixed intro column, a progress bar fills), a native scroll-snap
+   row below 1024 and under reduced motion (motion.css [data-h-track]). Cards: 3:4 photo, bottom shade, hex icon,
+   H3 link stretched over the card, summary, arrow tile in a bottom-right cut-out (.notch--br). Faint nodes canvas
+   behind the section on desktop only.
+   ========================================================================== */
+.sectors {
+  --card-w: 320px;
+  --intro-w: 420px;
+  --track-gap: var(--space-6);
+  --edge: max(var(--gutter), calc((100vw - var(--container)) / 2));   /* aligns with .container */
+  position: relative;
+  background: var(--ms-canvas);
+}
+.sectors__bg { position: absolute; inset: 0; z-index: 0; display: none; opacity: .55; }   /* faint */
+.sectors__layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-10);
+}
+
+/* ---------- Intro panel ---------- */
+.sectors__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  min-width: 0;
+  padding-inline: var(--edge);
+}
+.sectors__intro .eyebrow { margin: 0; }
+.sectors__title { margin: 0; }
+.sectors__text { margin: 0; max-width: min(42ch, 100%); color: var(--text-2); text-wrap: pretty; }
+.sectors__all { margin-top: var(--space-2); }
+
+/* ---------- Track (native row below 1024 / without JS / reduced motion) ---------- */
+.sectors__scroller { position: relative; min-width: 0; }
+.sectors__track {
+  gap: var(--track-gap);
+  margin: 0;
+  padding: var(--space-2) var(--edge) var(--space-4);
+  list-style: none;
+  scroll-padding-inline: var(--edge);
+  scrollbar-color: var(--azure-500) var(--navy-100);
+}
+.sectors__item { width: var(--card-w); }
+.sectors__progress { display: none; }
+
+/* ---------- Card ---------- */
+.sector-card {
+  --nw: 68px;                       /* arrow-tile cut-out at the bottom-right */
+  --nh: 68px;
+  --gap: 12px;
+  --nr: calc(28px + var(--gap));    /* the 56 px pill tile's radius + the gap */
+  --nf: 20px;
+  position: relative;
+  display: grid;                    /* media and body share one cell, so the body is not positioned and the
+                                       link's stretched ::after covers the whole card */
+  border-radius: var(--r-lg);
+  color: var(--ms-white);
+  transition: transform var(--dur-hover) var(--ease-apple);
+}
+.sector-card__media, .sector-card__body { grid-area: 1 / 1; }
+.sector-card__media {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--r-lg);
+  background: var(--navy-900);
+}
+.sector-card__media picture, .sector-card__media img, .sector-card__media .img-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-reveal) var(--ease-apple);
+}
+.sector-card__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(var(--navy-900-rgb) / 0) 35%, rgb(var(--navy-900-rgb) / .55) 65%, rgb(var(--navy-900-rgb) / .92) 100%);
+  pointer-events: none;
+}
+.sector-card__body {
+  position: relative;               /* above the media; not the link's containing block (no inset) */
+  z-index: 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5) calc(var(--nw) + var(--space-3)) var(--space-5) var(--space-5);
+  pointer-events: none;
+}
+.sector-card__body .hex-tile { margin-bottom: var(--space-1); }
+.sector-card__title { margin: 0; font-size: var(--fs-h4); line-height: var(--lh-h4); text-wrap: balance; }
+.sector-card__link { color: inherit; text-decoration: none; pointer-events: auto; }
+.sector-card__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-lg); }   /* the whole card is the link */
+.sector-card__link:focus-visible { outline: none; }
+.sector-card:has(.sector-card__link:focus-visible) { outline: 2px solid var(--sky-300); outline-offset: 3px; }
+.sector-card__summary { margin: 0; font-size: var(--fs-small); line-height: var(--lh-small); color: var(--navy-200); }
+.sector-card__arrow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline-grid;
+  place-items: center;
+  width: calc(var(--nw) - var(--gap));
+  height: calc(var(--nh) - var(--gap));
+  border-radius: var(--r-pill);
+  background: var(--azure-650);
+  color: var(--ms-white);
+  transition: background-color var(--dur-hover) var(--ease-apple), transform var(--dur-hover) var(--ease-apple);
+}
+.sector-card__arrow .icon { width: 22px; height: 22px; transition: transform var(--dur-hover) var(--ease-apple); }
+@media (hover: hover) {
+  .sector-card:hover { transform: translateY(-4px); }
+  .sector-card:hover .sector-card__media img, .sector-card:hover .sector-card__media .img-placeholder { transform: scale(1.04); }
+  .sector-card:hover .sector-card__arrow { background: var(--azure-500); }
+  .sector-card:hover .sector-card__arrow .icon { transform: translate(2px, -2px); }
+}
+
+/* ---------- Desktop ≥ 1024: pinned layout, intro column + clipped track, progress bar, nodes ---------- */
+@media (min-width: 1024px) {
+  .sectors__bg { display: block; }
+  .sectors__layout { grid-template-columns: var(--intro-w) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .sectors__intro { padding-inline: var(--edge) 0; }
+  .sectors__track { padding: var(--space-3) var(--edge) var(--space-3) 0; scroll-padding-inline: 0; }
+  .sectors__progress {
+    display: block;
+    height: 3px;
+    margin: var(--space-4) var(--edge) 0 0;
+    border-radius: var(--r-pill);
+    background: var(--navy-100);
+    overflow: hidden;
+  }
+  .sectors__progress-bar { display: block; height: 100%; width: 100%; border-radius: inherit; background: var(--azure-500); transform-origin: 0 50%; transform: scaleX(0); }
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.js .sectors { min-height: 100vh; display: grid; align-items: center; padding-block: var(--space-16); }
+  /* the translated track is clipped at the intro column's edge with a short fade, not drawn over it */
+  html.js .sectors__layout { gap: var(--space-8); }
+  html.js .sectors__clip {
+    --fade: 40px;
+    overflow: hidden;
+    margin-block: calc(-1 * var(--space-3));
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade));
+    mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade));
+  }
+  html.js .sectors__track { padding-left: var(--fade, 40px); }   /* the first card starts clear of the fade */
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .sectors { --card-w: 290px; --intro-w: 340px; }
+}
+
+/* Without the pin (no JS, reduced motion) the desktop layout keeps the native row; its scrollbar is the progress */
+html.no-js .sectors__progress, .sectors__progress:not(:has(.sectors__progress-bar[style])) { display: none; }
+
+/* ---------- Mobile < 768 ---------- */
+@media (max-width: 767px) {
+  .sectors { --card-w: min(76vw, 300px); --track-gap: var(--space-4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sector-card, .sector-card__media img, .sector-card__media .img-placeholder, .sector-card__arrow .icon { transition: none; }
+}

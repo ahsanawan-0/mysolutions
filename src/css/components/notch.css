@@ -63,5 +63,27 @@
     var(--notch-inner) left calc(var(--nw) - var(--nr)) bottom calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat; /* inner corner */
 }
 
+/* Hole at the bottom-right (the bottom-left geometry mirrored in x) */
+.notch--br {
+  --notch-fillet: radial-gradient(circle at 0 0, #000 calc(var(--nf) - .5px), transparent var(--nf));
+  --notch-inner:  radial-gradient(circle at 100% 100%, transparent calc(var(--nr) - .5px), #000 var(--nr));
+  -webkit-mask:
+    var(--notch-fill) left 0 bottom calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) left 0 bottom 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,
+    var(--notch-fillet) right var(--nw) bottom 0 / var(--nf) var(--nf) no-repeat,
+    var(--notch-fill) 0 0 / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) right calc(var(--nf) - 1px) bottom var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat,
+    var(--notch-fillet) right 0 bottom var(--nh) / var(--nf) var(--nf) no-repeat,
+    var(--notch-inner) right calc(var(--nw) - var(--nr)) bottom calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat;
+  mask:
+    var(--notch-fill) left 0 bottom calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat,  /* left of the hole */
+    var(--notch-fill) left 0 bottom 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,                       /* bottom strip */
+    var(--notch-fillet) right var(--nw) bottom 0 / var(--nf) var(--nf) no-repeat,                                            /* bottom fillet */
+    var(--notch-fill) 0 0 / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,                                         /* above the hole */
+    var(--notch-fill) right calc(var(--nf) - 1px) bottom var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat, /* over the hole */
+    var(--notch-fillet) right 0 bottom var(--nh) / var(--nf) var(--nf) no-repeat,                                            /* right fillet */
+    var(--notch-inner) right calc(var(--nw) - var(--nr)) bottom calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat; /* inner corner */
+}
+
 /* Switch the cut-out off (stacked layouts put the card under the image instead) */
 .notch--off { -webkit-mask: none; mask: none; }

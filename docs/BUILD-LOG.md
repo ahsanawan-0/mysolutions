@@ -447,3 +447,35 @@
 - Client: the three category photos `services/<slug>` (portrait, 4:5 or taller).
 - P12: Sectors (pinned horizontal scroll) below the approach section.
 - P33: Safari check of `overflow-x: clip` on `.approach__figure` and the `.notch` masks.
+
+---
+
+## P12 — Home: Sectors (pinned horizontal scroll)
+**Date:** 14 October 2026
+**Commit:** `P12: home sectors horizontal scroll`
+
+**Files created / changed**
+- `templates/sections/home/sectors.php` (new): `section.sectors#sectors[data-anim="h-scroll"]` → `.sectors__bg.nodes[data-module="nodes"]` (desktop only) + `.sectors__layout`: the **intro column** (eyebrow "Sectors", `heading(2, 'Sectors We', 'Serve')` with `two-voice`, the client-approved Our Story paragraph, link "All sectors" → `/sectors/`) and `.sectors__scroller[data-h-viewport]` holding `.sectors__clip` > `ul.sectors__track[data-h-track]` of seven `li[data-h-item]` cards from `sectors()`, then the progress bar `[data-h-progress]`. Card (`article.sector-card.on-dark`): 3:4 `img('sectors/<slug>')` in `.notch.notch--br[data-anim="velocity-skew"]`, bottom shade, C07 hex tile, H3 whose link is stretched over the whole card (`::after`), summary, and the 56 px arrow tile in the bottom-right cut-out (decorative; the H3 link is the only tab stop per card).
+- `src/css/pages/home-sectors.css` (new): intro column 420 px (340 at 1024–1279) + track; cards 320 px (290 / `min(76vw, 300px)`); `--edge` aligns the row with `.container`; below 1024 and under reduced motion the track is the native scroll-snap row from motion.css with `scroll-padding-inline`, a thin Azure/Navy 100 scrollbar and the intro stacked above. Desktop + motion: the section is `min-height: 100vh` and centred, the clip wrapper hides the translated track behind the intro column with a 40 px fade (the track is padded by the same 40 px so the first card starts clear of it), the 3 px progress bar fills under the track, the nodes canvas sits behind at 55 %.
+- `src/js/anim/h-scroll.js`: three backwards-compatible options — `[data-h-viewport]` (the visible window for the distance maths, so an untranslated column can sit beside the track), `[data-h-progress]` (scaled 0 → 1 on `onUpdate`), and a `focusin` handler that scrolls the page to the pin position showing the focused `[data-h-item]` (resetting any `scrollLeft` the browser applied to the overflow-hidden clip), so keyboard users never land on a card translated out of view. Cleanup removes the listener on matchMedia rebuild. `docs/06` §3 row updated.
+- `src/css/components/notch.css`: `.notch--br` (bottom-right hole), the bottom-left geometry mirrored in x. `app/data/home.php`: `sectors` section copy (eyebrow, heading, the verbatim paragraph, link, provisional alt text per sector); the stale empty `'sectors' => []` placeholder key removed (a duplicate key later in the array literal silently overrode the new one and threw on render). `templates/pages/home.php`: `sectors` maps to its template.
+
+**Decisions**
+- The intro stays fixed while only the cards travel (Innovax sticky-panel feel, docs/04 §1.0) rather than scrolling the intro away as the first track item: it keeps the heading on screen for the whole pin and the "All sectors" link reachable at every progress.
+- The whole card is clickable through the H3 link's stretched pseudo-element; the arrow tile is visual only. One tab stop per card, with the focus ring drawn on the card (`:has(:focus-visible)`).
+- `velocity-skew` goes on the card media (its `overflow: hidden` already matches `.notch`); the skew follows the vertical scroll velocity, which is what drives the pin.
+- Under reduced motion the row stays a native swipe row (allowed by the prompt) instead of a stacked grid: all seven cards remain reachable with no motion and no pin.
+
+**Deviations**
+- The nodes canvas is hidden below 1024 (prompt: desktop only) by CSS; the module's IntersectionObserver keeps it paused there rather than not loading it (the loader has no media condition).
+
+**Checks**
+- `php -l` clean; `npm run build` clean, 0 warnings; `seo-audit --all` PASS; `check-content` 106 findings (104 + the alt-text `PROVISIONAL` and the sector image keys).
+- Links: `/sectors/` and the seven sector URLs return 200.
+- Playwright 1440: the section pins (`pin-spacer` present), the track translates 0 → −1436 px (= `scrollWidth − viewport`), the progress bar scales 0 → 1, the following section never moves more than one wheel step per tick across the pin end (no jump). Focusing the sixth card's link at the start of the pin scrolls the page so the card sits at x 786–1106 with the 2 px Sky ring on the card. Resize 1440 → 800: pin removed, track `overflow-x: auto`, transform cleared, document width 800; back to 1440: one pin rebuilt, no leftover spacers. Reduced motion: no pin, no transform, bar hidden, static SVG nodes, native row. Document width equals the viewport at 360 / 768 / 1024 / 1440; no console errors.
+- Renders: 1440 mid-pin (cards sliding behind the intro's fade, bar at 44 %), 1024 at the pin start (first card clear of the fade), 768 and 360 swipe rows with the intro above.
+
+**Follow-ups**
+- Client: the seven sector photos `sectors/<slug>` (portrait 3:4).
+- P13: Process 01–05 below this section.
+- P33: Safari check of the pin inside Lenis and the `mask-image` fade on the clip wrapper.

@@ -54,8 +54,23 @@ return [
         ],
     ],
 
-    // [[PENDING: services (P11), sectors (P12), process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
-    'services' => [],
+    // [[PENDING: sectors (P12), process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
+
+    // P11 — "Our Services": three stacking category cards (docs/08 §4 H2 🔒 first section after the hero).
+    // Categories, sub-services and URLs come from app/data/services.php; only the section copy lives here.
+    'services' => [
+        'eyebrow' => 'Our Services',
+        'title'   => 'Everything You Need to',
+        'accent'  => 'Compete and Grow',
+        'intro'   => 'Three specialist service areas, one dependable partner. Choose the support you need, from a single tender to ongoing compliance and digital support.', // PROVISIONAL
+        'explore' => 'Explore {name}',          // button label; {name} = category name
+        'count'   => ['one' => '{n} service', 'other' => '{n} services'],
+        'images'  => [   // PROVISIONAL alt text; keys = services/<category-slug> (placeholders until the photos arrive)
+            'bid-proposal-management'       => 'Bid manager planning a tender response with a client team',
+            'compliance-virtual-assistance' => 'Compliance consultant checking policy documents with a care provider',
+            'digital-presence'              => 'Designer reviewing a business website on a laptop and a phone',
+        ],
+    ],
 
     // P10 — "Our Approach to Winning Contracts" (docs/04 §1.2, docs/08 §4 H3). Paragraph = about-us-content.md §1
     // condensed; the hours card reads config('hours'); the experience claim follows L05c.

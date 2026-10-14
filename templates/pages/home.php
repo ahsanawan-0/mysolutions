@@ -2,7 +2,7 @@
 declare(strict_types=1);
 /**
  * Home page. P08: hero (templates/sections/home/hero.php, which renders the header's `hero` variant inside the
- * panel). P10: the "Our Approach" section. The remaining sections (P11–P16) are anchored placeholders so the hero's
+ * panel). P11: "Our Services", P10: "Our Approach". The remaining sections (P12–P16) are anchored placeholders so the hero's
  * quick links already work. Section order follows docs/08 §4 (H1 hero → H2 services → H3 approach → H4 sectors …).
  * Copy: app/data/home.php.
  */
@@ -20,7 +20,7 @@ $page = [
 
 // id → [label, prompt] for sections not built yet, or a section template name once built
 $sections = [
-    'services' => ['Our Services', 'P11'],
+    'services' => 'sections/home/services',
     'approach' => 'sections/home/approach',
     'sectors'  => ['Sectors We Serve', 'P12'],
     'process'  => ['Our Process', 'P13'],

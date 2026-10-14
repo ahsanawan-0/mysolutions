@@ -413,3 +413,37 @@
 - Client: office hours (docs/15 P08 ❗), the meeting photo `home/approach-meeting` (5:4 or taller) and the handshake photo `home/approach-handshake` for the numerals.
 - P11: the Services section above this one (the hero's `#services` quick link currently lands on the placeholder).
 - P33: Safari check of the seven-layer `mask` shorthand (the hero's `mask-composite` check covers the same ground).
+
+---
+
+## P11 — Home: "Our Services" (3 stacking category cards)
+**Date:** 14 October 2026
+**Commit:** `P11: home services stacking cards`
+
+**Files created / changed**
+- `templates/sections/home/services.php` (new): `section.services#services` (🔒 first section after the hero, docs/08 §4 H2) → header (eyebrow "Our Services", `heading(2, 'Everything You Need to', 'Compete and Grow')` with `two-voice`, the `.lead` intro with `fade-up`) → `.services__stack[data-anim="stack-cards"]` with one `article.service-card` per category from `services()`: `.service-card__top` (C07 hex tile `lg` in the category colour + the "01/02/03" numeral, `aria-hidden`), H3 (`aria-labelledby` on the article), summary, `ul.service-card__subs` (`aria-label="<category> services"`) of `a.service-card__sub.hex-tile-trigger` links (hex tile `sm` + name + one-line summary + a slide-in arrow) → sub-service URLs, then the split button "Explore <category>" → the category URL. Media column: `img('services/<slug>')` 4:5 in `.notch.notch--bl` with the count chip ("3 services" / "5 services" / "4 services", `chip--<colour>` + `hexagon` icon) in the bottom-left cut-out. Digital Presence renders as `.service-card--dark.on-dark` (navy, Sky accent) with the glass split button.
+- `src/css/pages/home-services.css` (new): 7/5 card grid, `min-height: 70vh`, `--r-2xl`, 6 px top band in the category colour (`border-top`), `shadow-2`; the sub-service list in two columns ≥ 1280 (one column 1024–1279, where two are cramped); hover = category ink on the name + underline + the arrow sliding in (the hex tile's gradient fill comes from C07's `.hex-tile-trigger`); `--stack-top` = initial header height + 24 px. Below 1024 and under reduced motion the cards are `position: static` (plain list), the image moves above the body (16:9, 4:3 on phones) and the long "Explore …" label wraps inside a full-width button.
+- `src/css/components/notch.css` (new, shared): the true-mask cut-out from P10 extracted as `.notch.notch--tr` / `.notch--bl` (geometry via `--nw`, `--nh`, `--nr`, `--nf`; `.notch--off`), used by the approach image (top-right) and the service-card images (bottom-left). Adjacent mask layers now **overlap by 1 px** (only into fully visible parts of their neighbours): at fractional box sizes two half-covered pixels at a shared edge unioned to < 100 % alpha and showed as hairline seams (seen at 1024). `home-approach.css` drops its own mask block.
+- `app/data/home.php`: `services` section copy (eyebrow, heading, intro `// PROVISIONAL`, the "Explore {name}" / "{n} services" patterns, provisional alt text per category image). `src/icons.json`: `hexagon` added to the regular weight (sprite rebuilt, 89 symbols). `templates/pages/home.php`: `services` maps to its template.
+- Fix found while checking: the approach section's hours card starts its fade-up 40 px to the right; below 1024 it is full width, so until revealed the document was 40 px wider than the viewport (no visible scrollbar thanks to `html { overflow-x: clip }`, but a real overflow). `.approach__figure { overflow-x: clip }` under 1024.
+
+**Decisions**
+- Category order, names, summaries, icons and every URL come from `app/data/services.php`; the section adds no copy of its own beyond the header and label patterns, so P20/P21 and C-prompts change nothing here.
+- The count chip's hexagon icon and the hex tiles echo the logo (docs/04 §4); no photos of people.
+- Stacking uses the catalogue's `stack-cards` unchanged (sticky from CSS, scale 0.94 / opacity 0.6 scrubbed by JS); the end of the stack needs no special handling because all three cards share the same sticky top and leave together with the container.
+- The numeral uses Mona Sans 500 in Navy 100 (white on the dark card at 18 %) so it reads as a watermark, not a heading.
+
+**Deviations**
+- None against the prompt. The 6 px band is a `border-top` under the card radius, so it tapers into the corners rather than running square across; it reads cleaner with the 32 px radius than a separate bar would.
+
+**Checks**
+- `php -l` clean; `npm run build` clean, 0 warnings; `seo-audit --all` PASS (/, styleguide, motion); `check-content` 104 findings (101 + the intro and alt-text `PROVISIONAL` markers and the new image keys).
+- Links: all 16 hrefs in the section (hub, 3 categories, 12 sub-services) return 200 on the local server.
+- Playwright (php :8000 + Vite): document width equals the viewport at **360 / 768 / 1024 / 1440** at 0.5, 1.5, 2.5, 4 and 6 s after load (bisected by hiding each section); no console errors; no failed requests. Stacking at 1440 sampled through the section: cards sticky at 112 px, card 1 scrubs to scale 0.94 / opacity 0.6 as card 2 covers it, card 2 to 0.959 / 0.73 under card 3, card 3 never dimmed, no top-position jump > one wheel step at the end of the stack. Reduced motion: `position: static`, scale 1 / opacity 1 throughout, arrows always visible.
+- Keyboard: Tab order inside a card is sub-links in order then "Explore …", then the next card; sub-links show the 2 px Azure ring (Sky on the dark card) and the arrow appears on `:focus-visible`; both CTAs ringed; every link ≥ 44 px tall. The hero's "Explore Services" quick link lands with the section 104 px from the top (header offset) through Lenis.
+- Renders inspected at 1440 (card 1 with the chip tab and CTA at the bottom, the dark card with the two cards peeking above it), 1024 (one-column subs), 768 and 360 (image above, chip in the cut-out, wrapped button).
+
+**Follow-ups**
+- Client: the three category photos `services/<slug>` (portrait, 4:5 or taller).
+- P12: Sectors (pinned horizontal scroll) below the approach section.
+- P33: Safari check of `overflow-x: clip` on `.approach__figure` and the `.notch` masks.

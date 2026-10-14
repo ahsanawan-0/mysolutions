@@ -1,0 +1,67 @@
+/* Notch / cut-out over an image (docs/04 §1.5 🔒): painted fillets are only allowed on solid backgrounds, so an
+   image with a cut-out corner uses a TRUE CSS mask — the hole is real transparency and whatever sits behind shows
+   through. Add `.notch` + `.notch--tr` (top-right hole) or `.notch--bl` (bottom-left hole) to the image wrapper and
+   set the geometry on it or an ancestor:
+     --nw  hole width            --nh  hole height
+     --nr  the hole's inner corner radius (= the card's radius + the gap, so the two curves are concentric)
+     --nf  the S-curve fillets where the hole meets the image's outer edges (default --r-xl)
+   P09 rule: --nh ≥ --nr + --nf and --nw ≥ --nr + --nf, otherwise the arcs overlap and the curve shows a spike.
+   The tab/card that sits in the hole is positioned by the page CSS (e.g. `top: 0; right: 0; width: calc(var(--nw) - gap)`).
+   Seven layers, all `no-repeat`, default mask-composite (union): three rectangles round the hole, one on the far
+   side, two fillets, the inner corner. */
+.notch {
+  --nf: var(--r-xl);
+  --nr: calc(var(--r-xl) + 12px);
+  --notch-fill: linear-gradient(#000, #000);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hole at the top-right */
+.notch--tr {
+  --notch-fillet: radial-gradient(circle at 0 100%, #000 calc(var(--nf) - .5px), transparent var(--nf));
+  --notch-inner:  radial-gradient(circle at 100% 0, transparent calc(var(--nr) - .5px), #000 var(--nr));
+  /* Adjacent layers overlap by 1 px (only into fully visible parts of their neighbours), otherwise two half-covered
+     fractional pixels at a shared edge union to < 100 % alpha and show as a hairline seam. */
+  -webkit-mask:
+    var(--notch-fill) 0 calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) 0 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,
+    var(--notch-fillet) right var(--nw) top 0 / var(--nf) var(--nf) no-repeat,
+    var(--notch-fill) 0 100% / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) right calc(var(--nf) - 1px) top var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat,
+    var(--notch-fillet) right 0 top var(--nh) / var(--nf) var(--nf) no-repeat,
+    var(--notch-inner) right calc(var(--nw) - var(--nr)) top calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat;
+  mask:
+    var(--notch-fill) 0 calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat,        /* left of the hole */
+    var(--notch-fill) 0 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,                              /* top strip */
+    var(--notch-fillet) right var(--nw) top 0 / var(--nf) var(--nf) no-repeat,                                         /* top fillet */
+    var(--notch-fill) 0 100% / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,                                /* below the hole */
+    var(--notch-fill) right calc(var(--nf) - 1px) top var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat, /* under the hole */
+    var(--notch-fillet) right 0 top var(--nh) / var(--nf) var(--nf) no-repeat,                                         /* right fillet */
+    var(--notch-inner) right calc(var(--nw) - var(--nr)) top calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat; /* inner corner */
+}
+
+/* Hole at the bottom-left (the top-right geometry mirrored in both axes) */
+.notch--bl {
+  --notch-fillet: radial-gradient(circle at 100% 0, #000 calc(var(--nf) - .5px), transparent var(--nf));
+  --notch-inner:  radial-gradient(circle at 0 100%, transparent calc(var(--nr) - .5px), #000 var(--nr));
+  -webkit-mask:
+    var(--notch-fill) right 0 bottom calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) right 0 bottom 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,
+    var(--notch-fillet) left var(--nw) bottom 0 / var(--nf) var(--nf) no-repeat,
+    var(--notch-fill) 0 0 / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,
+    var(--notch-fill) left calc(var(--nf) - 1px) bottom var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat,
+    var(--notch-fillet) left 0 bottom var(--nh) / var(--nf) var(--nf) no-repeat,
+    var(--notch-inner) left calc(var(--nw) - var(--nr)) bottom calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat;
+  mask:
+    var(--notch-fill) right 0 bottom calc(var(--nf) - 1px) / calc(100% - var(--nw)) calc(100% - var(--nf) + 1px) no-repeat, /* right of the hole */
+    var(--notch-fill) right 0 bottom 0 / calc(100% - var(--nw) - var(--nf) + 1px) var(--nf) no-repeat,                      /* bottom strip */
+    var(--notch-fillet) left var(--nw) bottom 0 / var(--nf) var(--nf) no-repeat,                                            /* bottom fillet */
+    var(--notch-fill) 0 0 / 100% calc(100% - var(--nh) - var(--nf) + 1px) no-repeat,                                        /* above the hole */
+    var(--notch-fill) left calc(var(--nf) - 1px) bottom var(--nh) / calc(var(--nw) - var(--nf) + 2px) var(--nf) no-repeat,  /* over the hole */
+    var(--notch-fillet) left 0 bottom var(--nh) / var(--nf) var(--nf) no-repeat,                                            /* left fillet */
+    var(--notch-inner) left calc(var(--nw) - var(--nr)) bottom calc(var(--nh) - var(--nr)) / calc(var(--nr) + 1px) calc(var(--nr) + 1px) no-repeat; /* inner corner */
+}
+
+/* Switch the cut-out off (stacked layouts put the card under the image instead) */
+.notch--off { -webkit-mask: none; mask: none; }

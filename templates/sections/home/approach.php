@@ -35,7 +35,7 @@ $fillSrc = App\Image::src($a['number']['image']['key'], 800);   // null → bran
       <?= heading(2, $a['title'], $a['accent'], 'approach__title', 'approach-title', ['data-anim' => 'two-voice']) ?>
 
       <div class="approach__figure">
-        <div class="approach__image" data-anim="img-reveal">
+        <div class="approach__image notch notch--tr" data-anim="img-reveal">
           <?= img($a['image']['key'], ['alt' => $a['image']['alt'], 'ratio' => '5/4', 'sizes' => '(min-width: 1024px) 50vw, 100vw', 'cover' => true, 'pattern' => false]) ?>
         </div>
 

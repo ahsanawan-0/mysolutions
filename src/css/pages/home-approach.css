@@ -29,30 +29,10 @@
 .approach__title { margin: 0 0 var(--space-4); max-width: 14ch; text-wrap: balance; }
 
 .approach__figure { position: relative; }
+/* .notch.notch--tr (components/notch.css) cuts the hole with the --nw/--nh/--nr/--nf geometry set on .approach */
 .approach__image {
-  --m: linear-gradient(#000, #000);
-  --fillet: radial-gradient(circle at 0 100%, #000 calc(var(--nf) - .5px), transparent var(--nf));
-  --inner: radial-gradient(circle at 100% 0, transparent calc(var(--nr) - .5px), #000 var(--nr));
-  position: relative;
   border-radius: var(--r-xl);
-  overflow: hidden;
   aspect-ratio: 5 / 4;
-  -webkit-mask:
-    var(--m) 0 var(--nf) / calc(100% - var(--nw)) calc(100% - var(--nf)) no-repeat,
-    var(--m) 0 0 / calc(100% - var(--nw) - var(--nf)) var(--nf) no-repeat,
-    var(--fillet) right var(--nw) top 0 / var(--nf) var(--nf) no-repeat,
-    var(--m) 0 100% / 100% calc(100% - var(--nh) - var(--nf)) no-repeat,
-    var(--m) right var(--nf) top var(--nh) / calc(var(--nw) - var(--nf)) var(--nf) no-repeat,
-    var(--fillet) right 0 top var(--nh) / var(--nf) var(--nf) no-repeat,
-    var(--inner) right calc(var(--nw) - var(--nr)) top calc(var(--nh) - var(--nr)) / var(--nr) var(--nr) no-repeat;
-  mask:
-    var(--m) 0 var(--nf) / calc(100% - var(--nw)) calc(100% - var(--nf)) no-repeat,          /* left of the hole */
-    var(--m) 0 0 / calc(100% - var(--nw) - var(--nf)) var(--nf) no-repeat,                   /* top strip */
-    var(--fillet) right var(--nw) top 0 / var(--nf) var(--nf) no-repeat,                      /* top fillet */
-    var(--m) 0 100% / 100% calc(100% - var(--nh) - var(--nf)) no-repeat,                      /* below the hole */
-    var(--m) right var(--nf) top var(--nh) / calc(var(--nw) - var(--nf)) var(--nf) no-repeat, /* under the hole */
-    var(--fillet) right 0 top var(--nh) / var(--nf) var(--nf) no-repeat,                      /* right fillet */
-    var(--inner) right calc(var(--nw) - var(--nr)) top calc(var(--nh) - var(--nr)) / var(--nr) var(--nr) no-repeat; /* inner corner */
 }
 .approach__image picture, .approach__image img, .approach__image .img-placeholder {
   display: block;
@@ -156,7 +136,9 @@
 /* ---------- Tablet and mobile < 1024: stacked; the hours card sits under the image, no notch ---------- */
 @media (max-width: 1023px) {
   .approach__grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-10); }
-  .approach__image { -webkit-mask: none; mask: none; aspect-ratio: 4 / 3; }
+  .approach__image { -webkit-mask: none; mask: none; aspect-ratio: 4 / 3; }   /* = .notch--off */
+  /* the hours card's fade-up starts 40 px to the right; full-width here, so clip it or the page gets 40 px wider */
+  .approach__figure { overflow-x: clip; }
   .approach__hours {
     position: static;
     width: auto;

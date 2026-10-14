@@ -1,0 +1,188 @@
+/* ==========================================================================
+   Home "Our Services" (docs/08 §4 H2 🔒, docs/04 §4, P11): header + three sticky stacking category cards.
+   motion.css ([data-anim~="stack-cards"]) makes the cards sticky at --stack-top; stack-cards.js scales / dims a
+   covered card. Each card: 7/5 grid — body (tile + number, H3, summary, sub-service links in two columns, split
+   button) and the media column (4:5 image with the count chip in a bottom-left cut-out via .notch--bl).
+   Category colour = a 6 px top band + the hex tiles + hover ink; Digital Presence is the navy variant.
+   ========================================================================== */
+.services { background: var(--ms-canvas); }
+.services__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 60ch;
+  margin-bottom: var(--space-12);
+}
+.services__head .eyebrow { margin: 0; }
+.services__title { margin: 0; text-wrap: balance; }
+.services__intro { margin: 0; }
+
+.services__stack {
+  --stack-top: calc(var(--header-h-initial) + var(--space-6));
+  gap: var(--space-8);
+}
+
+/* ---------- Card ---------- */
+.service-card {
+  --card-accent: var(--cat-bid);
+  --card-ink: var(--azure-800);
+  --card-bg: var(--ms-white);
+  --nw: 200px;                       /* the count-chip cut-out at the image's bottom-left */
+  --nh: 80px;
+  --gap: 12px;
+  --nr: calc(var(--r-xl) + var(--gap));
+  --nf: var(--r-xl);
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-10);
+  min-height: 70vh;
+  padding: var(--space-10);
+  border-top: 6px solid var(--card-accent);
+  border-radius: var(--r-2xl);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+.service-card--compliance { --card-accent: var(--cat-compliance); --card-ink: var(--navy-700); }
+.service-card--digital    { --card-accent: var(--cat-digital); --card-ink: var(--sky-700); }
+.service-card--dark {
+  --card-bg: var(--navy-800);
+  --card-ink: var(--sky-300);
+  color: var(--ms-white);
+}
+
+.service-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.service-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  width: 100%;
+}
+.service-card__num {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-h2);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--navy-100);
+  font-variant-numeric: tabular-nums;
+}
+.service-card--dark .service-card__num { color: rgb(var(--white-rgb) / .18); }
+.service-card__title { margin: 0; font-size: var(--fs-h3); line-height: var(--lh-h3); text-wrap: balance; }
+.service-card__summary { margin: 0; max-width: 52ch; color: var(--text-2); text-wrap: pretty; }
+.service-card--dark .service-card__summary { color: var(--text-2-on-dark); }
+
+/* Sub-services: hex-icon links, two columns ≥ 1024 */
+.service-card__subs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-6);
+  width: 100%;
+  margin: var(--space-2) 0;
+  padding: 0;
+  list-style: none;
+}
+.service-card__sub {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-2) var(--space-2) 0;
+  border-radius: var(--r-md);
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease-apple);
+}
+.service-card__sub .hex-tile { flex: none; }
+.service-card__sub-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.service-card__sub-name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-body);
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: .2em;
+  transition: text-decoration-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.service-card__sub-summary { font-size: var(--fs-small); line-height: var(--lh-small); color: var(--text-2); }
+.service-card--dark .service-card__sub-summary { color: var(--text-2-on-dark); }
+.service-card__sub-arrow {
+  flex: none;
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  color: var(--card-ink);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity var(--dur-hover) var(--ease-apple), transform var(--dur-hover) var(--ease-apple);
+}
+@media (hover: hover) {
+  .service-card__sub:hover .service-card__sub-name { color: var(--card-ink); text-decoration-color: currentColor; }
+  .service-card__sub:hover .service-card__sub-arrow { opacity: 1; transform: none; }
+}
+.service-card__sub:focus-visible .service-card__sub-arrow { opacity: 1; transform: none; }
+.service-card__cta { margin-top: auto; }
+
+/* Media column: the image fills the card height; the count chip sits in the bottom-left cut-out */
+.service-card__media { position: relative; min-width: 0; }
+.service-card__image {
+  height: 100%;
+  min-height: 360px;
+  border-radius: var(--r-xl);
+}
+.service-card__image picture, .service-card__image img, .service-card__image .img-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.service-card__tab {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: calc(var(--nw) - var(--gap));
+  height: calc(var(--nh) - var(--gap));
+}
+.service-card__tab .chip { min-height: 40px; padding-inline: var(--space-4); }
+.service-card--dark .service-card__tab .chip { --chip-bg: var(--sky-300); --chip-fg: var(--navy-900); }
+
+/* ---------- Laptop 1024–1279 ---------- */
+@media (max-width: 1279px) {
+  .service-card { padding: var(--space-8); gap: var(--space-8); }
+  .service-card__subs { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }   /* two columns are cramped here */
+}
+
+/* ---------- Tablet and mobile < 1024: a plain vertical list, no stacking, image above the body ---------- */
+@media (max-width: 1023px) {
+  .services__stack > * { position: static; }
+  .services__stack { gap: var(--space-6); }
+  .service-card { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: var(--space-6); gap: var(--space-6); }
+  .service-card__media { order: -1; }
+  .service-card__image { height: auto; min-height: 0; aspect-ratio: 16 / 9; }
+  .service-card__subs { grid-template-columns: minmax(0, 1fr); }
+  .service-card__num { font-size: var(--fs-h3); }
+}
+@media (max-width: 767px) {
+  .service-card { padding: var(--space-5); border-radius: var(--r-xl); }
+  .service-card__image { aspect-ratio: 4 / 3; }
+  .service-card__tab { --nw: 170px; }
+  .service-card { --nw: 170px; --nh: 72px; }
+  /* the long "Explore <category>" label wraps instead of widening the page */
+  .service-card__cta { width: 100%; justify-content: space-between; height: auto; padding-block: var(--space-1); white-space: normal; text-align: left; }
+}
+
+/* Reduced motion: no stacking (static list), no hover slide */
+@media (prefers-reduced-motion: reduce) {
+  .services__stack > * { position: static; }
+  .service-card__sub-arrow { opacity: 1; transform: none; }
+}

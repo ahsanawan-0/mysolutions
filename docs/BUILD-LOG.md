@@ -377,3 +377,39 @@
 
 **Fix 2 (14 October 2026, client feedback, commit `P09 fix: sector tiles inside the notch`)**
 - The four sector tiles now sit *inside* the canvas notch tab (as in `hero_should`), not in the row below the panel: `.hero__chips` moved into `.hero__notch` (which therefore loses `aria-hidden`), the notch grows to 88 px (≥ 1024) to hold the 56 px tiles, and `.hero__bottom` keeps only the mini insight card. Because the notch is inside the `.on-dark` panel, the tiles get an explicit ink / Azure 800 colour so `base.css`'s `.on-dark a` rules do not turn them white. Below 1024 the notch is already a plain strip under the helper text, so the marquee of all seven sectors is unchanged there. Checked (Playwright): no horizontal scroll at 360 / 768 / 1024 / 1440, the four tiles on one row inside the tab at 1024 (compact padding) and 1440, no console errors.
+
+---
+
+## P10 — Home: "Our Approach to *Winning Contracts*"
+**Date:** 14 October 2026
+**Commit:** `P10: home approach section`
+
+**Files created / changed**
+- `templates/sections/home/approach.php` (new): `section.approach#approach` → `.container.approach__grid` (11fr / 9fr). Left: eyebrow "About My Solutionz", `heading(2, 'Our Approach to', 'Winning Contracts')` with `data-anim="two-voice"`, then `.approach__figure`: the 5:4 image (`img('home/approach-meeting', …, pattern => false)`, `data-anim="img-reveal"`) and the **Office Hours** card (`aside.approach__hours.on-dark`, `aria-labelledby`, `data-anim="fade-up" data-x="40" data-y="-40" data-delay="0.35"`) with a `<dl>` of day ranges built from `config('hours.days')` + `config('hours.closed')` ("Mon–Fri 09:00–17:30", "Sat–Sun Closed") and "Email us any time → info@mysolutionz.co.uk" (`config('email')`). Right (`data-anim="stagger"`): `.approach__num.fill-text` "10+" (`aria-hidden`, `data-anim="fill-text counter" data-to="10" data-suffix="+"`) next to the visually-hidden "Over 10 years of business development experience" (L05c), the sector avatar stack with the label "Strategic bids for sustainable growth", the paragraph, and the split button "More About Us" → `/about-us/`.
+- `src/css/pages/home-approach.css` (new, imported by `main.css` after `home.css`): the notch is a **true CSS mask** on `.approach__image` (docs/04 §1.5 🔒: over an image the cut-out must be real transparency): seven `mask` layers — three plain rectangles around the hole, a fourth under it, two `radial-gradient` fillets (`--nf` = 28 px) where the hole meets the image's top and right edges, and the hole's rounded inner corner (`--nr` = card radius 28 + gap 12 = 40, so the curves are concentric). Geometry in custom properties: `--nw` 360 × `--nh` 248 (≥ 1280), 300 × 236 (1024–1279); P09's rule `notch ≥ fillet + inner radius` holds. The card is absolutely positioned in the hole (`calc(var(--nw) - var(--gap))` wide), Azure 650 → Azure 500 gradient, white text, `shadow-2`. The numerals: Mona Sans 700, `clamp(140px, 16vw, 220px)`, `background-image: var(--fill-image, var(--ms-grad-brand))`, `background-size: 180% auto` so `fill-text` has room to pan; under reduced motion the background sits at 50 %. Below 1024: one column, mask off, the card static under the image, 4:3 image.
+- `app/data/home.php`: `approach` section (eyebrow, heading, image key/alt, card labels, number + SR text + fill-image key `home/approach-handshake`, the three avatars `first-aid-kit`/`bus`/`shield-star` in bid/compliance/digital tints with alt text, the paragraph from `about-us-content.md` §1 condensed, the button). `app/config/site.php`: `hours.closed` (Sat, Sun, `// PROVISIONAL`) and `hours.email_anytime`; the comment forbids 24/7 claims.
+- `templates/components/avatar-stack.php` + `avatar-stack.css`: avatars accept `icon` (+ `category`) and render a small C07 hex tile on a white circle (no fake people); `.avatar-stack--xl` = 56 px. `src/js/anim/fade-up.js`: optional `data-x`, `data-y`, `data-delay` (defaults unchanged: 0 / 24 / 0). `app/lib/Image.php`: `Image::src($key, $minWidth)` returns one JPEG rendition URL for CSS backgrounds, or null when the key is not in the manifest (the template then emits no inline `--fill-image` and the gradient shows).
+- `templates/pages/home.php`: the section list maps `approach` to its template; the other ids stay placeholders in docs/08 §4 order (hero → services → approach → sectors → process → why → faq → insights).
+
+**Decisions**
+- Hours are never typed in the template: the day ranges are derived from `config('hours')` (`Monday…Friday` → "Mon–Fri"), so the client's confirmed hours (docs/15 P08 ❗) are a config change only.
+- The number is `aria-hidden` and the sentence "Over 10 years of business development experience" is the accessible text, so screen readers never hear "zero plus" during the count-up and the L05c wording is exact.
+- The image-filled numerals use a gradient until `home/approach-handshake` exists in the manifest; the inline style carries only the custom property (no CSP in place; `Image::src()` keeps the URL out of the template).
+- The hours card uses `fade-up` with the new offset options (slides in from the top-right, 0.35 s after the image) instead of a new effect; the catalogue stays at 26 effects.
+- Innovax's "Expert Support: Anytime" line is replaced by "Email us any time" so the page never implies 24/7 support (docs/13).
+
+**Deviations**
+- Playwright's `scrollIntoView` / full-page screenshots do not trigger ScrollTrigger reveals under Lenis (the pre-states stay applied); the checks below scroll with the mouse wheel instead. Real users and anchor links are unaffected (P06 verified anchors through Lenis).
+- The split button's tile is white on the primary blue (C03 as built in P05); the reference's white square with a dark arrow matches.
+
+**Checks**
+- `php -l` on all six PHP files clean; `npm run build` clean, 0 warnings; `seo-audit --all` PASS (/, styleguide, motion); `check-content` 101 findings (100 + the new `PROVISIONAL` closed days).
+- Playwright (php :8000 + Vite): `scrollWidth === clientWidth` at **360 / 768 / 1024 / 1440**; no console errors; no 4xx or failed requests on the home page. 1440: image 656 × 525 with the card 348 × 236 in the hole, both fillets and the inner corner drawn, the right column 10+ / stack / text / button; 1024: narrower hole (300 × 236), label on two lines; 768 / 360: stacked, card under the image with no notch.
+- Behaviour: counter samples 3+ → 7+ → 9+ → 10+ and ends on the server text "10+"; `fill-text` background-position 86 % → 100 % over 400 px of scroll; `img-reveal` ends at `inset(0 round 28px)`; nothing left hidden after the reveals. Reduced motion: no counter, background at 50 %, no clip, nothing hidden.
+- Keyboard: Tab reaches the e-mail link (Sky 2 px ring on the gradient card) then "More About Us" (Azure 2 px ring); Shift+Tab reverses.
+- View source: heading, hours, SR sentence, paragraph and button are in the server HTML; no new JSON-LD.
+
+**Follow-ups**
+- Client: office hours (docs/15 P08 ❗), the meeting photo `home/approach-meeting` (5:4 or taller) and the handshake photo `home/approach-handshake` for the numerals.
+- P11: the Services section above this one (the hero's `#services` quick link currently lands on the placeholder).
+- P33: Safari check of the seven-layer `mask` shorthand (the hero's `mask-composite` check covers the same ground).

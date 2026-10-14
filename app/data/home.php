@@ -54,9 +54,41 @@ return [
         ],
     ],
 
-    // [[PENDING: services (P11), approach (P10), sectors (P12), process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
+    // [[PENDING: services (P11), sectors (P12), process (P13), why (P14), triage + faq (P15), insights + cta (P16)]]
     'services' => [],
-    'approach' => [],
+
+    // P10 — "Our Approach to Winning Contracts" (docs/04 §1.2, docs/08 §4 H3). Paragraph = about-us-content.md §1
+    // condensed; the hours card reads config('hours'); the experience claim follows L05c.
+    'approach' => [
+        'eyebrow' => 'About My Solutionz',
+        'title'   => 'Our Approach to',
+        'accent'  => 'Winning Contracts',
+        'image'   => [
+            'key' => 'home/approach-meeting',
+            'alt' => 'Tender writing consultant reviewing a bid with a client team',
+        ],
+        'hours' => [
+            'title'      => 'Office Hours',
+            'closed'     => 'Closed',
+            'email_lead' => 'Email us any time',   // the e-mail address itself comes from config('email')
+        ],
+        'number' => [
+            'value'  => 10,
+            'suffix' => '+',
+            'sr'     => 'Over 10 years of business development experience',   // L05c wording
+            'image'  => ['key' => 'home/approach-handshake', 'alt' => ''],      // fills the numerals; gradient until supplied
+        ],
+        'stack' => [
+            'label'   => 'Strategic bids for sustainable growth',
+            'avatars' => [   // sector hex icons in category tints (docs/09 icon map), never fake people
+                ['icon' => 'first-aid-kit', 'category' => 'bid',        'alt' => 'Healthcare and social care'],
+                ['icon' => 'bus',           'category' => 'compliance', 'alt' => 'Transport'],
+                ['icon' => 'shield-star',   'category' => 'digital',    'alt' => 'Security'],
+            ],
+        ],
+        'text'   => 'At My Solutionz, we help businesses compete for new opportunities through professional tender writing, bid management and business support services. We take the time to understand your services, strengths and objectives, then build responses that reflect what you can genuinely deliver.',
+        'button' => ['label' => 'More About Us', 'url' => '/about-us/'],
+    ],
     'sectors'  => [],
     'process'  => [],
     'why'      => [],

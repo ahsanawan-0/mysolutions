@@ -42,6 +42,9 @@ return [
             // schema.org OpeningHoursSpecification-friendly
             ['days' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], 'opens' => '09:00', 'closes' => '17:30'], // PROVISIONAL
         ],
+        'closed'  => ['Saturday', 'Sunday'], // PROVISIONAL
+        // E-mail is answered outside these hours; never claim 24/7 support (docs/13 §6 claims).
+        'email_anytime' => true,
     ],
 
     'socials' => [

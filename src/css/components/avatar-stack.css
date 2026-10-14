@@ -40,3 +40,9 @@
 .on-dark .avatar-stack { --avatar-ring: var(--navy-900); }
 .on-dark .avatar-stack__label { color: var(--navy-200); }
 .avatar-stack--lg { --avatar-size: 52px; }
+.avatar-stack--xl { --avatar-size: 56px; }
+
+/* Icon avatars: a small hex tile (C07) on white, e.g. sector icons where there are no people photos (P10) */
+.avatar--icon { background: var(--ms-white); overflow: visible; }
+.avatar--icon .hex-tile { --tile-size: calc(var(--avatar-size) * .62); }
+.avatar--icon .hex-tile .icon { width: calc(var(--tile-size) * .55); height: calc(var(--tile-size) * .55); }

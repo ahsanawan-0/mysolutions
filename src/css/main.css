@@ -32,5 +32,6 @@
 
 @import '/src/css/components/special-frame.css';
 @import '/src/css/pages/home.css';
+@import '/src/css/pages/home-approach.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

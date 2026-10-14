@@ -2,7 +2,8 @@
 declare(strict_types=1);
 /**
  * Home page. P08: hero (templates/sections/home/hero.php, which renders the header's `hero` variant inside the
- * panel). The remaining sections (P10–P16) are anchored placeholders so the hero's quick links already work.
+ * panel). P10: the "Our Approach" section. The remaining sections (P11–P16) are anchored placeholders so the hero's
+ * quick links already work. Section order follows docs/08 §4 (H1 hero → H2 services → H3 approach → H4 sectors …).
  * Copy: app/data/home.php.
  */
 $page = [
@@ -17,9 +18,10 @@ $page = [
     'primary_image'  => '/assets/og/default.jpg',
 ];
 
-$placeholders = [
+// id → [label, prompt] for sections not built yet, or a section template name once built
+$sections = [
     'services' => ['Our Services', 'P11'],
-    'approach' => ['Our Approach', 'P10'],
+    'approach' => 'sections/home/approach',
     'sectors'  => ['Sectors We Serve', 'P12'],
     'process'  => ['Our Process', 'P13'],
     'why'      => ['Why Work With Us', 'P14'],
@@ -28,8 +30,12 @@ $placeholders = [
 ];
 ?>
 <?= render('sections/home/hero') ?>
-<?php foreach ($placeholders as $id => [$label, $prompt]): ?>
+<?php foreach ($sections as $id => $section): ?>
+<?php if (is_string($section)): ?>
+<?= render($section) ?>
+<?php else: [$label, $prompt] = $section; ?>
 <section class="section home-placeholder" id="<?= e($id) ?>" aria-label="<?= e($label) ?>">
   <div class="container"><p class="small">[[PENDING: <?= e($label) ?> section (<?= e($prompt) ?>)]]</p></div>
 </section>
+<?php endif; ?>
 <?php endforeach; ?>

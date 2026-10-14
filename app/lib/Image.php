@@ -90,6 +90,30 @@ final class Image
     }
 
     /**
+     * URL of one rendition for CSS use (background-image fills such as the image-filled "10+" numerals):
+     * the smallest JPEG at least $minWidth wide, or the largest one. Null when the image is not in the manifest,
+     * so the caller can fall back to a gradient instead of a broken URL.
+     */
+    public static function src(string $key, int $minWidth = 800): ?string
+    {
+        $entry = self::manifest()[$key] ?? null;
+        if ($entry === null) {
+            return null;
+        }
+        $widths = $entry['widths'];
+        sort($widths);
+        $pick = max($widths);
+        foreach ($widths as $w) {
+            if ($w >= $minWidth) {
+                $pick = $w;
+                break;
+            }
+        }
+        $dir = str_contains($key, '/') ? substr($key, 0, strrpos($key, '/') + 1) : '';
+        return self::BASE . $dir . basename($key) . '-' . $pick . '.jpg';
+    }
+
+    /**
      * Branded placeholder: navy→azure gradient, faint hexagon pattern and a `[[PENDING IMAGE: key]]`
      * label, at the requested aspect ratio (`ratio => '16/9'`, default 16/9). Colours via CSS variables only.
      */

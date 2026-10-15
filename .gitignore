@@ -23,6 +23,9 @@
 /.claude/skills/pixel2motion/
 /design/logo-motion/outputs/
 
+# Unrelated local files (BIOMEE social media images, not part of this site)
+/BIOMEE/
+
 # OS files
 .DS_Store
 Thumbs.db

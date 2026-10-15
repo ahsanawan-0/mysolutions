@@ -19,9 +19,10 @@ $categories = [
         'summary' => 'From finding the right contracts to final submission, we manage your tenders so your team can focus on running the business.',
         'status'  => 'published',
         'subs'    => [
-            ['slug' => 'tender-bid-writing',         'name' => 'Tender & Bid Writing',       'icon' => 'pen-nib',     'summary' => 'Evidence-led responses written to score.',       'status' => 'draft'], // PROVISIONAL
-            ['slug' => 'opportunity-identification', 'name' => 'Opportunity Identification', 'icon' => 'binoculars',  'summary' => 'The right contracts, found and qualified.',      'status' => 'draft'], // PROVISIONAL
-            ['slug' => 'expert-review',              'name' => 'Expert Review',              'icon' => 'list-checks', 'summary' => "An evaluator's-eye review before you submit.",  'status' => 'draft'], // PROVISIONAL
+            // Summaries condensed from the client's page taglines (docs/website_content/services/01a–01c, 15 Oct 2026); P21 publishes the pages
+            ['slug' => 'tender-bid-writing',         'name' => 'Tender & Bid Writing',       'icon' => 'pen-nib',     'summary' => 'Tender writing that gives you a competitive advantage.', 'status' => 'draft'], // PROVISIONAL
+            ['slug' => 'opportunity-identification', 'name' => 'Opportunity Identification', 'icon' => 'binoculars',  'summary' => 'Find the right opportunities for your business.',        'status' => 'draft'], // PROVISIONAL
+            ['slug' => 'expert-review',              'name' => 'Expert Review',              'icon' => 'list-checks', 'summary' => 'Expert eyes and a stronger bid before you submit.',      'status' => 'draft'], // PROVISIONAL
         ],
     ],
     [

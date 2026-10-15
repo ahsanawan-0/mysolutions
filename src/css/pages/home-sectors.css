@@ -99,7 +99,7 @@
 .sector-card__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-lg); }   /* the whole card is the link */
 .sector-card__link:focus-visible { outline: none; }
 .sector-card:has(.sector-card__link:focus-visible) { outline: 2px solid var(--sky-300); outline-offset: 3px; }
-.sector-card__summary { margin: 0; font-size: var(--fs-small); line-height: var(--lh-small); color: var(--navy-200); }
+.sector-card__summary { margin: 0; font-size: var(--fs-body); line-height: var(--lh-small); color: var(--navy-200); }
 .sector-card__arrow {
   position: absolute;
   right: 0;

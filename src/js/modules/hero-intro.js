@@ -3,7 +3,7 @@
 // after paint; this module builds the GSAP timeline, takes the pre-states over (.is-intro-live), waits for
 // `splash:done` (or runs at once when the splash already finished or never played) and plays:
 //   0.00 panel clip-path opens · 0.10 photo scale 1.15 → 1 (opacity stays 1: it is the LCP element) · 0.30 nav
-//   items · 0.35 badge pop · 0.45 H1 lines slide up inside SplitText masks (no opacity) · 0.70 lead · 0.80
+//   items · 0.45 H1 lines slide up inside SplitText masks (no opacity) · 0.70 lead · 0.80
 //   Quick-Start bar · 0.90 cards slide in from +80 and the frame draws itself (--draw) then starts orbiting ·
 //   1.10 helper + quick links · 1.20 mini card + chips stagger.
 // Scroll: photo yPercent 12, copy yPercent −8 + fade to .6, stage yPercent −14, panel radius 28 → 40 (scrubbed;
@@ -58,7 +58,7 @@ export default function heroIntro(hero) {
       defaults: { ease: 'expo.out' },
       onComplete: () => {
         split.revert();
-        gsap.set([panel, photo, navItems, one('.hero__badge'), one('.hero__lead'), one('.quick-start'), cardLinks, one('.hero__helper'), one('.hero__links'), one('.hero__controls'), one('.hero__mini'), chips].filter(Boolean), { clearProps: 'all' });
+        gsap.set([panel, photo, navItems, one('.hero__lead'), one('.quick-start'), cardLinks, one('.hero__helper'), one('.hero__links'), one('.hero__controls'), one('.hero__mini'), chips].filter(Boolean), { clearProps: 'all' });
         hero.classList.add('is-intro-done');
         parallax();
       },
@@ -66,7 +66,6 @@ export default function heroIntro(hero) {
     tl.fromTo(panel, { clipPath: `inset(5% 4% 5% 4% round ${radius})` }, { clipPath: `inset(0% 0% 0% 0% round ${radius})`, duration: 0.9 }, 0)
       .fromTo(photo, { scale: 1.15, transformOrigin: '60% 50%' }, { scale: 1, duration: 1.4, ease: 'power2.out' }, 0.1)   // opacity stays 1 (LCP)
       .fromTo(navItems, { y: -12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.05 }, 0.3)
-      .fromTo(one('.hero__badge'), { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(1.6)' }, 0.35)
       .from(split.lines, { yPercent: 110, duration: 0.9, stagger: 0.08 }, 0.45)
       .fromTo(one('.hero__lead'), { y: 16, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7 }, 0.7)
       .fromTo(one('.quick-start'), { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7 }, 0.8)

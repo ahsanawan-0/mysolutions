@@ -138,7 +138,7 @@
   letter-spacing: 0.08em;
   color: var(--ms-ink);
 }
-.approach__text { margin: 0; max-width: 46ch; font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.approach__text { margin: 0; max-width: 46ch; font-size: var(--fs-body); line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
 .approach__cta { margin-top: var(--space-2); }
 
 /* ---------- Laptop 1024–1279: a narrower hole, smaller card type ---------- */
@@ -167,7 +167,6 @@
 @media (max-width: 767px) {
   .approach__hours { padding: var(--space-4) var(--space-5); }
   .approach__num { font-size: clamp(104px, 30vw, 140px); }
-  .approach__text { font-size: var(--fs-body); }
 }
 
 @media (prefers-reduced-motion: reduce) {

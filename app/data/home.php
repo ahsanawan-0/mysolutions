@@ -9,8 +9,7 @@ declare(strict_types=1);
  */
 return [
     'hero' => [
-        'badge' => 'UK Bid & Proposal Management', // PROVISIONAL
-        // H1, two lines; the second line is the italic accent (two-voice heading).
+        // H1, two lines; the second line is the blue accent (two-voice heading, same upright Figtree).
         // Alternatives kept for the client: B "Compete With" / "Confidence." · C "Your Next Contract" / "Starts Here."
         'title'   => 'Tenders, Crafted',  // PROVISIONAL
         'accent'  => 'for Success.',      // PROVISIONAL

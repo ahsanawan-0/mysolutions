@@ -1,0 +1,108 @@
+/* C31 Select: the custom listbox that src/js/modules/select.js builds over a native <select> (`data-module="select"`).
+   Without JS the native control shows; with JS it stays in the form, visually hidden. The popup is a top-layer popover
+   (fixed position set by JS), so no ancestor overflow, clip-path or transform can cut it off. */
+
+.select__native {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.select__trigger {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: start;
+  user-select: none;
+}
+.select__trigger:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.select__trigger[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+
+/* ---------- Popup ---------- */
+.select__list {
+  position: fixed;
+  inset: auto;                         /* the popover UA styles centre it; JS sets top/bottom/left/width/max-height */
+  z-index: 950;                        /* only used by the no-popover fallback; the top layer needs none */
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-2);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--ms-line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--ms-ink);
+  box-shadow: var(--shadow-3);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.3;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ms-line) transparent;
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity var(--dur-hover) var(--ease-out), translate var(--dur-hover) var(--ease-out);
+}
+.select__list--fixed:not(.is-open) { display: none; }
+@starting-style {
+  .select__list { opacity: 0; translate: 0 -6px; }
+  .select__list[data-side="top"] { translate: 0 6px; }
+}
+
+/* Groups: an eyebrow-style heading with the category icon; a hairline between groups */
+.select__group + .select__group,
+.select__option + .select__group { margin-top: var(--space-1); padding-top: var(--space-1); border-top: 1px solid var(--ms-line); }
+.select__group-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  color: var(--text-2);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: var(--lh-eyebrow);
+  text-transform: uppercase;
+}
+.select__group-label .icon { width: 14px; height: 14px; color: var(--option-icon); }
+
+/* Options */
+.select__list { --option-icon: var(--azure-650); }
+.select__list [data-colour="bid"]        { --option-icon: var(--cat-bid); }
+.select__list [data-colour="compliance"] { --option-icon: var(--cat-compliance); }
+.select__list [data-colour="digital"]    { --option-icon: var(--cat-digital-ink); }
+.select__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--r-xs);
+  color: var(--ms-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.select__option > .icon { flex: none; width: 18px; height: 18px; color: var(--option-icon); }
+.select__text { flex: 1; min-width: 0; }
+.select__check { flex: none; width: 16px; height: 16px; color: var(--azure-650); opacity: 0; }
+.select__option.is-active { background: rgb(var(--azure-500-rgb) / .08); }
+.select__option[aria-selected="true"] { color: var(--azure-700); font-weight: var(--fw-medium); }
+.select__option[aria-selected="true"] .select__check { opacity: 1; }
+.select__option[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+@media (pointer: coarse) {
+  .select__option { min-height: var(--target-min); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select__list, .select__option { transition: none; }
+}
+@media (forced-colors: active) {
+  .select__option.is-active { outline: 2px solid Highlight; outline-offset: -2px; }
+  .select__option[aria-selected="true"] .select__check { color: Highlight; }
+}

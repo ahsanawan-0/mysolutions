@@ -640,3 +640,92 @@
 - Responsive pipeline generated 96 AVIF/WebP/JPEG renditions from the 10 originals. Generated the photographic homepage OG image. Kept existing lazy loading, dimensions, srcsets and high-priority hero loading.
 - Validation: PHP syntax checks passed; npm run build passed; homepage HTTP 200; all homepage image references exist; 24 picture elements and zero data-pending-image markers; sample WebP for each of the 10 originals served successfully; SEO audit passed for all three current pages.
 - Content checker retains unrelated provisional copy/route findings and four missing demo image keys used only in the local styleguides. Browser visual inspection was unavailable because browser access was rejected by the browser security policy; source mappings, generated images and HTTP assets were checked instead.
+
+---
+
+## Client change — Figtree everywhere, 14px paragraphs, hero badge removed
+**Date:** 15 October 2026
+
+**Client instruction:** remove the hero badge pill ("UK Bid & Proposal Management"); one simple font everywhere, Figtree, including the italic accent words; paragraphs 14px with the headings scaled to match. Confirmed in chat: badge only (section eyebrows stay), accent words upright Figtree in the brand blue, Figtree downloaded from npm and self-hosted.
+
+**Files created / changed**
+- `docs/00-LOCKED-DECISIONS.md`: L11 (Figtree only, 14px paragraphs), L15 (accent words upright, colour only), L18 (no badge) amended with the date; `docs/02` §3 rewritten (family, scale table, rules); `docs/03` C01/C02/C06, `docs/04` §1.0 and `docs/05` (badge row + 0.35 timeline step struck through) marked as superseded; CLAUDE.md `npm run fonts` line.
+- `package.json`: + `@fontsource-variable/figtree` 5.3.0 (OFL); − `@fontsource-variable/mona-sans`, `@fontsource-variable/google-sans`, `@fontsource/playfair-display` (Khand stays: logo build only).
+- `scripts/fonts.py` → `public/assets/fonts/figtree-var.woff2` (Latin subset, wght 400–700, 18 KB; was 89 KB across three files, now deleted); `src/css/fonts.css` = Figtree + metric-matched Arial fallback (101.52 % / 93.57 % / 24.62 %); `templates/partials/head-seo.php` preloads the one file.
+- `src/css/tokens.css`: `--font-sans` (Figtree) with `--font-display` / `--font-body` as aliases, `--font-accent` removed; scale from 14px: display 36→56, h1 32→44, h2 26→34, h3 20→24, h4 16→18, body 14, small 13, eyebrow 12, new `--fs-ui` 14 / `--fs-ui-lg` 16; `--fs-lead` 16 is now UI-only (FAQ questions, large buttons, quotes); headings weight 600, looser line-heights for Figtree.
+- `src/css/base.css`: `h* em` = inherit family/weight, `font-style: normal`, Azure 600 (Sky 300 on dark, gradient on `.display` only); `.lead` uses the body size. Paragraph classes on 14px: hero lead + helper, approach text, CTA band text, sector card summaries.
+- Hard-coded UI sizes moved onto tokens: nav links, header phone, mega-menu items, mobile menu links (`--fs-h3`), hero card title/chip, Quick-Start labels/button, mini card, chips; the footer wordmark and display marquee scaled down to match (decorative numerals unchanged).
+- Hero: badge markup, `badge` data string, its CSS (incl. the gradient defs used only by it) and the 0.35s `back.out` tween removed (`hero.php`, `app/data/home.php`, `home.css`, `hero-intro.js`); `--hero-title-size` = `--fs-display`, breakpoint overrides removed.
+- `scripts/og.mjs`: SVG text family → Figtree (renders with the Arial fallback, as before); styleguide type copy + gradient sample.
+
+**Checks**
+- Every element on `/` and `/styleguide/` computes to Figtree (the only loaded face: Figtree 400–700); hero H1 56px at 1440 / 36px at 360, accent upright Sky 300 on dark, h2 accent Azure 600 on light; every paragraph 14px except the footer legal line and the hours label (13px captions).
+- `php -l` clean; `npm run build` clean; document width = viewport at 360 / 412 / 768 / 1024 / 1440; no console errors or failed requests; `seo-audit --all` PASS; `check-content` 114 (badge marker gone); Lighthouse accessibility 100.
+
+**Follow-ups**
+- PROMPTS.md still describes the old fonts / italic accent in later prompts (P17+): L11/L15/L18 in docs/00 take precedence.
+
+---
+
+## Client change — custom dropdowns (C31 Select) for the Quick-Start bar
+**Date:** 15 October 2026
+
+**Client instruction:** the native `<select>` popup (browser default list) looks unprofessional; use a custom dropdown.
+
+**Files created / changed**
+- `src/js/modules/select.js` (new, lazy `data-module="select"`): WAI-ARIA APG select-only combobox over the native `<select>`: a focusable `role="combobox"` shows the value (`aria-labelledby` = the field label, `aria-activedescendant` for the active option), a `role="listbox"` popup lists the options (optgroups → `role="group"` with an eyebrow heading; `data-icon` → Phosphor light icon from `data-sprite`; `data-colour` → category tint; check icon on the selected option). Keyboard: ↓ ↑ Enter Space open; ↓ ↑ Home End PageUp PageDown move; Enter Space Tab Alt+↑ choose; Esc closes; type-ahead (buffer cleared on close). Mouse: click / hover / outside click / label click. The popup is a manual popover (top layer: the hero panel's clip, overflow and the intro/parallax transforms cannot cut it off; no-popover browsers get a fixed element on `<body>`), opens below the `[data-select-anchor]` field or above when there is more room, max 360px with its own scroll (`data-lenis-prevent`), follows the page scroll and closes when the field leaves the viewport. The native `<select>` stays in the form (visually hidden, `tabindex=-1`, `aria-hidden`) and receives `input`/`change` events; reset, bfcache restore and `invalid` are handled; without JS it is the visible control.
+- `src/css/components/select.css` (new, imported by `main.css`): white popup, radius 16, Shadow 3, 8px padding, options 40px (44px on coarse pointers), active = Azure 500 at 8 %, selected = Azure 700 + check, hairlines between groups, `@starting-style` fade/slide in, reduced-motion and forced-colours rules.
+- `templates/sections/home/hero.php`: `data-select-anchor` on both fields, `data-module="select"` + `data-sprite` on both controls, `data-icon` on every option (sectors / sub-services from the data, `squares-four` for "Any", `hexagon` for "Other") and `data-icon` + `data-colour` on the service optgroups. `home.css`: the caret turns 180° and Azure while open.
+- `docs/03` C31, CLAUDE.md pointer.
+
+**Checks**
+- Playwright 1440 + 360: click opens (below at 1440; above at 360 for the service list, where there is more room), hover highlights, click chooses and returns focus; ↓ / End / type-ahead ("s" → Security, "tr" → Transport) / Enter / Esc / Tab behave as in the APG pattern; outside click closes; the label opens it; the form submits `?sector=transport&service=care-plans`; the wheel over the list scrolls only the list, a page scroll moves the list with its field (scroll position kept) and closes it once the field leaves the viewport. No console errors.
+- `npm run build` clean (`select` chunk 2.6 KB gzip); Lighthouse accessibility 100.
+
+---
+
+## Client fix — mega menu / sectors panel glass (text behind showing through)
+**Date:** 15 October 2026
+
+**Problem:** over the dark process section the Services mega menu showed the page text behind it sharp and readable, clashing with the menu text. Cause: the compact header put its own `backdrop-filter` on `.site-header`, which makes the header the *backdrop root* of everything inside it, so the panels' `backdrop-filter` could only blur the header, never the page; the 72 % navy tint alone let the text through.
+
+**Fix**
+- `src/css/components/header.css`: the compact glass bar (dark + light, the no-`backdrop-filter` and reduced-transparency fallbacks) moved from `.site-header` onto `.site-header::before` (absolute, `z-index: -1`, fades in with `.is-scrolled`), the same technique `.glass-nav::before` already used. The header itself has no backdrop-filter any more, so the panels blur the page.
+- `src/css/tokens.css`: `--glass-menu-dark-bg` (navy 900 at 90 %) and `--glass-menu-dark-blur` (32px, saturate 170 %). `src/css/components/mega-menu.css`: `.menu.glass-thick-dark` uses them plus a soft white top sheen; solid navy without backdrop-filter support or under `prefers-reduced-transparency`.
+
+**Checks**
+- Playwright 1440: follow header over the process section → Services mega menu: the steps and photo behind are blurred to a soft navy wash, all labels readable; over the light Why section → Sectors dropdown frosted and readable; the header's glass is on `::before` (`blur(24px)` dark / `blur(20px)` light), the header element has `backdrop-filter: none`. `npm run build` clean.
+
+---
+
+## Client fix — hero header menus not opening (duplicate ids)
+**Date:** 15 October 2026
+
+**Problem:** on the home hero, Services / Sectors flipped their caret (`aria-expanded="true"`) but no panel appeared. Cause (P16 regression): the follow header and the hero header both printed `id="menu-services"` / `id="menu-sectors"`; the follow header comes first in the DOM, so `header.js` (`getElementById(aria-controls)`) opened the follow header's panel, which is hidden while the hero is on screen.
+
+**Fix**
+- `templates/partials/header.php`: menu ids and `aria-controls` come from `$menuId()`, which prefixes `hf-` in the follow header (as its logo ids already were); the page has no duplicate ids any more.
+- `src/css/components/mega-menu.css`: the menu link colours are set at two-class specificity (`.menu .menu__sub`, `.menu .menu__cat`) so the hero panel's `.on-dark a` (Sky) no longer turns the item names blue inside the hero.
+
+**Checks**
+- Playwright 1440: hover on Services / Sectors in the hero header opens the frosted panels (white names, Navy 200 summaries); Enter on the toggle opens, Esc closes and keeps focus on the toggle; the follow header's menus still open over the process section; no duplicate ids on `/`; `npm run build` clean.
+
+---
+
+## Client content — Bid & Proposal Management services copy
+**Date:** 15 October 2026
+
+**Client input:** an updated `My Solutionz - Website content.docx`. The About text is unchanged; a new *Our Services* part adds the final copy for **Bid & Proposal Management** (category page) and its 3 sub-services **Tender & Bid Writing**, **Opportunity Identification** and **Expert Review**. None of these pages is built yet (P20/P21), so the copy goes into the content docs and the prompts.
+
+**Files created / changed**
+- `docs/website_content/My Solutionz - Website content.docx` replaced by the new version (a superset of the old one).
+- `docs/website_content/services/01-bid-proposal-management.md` rewritten from the client copy (replaces our 13 Oct draft: the draft's benefits bento, personas, Procurement Act checklist and 4 "why" points are dropped; its 8 FAQs stay as provisional). New `01a-tender-bid-writing.md`, `01b-opportunity-identification.md`, `01c-expert-review.md`. Each has the client copy verbatim mapped to page blocks, an SEO pack (titles 46–52 chars, descriptions 141–159), schema, internal links, icons, layout/motion table and client notes. A script check confirmed every client sentence is present word for word.
+- "Over 16 years" appears 5 times in the new services copy: written as "over 10 years of business development experience" everywhere (L05c).
+- Client gaps filled with `PROVISIONAL` copy: one-line descriptions for the 6 "How We Manage Your Bids" steps (headings only in the docx), the sub-service cards heading/intro, the category FAQs; Tender & Bid Writing uses the default CTA label.
+- `app/data/services.php`: the 3 Bid & Proposal sub-service one-liners (mega menu, hero slider, home services cards, llms.txt) condensed from the client's page taglines, still `// PROVISIONAL`.
+- `PROMPTS.md`: P20 and P21 rewritten around the client's structure (typed `sections[]` blocks shared by the category and sub-service templates, `rich()` helper for the client's bold + internal links, 6-step process, CTA band `sub`/paragraphs, template name `single.php` as in `app/routes.php`, new icons listed); P21 publishes the 3 sub-services, so **C03a is absorbed into P21**; status table + header updated.
+- `docs/00` P06, `docs/08` §7a/§7b (dated notes on the client structure), `docs/09` §1–§4 (4 of 15 service pages final), `docs/15` Q03, Q06b ((c) private sector confirmed), new Q06c (provisional gaps for the client).
+
+**Follow-ups**
+- Client: approve or replace the Q06c items (step descriptions, subs intro, FAQs, CTA label, one-liners); free quote + portal uploads (Q06b).
+- Next service content: Category 2 (Compliance & Virtual Assistance) in the same shape.

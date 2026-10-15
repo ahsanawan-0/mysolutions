@@ -120,7 +120,7 @@ Together they read as an **M** rising upward to the right, a visual metaphor for
 --ms-grad-hero:   radial-gradient(1200px 600px at 75% 20%, rgba(0,154,240,.28), transparent 60%),
                   radial-gradient(900px 500px at 10% 90%, rgba(141,214,255,.14), transparent 60%),
                   #011B43;
---ms-grad-text:   linear-gradient(100deg, #009AF0, #003C8C); /* italic accent words, large sizes only */
+--ms-grad-text:   linear-gradient(100deg, #009AF0, #003C8C); /* accent words on the display size only */
 ```
 
 ### 2.6 Colour usage rules (locked)
@@ -132,35 +132,35 @@ Together they read as an **M** rising upward to the right, a visual metaphor for
 
 ---
 
-## 3. Typography (🔒 LOCKED: the fonts scraped from the Innovax reference, as requested)
+## 3. Typography (🔒 LOCKED: Figtree everywhere, 14px paragraphs; client decision, 15 October 2026)
 
-Verified on the live Innovax demo (see `04-reference-teardown.md` §1.0). All three families are open-licence (SIL OFL) and are **self-hosted as subset WOFF2** (no Google Fonts CDN at runtime, for GDPR and speed).
+The client replaced the three Innovax fonts (Mona Sans headings, Google Sans body, Playfair Display Italic accent words) with **one family: Figtree** (SIL OFL), **self-hosted as a subset variable WOFF2** (`public/assets/fonts/figtree-var.woff2`, weights 400–700, ~18 KB; no Google Fonts CDN at runtime, for GDPR and speed). Built by `npm run fonts` from `@fontsource-variable/figtree`.
 
-| Role | Family | Weights / styles to ship | Purpose |
+| Role | Family | Weights | Purpose |
 |---|---|---|---|
-| **Display / headings** | **Mona Sans** (GitHub, variable) | 500, 600, 700 (variable axis) | All headings, nav, buttons, big numbers (image-filled "10+" at 700) |
-| **Accent italic serif** | **Playfair Display Italic** | 500 italic only | 1–3 accent words per heading in Azure: "Our Approach to *Business Growth*", "Behind *Our Expertise*" |
-| **Body / UI** | **Google Sans** (variable) | 400, 500, (400 italic) | Paragraphs, lists, forms, captions |
+| **Headings, display, nav, buttons** | **Figtree** | 600 (headings), 500 (UI), 700 (big numbers) | All headings, nav, buttons, card titles, image-filled "10+" |
+| **Accent words** | **Figtree**, upright | same as the heading | 1–3 accent words per heading, set apart by **colour only** (Azure 600 on light, Sky 300 on dark, the brand gradient on the display size). No italic, no serif |
+| **Body / UI** | **Figtree** | 400, 500 | Paragraphs, lists, forms, captions |
 
-- **Fallback stack (metric-matched to prevent CLS):** `"Mona Sans", "Mona Sans Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`. The fallback `@font-face` uses `size-adjust` / `ascent-override` so the swap doesn't shift layout. On Apple devices the system fallback is SF Pro, in line with the Apple principles.
-- **Logo wordmark** stays **outlined SVG** (its condensed squared face, likely *Saira Condensed*, is **not** loaded as a web font; it only lives inside the logo).
-- Innovax heading tracking reference: 60px Mona Sans with −3px letter-spacing (= −0.05em). Our scale below uses −0.035em to −0.03em for large sizes (slightly more open, which suits Apple-style legibility).
+- **Fallback stack (metric-matched to prevent CLS):** `"Figtree", "Figtree Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`. The fallback `@font-face` (Arial) uses `size-adjust` / `ascent-override` so the swap doesn't shift layout. CSS keeps `--font-display` / `--font-body` as aliases of `--font-sans`.
+- **Logo wordmark** stays **outlined SVG** (Khand, build-time only in `scripts/logo.mjs`; never loaded as a web font).
 
-### Type scale (fluid, Apple-like proportions)
+### Type scale (from a 14px paragraph; headings step up by ~1.25, fluid 360 → 1440px)
 
 | Token | Size (min → max) | Line-height | Tracking | Weight |
 |---|---|---|---|---|
-| `--fs-display` | 48 → 96px | 1.02 | −0.035em | 500 |
-| `--fs-h1` | 40 → 72px | 1.05 | −0.03em | 500 |
-| `--fs-h2` | 32 → 56px | 1.08 | −0.025em | 500 |
-| `--fs-h3` | 24 → 32px | 1.15 | −0.015em | 600 |
-| `--fs-h4` | 20 → 24px | 1.25 | −0.01em | 600 |
-| `--fs-lead` | 18 → 21px | 1.5 | 0 | 400 |
-| `--fs-body` | 16 → 17px | 1.6 | 0 | 400 |
-| `--fs-small` | 14px | 1.5 | 0 | 400 |
-| `--fs-eyebrow` | 12 → 13px | 1.2 | +0.12em, UPPERCASE | 600 |
+| `--fs-display` | 36 → 56px | 1.1 | −0.025em | 600 |
+| `--fs-h1` | 32 → 44px | 1.12 | −0.02em | 600 |
+| `--fs-h2` | 26 → 34px | 1.18 | −0.015em | 600 |
+| `--fs-h3` | 20 → 24px | 1.25 | −0.01em | 600 |
+| `--fs-h4` | 16 → 18px | 1.3 | −0.005em | 600 |
+| `--fs-lead` | 16px (UI: FAQ questions, large buttons, quotes; not paragraphs) | 1.55 | 0 | 400 |
+| `--fs-body` | **14px** | 1.6 | 0 | 400 |
+| `--fs-ui` / `--fs-ui-lg` | 14px / 16px | — | — | 500 |
+| `--fs-small` | 13px | 1.5 | 0 | 400 |
+| `--fs-eyebrow` | 12px | 1.3 | +0.1em, UPPERCASE | 600 |
 
-Rules: one H1 per page; italic-serif accent max **2–3 words** per heading; never set body copy in the serif; never go below 14px for any readable text.
+Rules: one H1 per page; accent words max **2–3** per heading, colour only; every paragraph is 14px; nothing readable below 12px (eyebrow labels), captions and legal 13px.
 
 ---
 

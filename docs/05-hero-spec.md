@@ -35,7 +35,7 @@ Elements in the reference, in reading order:
 1. **Outer frame:** white (here `--ms-canvas`) page with the hero panel inset ~16–24px, all corners rounded.
 2. **Dark hero panel** with a **building photo** on the right half fading into the dark on the left.
 3. **Nav inside the panel:** small logo box left, centred links with an **active dot indicator** above "Home", right side "Log in" + outlined **pill** button.
-4. **Left column:** a **pill badge with a 3D object**, a **2-line bold headline**, a **2-line sub-headline**, a **white search bar** (two dropdowns + coloured button), and **two quick links with chevron circles** underneath.
+4. **Left column:** ~~a pill badge with a 3D object~~ (removed by the client, 15 October 2026), a **2-line bold headline**, a **2-line sub-headline**, a **white search bar** (two dropdowns + coloured button), and **two quick links with chevron circles** underneath.
 5. **Right column:** a **horizontal card carousel** (prev card faded and clipped, **active centre card**, next card faded and clipped). Each card is dark glass with a **round icon chip**, **title**, and a **one-line description**.
 6. **"Our Special Service" tag** sitting above the active card, wrapped by a **light outline frame**: a rounded rectangle border that hugs the tag and extends down behind the card. **This border is the one that must be animated (moving shine / glow).**
 7. **Bottom-right helper text** with an inline link.
@@ -51,8 +51,8 @@ Elements in the reference, in reading order:
 | Logo box | White/reversed horizontal logo (SVG), 140–160px wide |
 | Nav links | Home • About • Services (mega menu) • Sectors • Insights (blog) • Contact. Active-page dot indicator in Azure 500 |
 | "Log in" + "Sign Up" | **Phone link** `+44 7466 063564` (Phosphor `phone`) + **"Get a Free Quote"** outlined glass pill → `/contact-us/#quote` |
-| Purple pill + 3D object | Glass pill containing a **3D-style hexagon "M" mark** (rendered SVG with gradient and depth, slow idle float) + eyebrow text e.g. *"UK Tender Writing & Bid Management"* |
-| Headline | 2 lines, e.g. *"Win More Contracts. / **Crafted for Success.**"* (second line may use the azure gradient italic-serif accent on 1–2 words). Final copy is TBD |
+| ~~Purple pill + 3D object~~ | **Removed by the client (15 October 2026).** Was: glass pill containing a **3D-style hexagon "M" mark** (rendered SVG with gradient and depth, slow idle float) + eyebrow text e.g. *"UK Tender Writing & Bid Management"* |
+| Headline | 2 lines, e.g. *"Win More Contracts. / **Crafted for Success.**"* (second line is the blue accent in the same upright Figtree, L11/L15). Final copy is TBD |
 | Sub-headline | 2 lines summarising: tender writing, bid management, business support for UK businesses |
 | Search bar | **"Quick-Start" bar**: white rounded bar with dropdown 1 = **Your sector** (Healthcare & Social Care, Transport, Cleaning, Education & Training, Security, Facilities Management, Building Maintenance, Other), dropdown 2 = **Support needed** (`<optgroup>` per category: *Bid & Proposal Management* › Tender & Bid Writing, Opportunity Identification, Expert Review · *Compliance & Virtual Assistance* › CQC Registration, Policy Management, Carbon Reduction Plan, Data Entry & Management, Care Plans · *Digital Presence* › Website Development, Social Media Management, Email Marketing, SEO & Analytics), button **"Get Started"** (Azure 650) → `/contact-us/?sector=…&service=…#quote` which pre-selects the form fields (the canonical of `/contact-us/` ignores these params). No personal data in the URL. |
 | "Buy a home ⌄ / Rent a home ⌄" | **"Explore Services ⌄"** (scrolls to services) and **"Sectors We Serve ⌄"** (scrolls to sectors). Chevron inside a small white circle, exactly like the reference |
@@ -142,7 +142,7 @@ Timeline (GSAP, total ≈ 1.6s, starts when the splash logo morphs into the nav 
 | 0.00 | Panel | `clip-path: inset(6% 6% 6% 6% round 28px)` → `inset(0 round 28px)`, 0.9s `expo.out` |
 | 0.10 | Background photo | scale 1.15 → 1.0, 1.4s. **Opacity stays 1 from first paint** (it is the LCP element; opacity-0 elements are not LCP candidates) |
 | 0.30 | Nav items | y −12 → 0, opacity, stagger 0.05 |
-| 0.35 | Badge | scale .8 → 1, `back.out(1.6)` |
+| ~~0.35~~ | ~~Badge~~ | removed with the badge (15 October 2026) |
 | 0.45 | Headline | **SplitText lines**, y 110% → 0 with mask, stagger 0.08, 0.9s `expo.out` |
 | 0.70 | Sub-headline | opacity + y 16 → 0 |
 | 0.80 | Quick-Start bar | y 24 → 0, opacity |

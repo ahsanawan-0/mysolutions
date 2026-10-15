@@ -2,7 +2,7 @@
 
 > **What this is:** 36 build prompts (P00–P35) that build the entire My Solutionz website, plus content-fill prompts (C01–C07) that drop in the client's final copy later.
 > **How to use:** run the prompts **in order**, one per Claude Code session (or one at a time in the same session), in the project root `D:\mysolutions\New folder`. Paste the whole prompt block. After each prompt, review the result in the browser, then commit.
-> **Written:** 13 Oct 2026 · Specs: `docs/` (start with `docs/00-LOCKED-DECISIONS.md`)
+> **Written:** 13 Oct 2026 · **Updated 15 Oct 2026:** the client's final copy for Bid & Proposal Management + its 3 sub-services is in `docs/website_content/services/01*.md`; P20 and P21 now build from it (C03a is absorbed into P21) · Specs: `docs/` (start with `docs/00-LOCKED-DECISIONS.md`)
 
 ---
 
@@ -80,8 +80,8 @@ The client is still delivering content, so **structure and content are separated
 | P17 | Inner-page hero component | ✅ |
 | P18 | About page part 1: About Us + Our Story | ✅ |
 | P19 | About page part 2: Approach, Why Us, Mission & Vision | ✅ |
-| P20 | Services hub + category template + 3 category pages | 🟡 (Category 1 final) |
-| P21 | Sub-service template + 12 sub-service pages | 🟡 |
+| P20 | Services hub + category template + 3 category pages | 🟡 (Category 1 final: client copy 15 Oct) |
+| P21 | Sub-service template + 12 sub-service pages | 🟡 (3 Bid & Proposal pages final: client copy 15 Oct) |
 | P22 | Sectors hub + sector template + 7 sector pages | 🟡 |
 | P23 | Contact page + form backend | ✅ |
 | P24 | Quote pre-fill, thank-you page, form polish | ✅ |
@@ -96,7 +96,7 @@ The client is still delivering content, so **structure and content are separated
 | P33 | Responsive, cross-browser and device polish | ✅ (run near the end) |
 | P34 | Security hardening | ✅ (run near the end) |
 | P35 | Launch | ✅ (run at launch) |
-| C01–C07 | Content-fill prompts | ⏳ |
+| C01–C07 | Content-fill prompts | ⏳ (C03a ✅ absorbed into P21) |
 
 **Suggested pace:** P00–P07 first (foundation, ~1–2 days), then P08–P16 (home), then P17–P29 (inner pages). P30–P35 run once content is final.
 
@@ -970,37 +970,55 @@ The inner pages use the **default header** (glass pill nav, P04) over the hero. 
 
 ---
 
-## P20 — Services hub + category landing template + 3 category pages 🟡 (Category 1 final)
+## P20 — Services hub + category landing template + 3 category pages 🟡 (Category 1 final: client copy 15 Oct 2026)
 
-**Read first:** `docs/08` §6 and §7a, `docs/website_content/services/01-bid-proposal-management.md` (**full content + SEO pack + design notes for Category 1**), `docs/10` §6 (Service + OfferCatalog schema)
+**Read first:** `docs/08` §6 and §7a, `docs/website_content/services/01-bid-proposal-management.md` (**final client copy received 15 Oct 2026, verbatim** + SEO pack + layout/motion table + the conventions at its top: `*accent*`, `**bold**`, `[links]`, "Sub:"), `docs/10` §6 (Service + OfferCatalog schema), `docs/00` L05c (experience = "over 10 years")
 
-**Goal:** `/services/` and a reusable category landing template; Category 1 complete with final content; Categories 2–3 as structured drafts.
+**Goal:** `/services/` and a reusable category landing template; Category 1 complete with the client's final copy; Categories 2–3 as structured drafts.
+
+> **Changed 15 Oct 2026:** the client wrote the Category 1 page themselves. Their structure (intro → what is → how we manage your bids (6 steps) → why choose → public and private sector → closing CTA) **replaces** our 13 Oct draft; the draft's benefits bento, persona chips, Procurement Act checklist and 4 "why" points are gone. The page data is therefore an **ordered list of typed blocks** (shared with P21), not fixed slots.
 
 **Build:**
-1. **Data:** `app/data/service-pages/<category-slug>.php` per category, with keys `seo`, `hero`, `what_is`, `steps[]`, `subs_intro`, `benefits[]`, `who` (`personas[]`, `sectors_text`), `regulation` (`heading`, `intro`, `items[]`, `outro`, `updated`), `why[]`, `faq_tag`, `cta`.
-2. **`bid-proposal-management.php`:** transfer **all** copy from `01-bid-proposal-management.md` exactly:
-   - hero, "What is bid and proposal management?", 5 steps, 3 sub-service cards, 6 benefits, who we support, the Procurement Act 2023 section with `updated: 2026-10-13`, 4 why points, CTA;
-   - add its 8 FAQs to `faqs.php` tagged `bid-proposal-management`;
+1. **Data:** `app/data/service-pages/<category-slug>.php` per category, returning:
+   - `status`, `seo` (`title`, `description`, `og_title`, `og_description`, `og_image`, `og_image_alt`), `hero` (`eyebrow`, `title`, `accent`, `sub`, `lead`, `ctas`, `labels[]`, `trust`), `faq_tag`, `cta` (closing band: `heading`, `accent`, `sub`, `paras[]`, `strong`, `label`).
+   - `sections[]`: ordered blocks, each with a `type` (the partials are reused by P21):
+     - `intro`: `paras[]`;
+     - `text`: `id`, `heading`, `accent`, `sub`, `paras[]`, optional `image`, `variant` (`default|mist|band`), `updated` (band), `button`;
+     - `steps`: `id`, `heading`, `accent`, `sub`, `paras[]`, `steps[]` (`title`, `icon`, `text`, optional `detail[]`);
+     - `list`: `id`, `heading`, `accent`, `sub`, `paras[]`, `items[]` (`icon`, `title`, `text`), `outro`;
+     - `why`: `id`, `heading`, `accent`, `sub`, `paras[]`, `lead_in`, `items[]` (`icon`, `strong`, `text`), `outro`;
+     - `subs`: `id`, `heading`, `accent`, `intro`, `taglines` (sub slug → card text); the cards come from `services.php`.
+   - FAQ and CTA always close the page.
+   - Text helper `rich(string $s): string` in `app/lib/helpers.php`: `e()` first, then `**…**` → `<strong>` and `[label](/path/)` → `<a href="url(path)">` (root-relative paths only); nothing else becomes HTML. Paragraphs are printed with `rich()`.
+2. **`bid-proposal-management.php`:** transfer **all** copy from `01-bid-proposal-management.md` exactly, in its order:
+   - hero: eyebrow "Our Services", H1 "Bid &" + `<em>Proposal Management</em>`, sub "Strategic Bid Management to Help Your Business Compete and Grow", lead = the client's first paragraph, CTAs, trust line, labels;
+   - `intro` (the client's paragraphs 2–3);
+   - `text` "What Is Bid & Proposal Management?" (6 paragraphs + notched image);
+   - `steps` "How We Manage Your Bids" (3 paragraphs + **6 steps**: client titles; the one-line descriptions are `// PROVISIONAL`, the client sent headings only);
+   - `subs` (heading + intro `// PROVISIONAL`; card text = each sub-page's client tagline);
+   - `text` "Why Choose Professional Bid Management?" (3 paragraphs + split button "More About Our Approach" → `/about-us/#our-approach`);
+   - `text` `band` "Bid Management for Public and Private Sector Contracts" (6 paragraphs, sector names linked, `updated: 2026-10-15`);
+   - FAQ: the 8 FAQs in the doc (all `// PROVISIONAL`): 5 already exist in `faqs.php` with the `bid-proposal-management` tag; add the 3 missing ones (bid writing vs bid management, notice before a deadline, private sector proposals);
+   - `cta`: the client's heading, sub, 2 paragraphs and bold line; button = site default "Get a Free Quote" (the client gave no label) → `/contact-us/?service=bid-proposal-management#quote`;
    - SEO pack exactly as given;
-   - status **published** (client approval pending only for the 3 notes at the end of that file, which stay as `// PROVISIONAL` comments on those sentences).
-3. **`compliance-virtual-assistance.php` and `digital-presence.php`:** same structure.
+   - status **published** (`check-content` keeps listing the PROVISIONAL step descriptions, subs intro and FAQs until the client approves them, `docs/15` Q06c).
+   - "16 years" never appears anywhere (L05c).
+3. **`compliance-virtual-assistance.php` and `digital-presence.php`:** the same block sequence as Category 1 (the client's structure; their copy is expected in the same shape).
    - Hero uses the category summary from `services.php`.
-   - The sub-service cards are generated from `services.php`.
-   - All other sections contain `[[PENDING: …]]` markers describing the content needed.
+   - The `subs` cards are generated from `services.php` (summary as card text).
+   - All other blocks contain `[[PENDING: …]]` markers describing the content needed.
    - Provisional SEO: titles `Compliance & Virtual Assistance Services UK | My Solutionz` and `Digital Presence Services for UK Businesses | My Solutionz`, descriptions `[[PENDING]]`.
    - Status **draft**.
-   - Template rule: sections whose data is `[[PENDING…]]` render as a dashed "Content pending: …" block on non-production and are **omitted** on production.
-4. **Template** `templates/pages/services/category.php`, per `docs/08` §7a and the design table at the end of `01-bid-proposal-management.md`:
-   - `hero-inner` `category` variant;
-   - "What is" (text + notched image, `img-reveal`);
-   - steps (process component `compact`, pinned on desktop);
-   - sub-service cards (large glass cards, hex icons, corner-notch arrows, `tilt`);
-   - benefits bento (6 tiles);
-   - who we support (persona chips + sector links marquee);
-   - **regulation band** (Navy 900, icon checklist, visible "Last updated 13 October 2026", `read-along` intro);
-   - why (two-voice + 4 points + split button "More About Our Approach" → `/about-us/#our-approach`);
+   - Template rule: a block whose data is `[[PENDING…]]` renders as a dashed "Content pending: …" block on non-production and is **omitted** on production.
+4. **Template** `templates/pages/services/category.php` + block partials `templates/sections/service/{intro,text,steps,list,why,subs,faq}.php` (P21 reuses them; CSS `src/css/pages/service.css`), per `docs/08` §7a and the design table at the end of `01-bid-proposal-management.md`:
+   - `hero-inner` `category` variant (Azure chip + glow, `kanban` hex icon in the glowing frame);
+   - `intro`: first paragraph at lead size, max 68ch, `fade-up`;
+   - `text`: two-voice H2 + the client's "Sub" line as a styled paragraph (not an H3); optional notched image (`img-reveal`); `mist` variant; `band` variant = Navy 900, two columns ≥ 1024, visible "Last updated 15 October 2026", `read-along` on the first paragraph;
+   - `steps`: process component `compact`, pinned on desktop; **must handle 6 steps** (numbering 01–06, progress line and pin length scale with the count);
+   - `subs`: large glass cards, hex icons, corner-notch arrows, `tilt`;
+   - `list` (icon cards) and `why` (icon rows: `<strong>` + text in one sentence), `stagger`: not used by Category 1 but built and shown on the styleguide for P21;
    - FAQ accordion (from `faqs.php` by tag);
-   - CTA band pre-filling the category (`/contact-us/?service=<category-slug>#quote`).
+   - closing CTA band: extend `templates/components/cta-band.php` with optional `sub` (line under the heading), `text` as a string **or** an array of paragraphs, and `strong` (bold closing line); the default band stays unchanged.
 5. **Schema:** webPage + breadcrumbs (Home › Services › Category) + `serviceCategory()` with `hasOfferCatalog` listing the sub-services (name + URL).
 6. **Services hub** `/services/` (`templates/pages/services/index.php`, `app/data/service-pages/_hub.php`):
    - `hero-inner` `columns`: eyebrow "Our Services", H1 "Our" + `<em>Services</em>`, lead "Bid and proposal management, compliance and virtual assistance, and digital presence support for UK businesses." `// PROVISIONAL`.
@@ -1010,51 +1028,49 @@ The inner pages use the **default header** (glass pill nav, P04) over the hero. 
    - Status published.
 
 **Acceptance:**
-- `/services/bid-proposal-management/` contains every word of the approved content and passes `bin/seo-audit.php`; schema validates.
+- `/services/bid-proposal-management/` contains every word of the client copy in `01-bid-proposal-management.md` (diff the rendered text against the doc), says "over 10 years" wherever experience is mentioned and never "16 years", and passes `bin/seo-audit.php`; schema validates.
+- The 6-step process, the band's "Last updated 15 October 2026" and the closing CTA copy render in the server HTML.
 - Draft categories show pending blocks locally and are noindex.
 - Hub links all resolve.
 - Standard checks.
 
 ---
 
-## P21 — Sub-service landing template + 12 sub-service pages 🟡
+## P21 — Sub-service landing template + 12 sub-service pages 🟡 (3 Bid & Proposal pages final: client copy 15 Oct 2026)
 
-**Read first:** `docs/08` §7b, `docs/website_content/current-site-content-scrape.md` §4 (raw material), `docs/10` §3 (keywords) and §6, `docs/09` §4
+**Read first:** `docs/08` §7b, `docs/website_content/services/01a-tender-bid-writing.md`, `01b-opportunity-identification.md`, `01c-expert-review.md` (**final client copy, verbatim** + SEO packs + layout tables), the conventions at the top of `01-bid-proposal-management.md`, the block partials from P20, `docs/website_content/current-site-content-scrape.md` §4 (raw material for CQC / Website / Social Media), `docs/10` §2 (legacy URLs), §3 (keywords) and §6, `docs/09` §4, `docs/00` L05c
 
-**Goal:** One data-driven template for all 12 sub-services. Pages render now with provisional/pending content; the C03 prompts fill final copy later.
+**Goal:** One data-driven template for all 12 sub-services. The 3 Bid & Proposal sub-services are **published with the client's final copy** (this absorbs C03a); the other 9 render with provisional/pending content until C03b/C03c.
+
+> **Changed 15 Oct 2026:** the client's sub-service pages share one shape: hero (H1 + tagline + opening paragraph) → intro → text sections → an icon list ("what we cover") → a 5-step process → "why choose" (paragraphs + bold-led benefit sentences) → closing CTA. The template renders P20's typed blocks in data order, so Opportunity Identification's extra sections ("Understanding Your Business Comes First", "Tender Compatibility Analysis") need no template change. The old fixed slots (problem / included / who / deliverables) are gone.
 
 **Build:**
-1. **Data:** `app/data/service-pages/<category>/<sub>.php` with keys `seo`, `hero` (`title`, `accent`, `lead`), `problem`, `included[]` (icon + title + text), `steps[]`, `who` (sector slugs + business types), `deliverables[]`, `why[]`, `related[]` (auto: siblings + 1 cross-category), `faq_tag`, `cta`, `status`.
-2. **Provisional content** (all `status: draft`, everything `// PROVISIONAL`):
-   - For the 6 sub-services that exist on the current site, map the scraped copy into the structure as provisional raw material (it will be rewritten in C03):
-     - Tender & Bid Writing ← Tender Writing;
-     - Expert Review ← Tender Review;
-     - Opportunity Identification ← Tender Search;
-     - CQC Registration;
-     - Website Development;
-     - Social Media Management.
-
-     Remove unsupported claims while doing so ("star tender writer", "lucrative", "proven track record" without evidence).
-   - For the other 6 (Policy Management, Carbon Reduction Plan, Data Entry & Management, Care Plans, Email Marketing, SEO & Analytics): hero from `services.php`, every other section `[[PENDING: …]]`.
+1. **Data:** `app/data/service-pages/<category>/<sub>.php` returning `status`, `seo`, `hero` (`title`, `accent`, `sub`, `lead`, `ctas`), `sections[]` (P20 block types: `intro`, `text`, `list`, `steps`, `why`), `related` (auto: siblings + 1 cross-category, overridable), `faq_tag`, `cta` (`heading`, `accent`, `sub`, `paras[]`, `strong`, `label`).
+2. **Final content: Tender & Bid Writing, Opportunity Identification, Expert Review** (status `published`, also in `services.php`):
+   - Transfer **all** copy from `01a` / `01b` / `01c` exactly, block by block, in the docs' order (hero lead = the client's first paragraph; `intro` = the following paragraphs).
+   - Steps with several paragraphs → `text` + `detail[]`; process component `full`.
+   - Icons as listed in the docs. Add the new ones to `src/icons.json` (`list-numbers`, `shield-warning`, `folder-open`, `file-magnifying-glass`, `presentation-chart`, `map-trifold`, `currency-gbp`, `ranking`, `funnel`, `scales`, `article`, `crosshair`, `chat-centered-text`, `hourglass`) and run `npm run icons`.
+   - CTA labels: Opportunity Identification "Find My Next Tender Opportunity", Expert Review "Get Your Tender Expertly Reviewed" (client); Tender & Bid Writing = site default "Get a Free Quote".
+   - Experience is "over 10 years of business development experience"; the client's "16 years" is never used (L05c).
+   - SEO packs exactly as given; `faq_tag` = the sub slug.
+3. **Provisional content: the other 9** (all `status: draft`, everything `// PROVISIONAL`), in the same block shape:
+   - CQC Registration, Website Development, Social Media Management: map the scraped current-site copy into the blocks as provisional raw material (rewritten in C03b/C03c). Remove unsupported claims ("star tender writer", "lucrative", "proven track record" without evidence).
+   - Policy Management, Carbon Reduction Plan, Data Entry & Management, Care Plans, Email Marketing, SEO & Analytics: hero from `services.php`, every other block `[[PENDING: …]]`.
    - Provisional SEO titles: `<Name> Services UK | My Solutionz` (shorten where needed to ≤ 60 chars, e.g. `CQC Registration Support | My Solutionz`); descriptions `[[PENDING]]`.
-3. **Template** `templates/pages/services/sub.php`, per `docs/08` §7b:
-   - `hero-inner` `category` variant with a "Part of [Category]" chip, breadcrumbs Home › Services › Category › Sub-service;
-   - problem (short, empathic: large lead text + supporting image);
-   - what's included (icon checklist cards, `stagger`);
-   - how it works (process component `compact`);
-   - who it's for (sector chips + types);
-   - what you receive (deliverables list with check icons on a mist background);
-   - why My Solutionz (3–4 points);
-   - related services (cards);
-   - FAQ (by tag);
-   - CTA band pre-filling the sub-service.
-   - Sections with pending data follow the P20 rule (dashed block locally, omitted in production).
-4. **Schema:** webPage + breadcrumbs + `service()` (`serviceType`, `provider #organization`, `areaServed GB`, `audience BusinessAudience`, `isRelatedTo` the category `@id`).
-5. Add each sub-service's **old URL redirect check** to `bin/seo-audit.php` (the 6 old `/service/*` URLs must 301 in one hop to these pages).
+4. **Template** `templates/pages/services/single.php` (the name `app/routes.php` already uses), per `docs/08` §7b and the layout tables in `01a`–`01c`:
+   - `hero-inner` `category` variant with a "Part of [Category]" chip, the sub-service icon in the glowing frame, the client's tagline as the sub line, breadcrumbs Home › Services › Category › Sub-service;
+   - the `sections[]` blocks through the P20 partials (`list` = icon cards in a grid, `stagger` + `tilt`; `steps` = process component `full`; `why` = icon rows with `<strong>` + text + closing paragraph);
+   - related services (cards: siblings + 1 cross-category; draft pages are skipped in production);
+   - FAQ (by tag; **omitted when no item carries the tag**, e.g. Opportunity Identification today);
+   - closing CTA band with the page's `cta` copy, pre-filling the sub-service (`/contact-us/?service=<sub-slug>#quote`).
+   - Blocks with pending data follow the P20 rule (dashed block locally, omitted in production).
+5. **Schema:** webPage + breadcrumbs + `service()` (`serviceType`, `description`, `provider #organization`, `areaServed GB`, `audience BusinessAudience`, `isRelatedTo` the category `@id`).
+6. Add each sub-service's **old URL redirect check** to `bin/seo-audit.php` (the 6 old `/service/*` URLs must 301 in one hop to these pages).
 
 **Acceptance:**
+- The 3 Bid & Proposal pages contain every word of their client docs (diff the rendered text against the docs), pass `bin/seo-audit.php`, are published and listed in `/sitemap-services.xml`.
 - All 12 routes render without errors at all breakpoints.
-- `bin/check-content.php` lists their pending items.
+- `bin/check-content.php` lists the 9 provisional pages' pending items (and no longer lists the 3 final ones, apart from FAQ items still awaiting approval).
 - The 6 legacy redirects land on the right pages.
 - Standard checks.
 
@@ -1521,7 +1537,7 @@ The workflow for each piece of content:
 |---|---|---|---|
 | C01 | **Home final copy**: hero headline choice, sub-headline, section intros, home SEO | `website_content/home-content.md` | `app/data/home.php` → published |
 | C02 | **Service categories 2 & 3**: Compliance & Virtual Assistance, Digital Presence | `website_content/services/02-…md`, `03-…md` | `app/data/service-pages/…` → published |
-| C03a | **Bid & Proposal sub-services** (3) | `services/01a-…`, `01b-…`, `01c-…` | sub-service data → published |
+| ~~C03a~~ ✅ | **Bid & Proposal sub-services** (3): client copy received 15 Oct 2026 | `services/01a-tender-bid-writing.md`, `01b-opportunity-identification.md`, `01c-expert-review.md` ✅ | **No separate prompt: built and published by P21** |
 | C03b | **Compliance & VA sub-services** (5) | `services/02a–02e` | sub-service data → published |
 | C03c | **Digital Presence sub-services** (4) | `services/03a–03d` | sub-service data → published |
 | C04 | **Sectors** (hub + 7 pages, each substantially unique) | `website_content/sectors/*.md` | sector data → published |

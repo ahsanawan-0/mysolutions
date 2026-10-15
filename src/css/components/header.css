@@ -20,7 +20,7 @@ body:not(.has-overlay-header) > main { padding-top: var(--header-h-initial); }
   z-index: 800;
   height: var(--h);
   color: var(--nav-fg);
-  transition: height var(--dur-ui) var(--ease-apple), background-color var(--dur-ui) var(--ease-apple), box-shadow var(--dur-ui) var(--ease-apple);
+  transition: height var(--dur-ui) var(--ease-apple);
   will-change: transform;
 }
 .site-header[data-theme="light"] {
@@ -32,13 +32,26 @@ body:not(.has-overlay-header) > main { padding-top: var(--header-h-initial); }
   --active-fg: var(--ms-white);
 }
 .site-header.is-scrolled { --h: var(--header-h-compact); }
-.site-header.is-scrolled[data-theme="dark"] {
+/* The compact glass bar lives on ::before, not on the header: a backdrop-filter on the header would make it the
+   "backdrop root" of the mega menu / sectors panel inside it, so their frosted glass could only blur the header and
+   the page text behind would show through sharp. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-ui) var(--ease-apple), background-color var(--dur-ui) var(--ease-apple), box-shadow var(--dur-ui) var(--ease-apple);
+}
+.site-header.is-scrolled::before { opacity: 1; }
+.site-header.is-scrolled[data-theme="dark"]::before {
   background: var(--glass-thick-dark-bg);
   -webkit-backdrop-filter: var(--glass-thick-dark-blur);
   backdrop-filter: var(--glass-thick-dark-blur);
   box-shadow: 0 1px 0 rgb(var(--white-rgb) / .08);
 }
-.site-header.is-scrolled[data-theme="light"] {
+.site-header.is-scrolled[data-theme="light"]::before {
   background: var(--glass-regular-light-bg);
   -webkit-backdrop-filter: var(--glass-regular-light-blur);
   backdrop-filter: var(--glass-regular-light-blur);
@@ -78,7 +91,7 @@ img.logo-img { height: auto; }
   gap: var(--space-2);
   font-family: var(--font-display);
   font-weight: var(--fw-bold);
-  font-size: 1.25rem;
+  font-size: var(--fs-h4);
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
@@ -105,7 +118,7 @@ img.logo-img { height: auto; }
   border-radius: var(--r-xs);
   color: var(--nav-fg);
   font-family: var(--font-display);
-  font-size: 0.9375rem;      /* 15px */
+  font-size: var(--fs-ui);
   font-weight: var(--fw-medium);
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -200,7 +213,7 @@ img.logo-img { height: auto; }
   color: var(--nav-fg);
   font-family: var(--font-display);
   font-weight: var(--fw-medium);
-  font-size: 0.9375rem;
+  font-size: var(--fs-ui);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -231,17 +244,17 @@ img.logo-img { height: auto; }
 
 /* ---------- Fallbacks ---------- */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .site-header.is-scrolled[data-theme="dark"] { background: rgb(var(--navy-900-rgb) / .97); }
-  .site-header.is-scrolled[data-theme="light"] { background: rgb(245 247 251 / .97); }
+  .site-header.is-scrolled[data-theme="dark"]::before { background: rgb(var(--navy-900-rgb) / .97); }
+  .site-header.is-scrolled[data-theme="light"]::before { background: rgb(245 247 251 / .97); }
   .glass-nav::before { background: rgb(var(--white-rgb) / .3); }
   .site-header[data-theme="light"] .glass-nav::before { background: rgb(var(--ink-rgb) / .08); }
 }
 @media (prefers-reduced-transparency: reduce) {
-  .site-header.is-scrolled[data-theme="dark"] { background: var(--glass-solid-dark); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .site-header.is-scrolled[data-theme="light"] { background: var(--glass-solid-light); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .site-header.is-scrolled[data-theme="dark"]::before { background: var(--glass-solid-dark); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .site-header.is-scrolled[data-theme="light"]::before { background: var(--glass-solid-light); -webkit-backdrop-filter: none; backdrop-filter: none; }
   .glass-nav::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(var(--navy-900-rgb) / .9); }
   .site-header[data-theme="light"] .glass-nav::before { background: var(--ms-mist); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-header { transition: none; }
+  .site-header, .site-header::before { transition: none; }
 }

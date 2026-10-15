@@ -112,6 +112,8 @@ Generic overview of the category: what it is, how it works, what we do, how it h
 9. **FAQ** (6–8 Q&As).
 10. CTA band (pre-fills the category in the quote form).
 
+> **15 Oct 2026 (client copy for Category 1):** the client wrote the Bid & Proposal page in this order: hero → intro → *What is…?* → *How We Manage Your Bids* (6 steps) → *Why Choose Professional Bid Management?* → *Bid Management for Public and Private Sector Contracts* (= item 7) → closing CTA. Items 5, 6 and 8 are covered by the client's own sections, so the template renders an **ordered list of typed blocks** from the data (PROMPTS P20) and keeps items 4 (sub-service cards), 9 (FAQ) and 10. Categories 2–3 are expected in the same shape.
+
 ## 7b. SUB-SERVICE LANDING TEMPLATE (`/services/<category>/<sub-service>/`): data-driven from `app/data/services.php`
 1. Hero: H1 = sub-service + keyword (e.g. "Tender & Bid Writing Services"), lead, CTAs, breadcrumbs (Home › Services › Category › Sub-service), sub-service icon in the glowing frame, "Part of [Category]" chip.
 2. **The problem we solve** (short, empathic).
@@ -123,6 +125,8 @@ Generic overview of the category: what it is, how it works, what we do, how it h
 8. **Related services**: the sibling sub-services + 1 cross-category link.
 9. **FAQ** (sub-service-specific, 5–8 Q&As).
 10. CTA band (pre-fills the sub-service in the contact form).
+
+> **15 Oct 2026 (client copy for the 3 Bid & Proposal sub-services, `website_content/services/01a`–`01c`):** the client's pages run hero (H1 + tagline + opening paragraph) → intro → text sections (*What is…?*, *The advantage / value of…*) → an icon list (*Our … Services* / *What Does Our Review Cover?* / *Tender Compatibility Analysis*) → 5-step process → *Why Choose My Solutionz…?* (paragraphs + bold-led benefits) → closing CTA. The template renders the same typed blocks as the category page (PROMPTS P21), plus related services and FAQ (omitted when no FAQ is tagged).
 
 ## 8. SECTORS HUB and SECTOR PAGE TEMPLATE (`/sectors/<slug>/`)
 Hub: inner hero → sector cards (photo + icon) → "Why sector knowledge matters" → CTA.

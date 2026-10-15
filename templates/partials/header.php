@@ -25,6 +25,7 @@ $isCurrent = static fn (array $item): bool => !empty($item['exact']) ? $current 
 $quoteUrl = url('/contact-us/') . '#quote';
 $follow = !empty($follow) && $variant === 'default';
 $logoPrefix = $follow ? 'hf' : 'hl';
+$menuId = static fn (string $menu): string => ($follow ? 'hf-' : '') . 'menu-' . $menu;   // unique per header: both print on hero pages
 ?>
 <header class="site-header site-header--<?= e($variant) ?><?= $follow ? ' site-header--follow' : '' ?>" data-header="<?= e($variant) ?>" data-theme="<?= e($theme) ?>"<?= $follow ? ' data-follow' : '' ?>>
   <div class="site-header__inner">
@@ -39,11 +40,11 @@ $logoPrefix = $follow ? 'hf' : 'hl';
         <li class="site-nav__item<?= $hasMenu ? ' has-menu' : '' ?>" <?= $hasMenu ? 'data-menu="' . e($item['menu']) . '"' : '' ?>>
           <a class="site-nav__link<?= $active ? ' is-active' : '' ?>" href="<?= e(url($item['url'])) ?>"<?= $current === $item['url'] ? ' aria-current="page"' : '' ?> data-nav-link><?= e($item['label']) ?></a>
           <?php if ($hasMenu): ?>
-          <button class="site-nav__toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="menu-<?= e($item['menu']) ?>" data-menu-trigger>
+          <button class="site-nav__toggle" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="<?= e($menuId($item['menu'])) ?>" data-menu-trigger>
             <?= icon('caret-down', 'regular', ['size' => 16, 'label' => 'Open ' . $item['label'] . ' menu']) ?>
           </button>
           <?php if ($item['menu'] === 'services'): ?>
-          <div class="menu menu--mega glass-thick-dark" id="menu-services" hidden data-menu-panel>
+          <div class="menu menu--mega glass-thick-dark" id="<?= e($menuId('services')) ?>" hidden data-menu-panel>
             <div class="menu__grid">
               <?php foreach ($services as $category): ?>
               <div class="menu__col" data-menu-col>
@@ -75,7 +76,7 @@ $logoPrefix = $follow ? 'hf' : 'hl';
             </div>
           </div>
           <?php elseif ($item['menu'] === 'sectors'): ?>
-          <div class="menu menu--drop glass-thick-dark" id="menu-sectors" hidden data-menu-panel>
+          <div class="menu menu--drop glass-thick-dark" id="<?= e($menuId('sectors')) ?>" hidden data-menu-panel>
             <ul class="menu__list" data-menu-col>
               <?php foreach ($sectors as $sector): ?>
               <li>

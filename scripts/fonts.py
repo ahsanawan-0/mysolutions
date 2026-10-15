@@ -1,4 +1,4 @@
-"""Instance + subset the three brand fonts to Latin WOFF2 and compute metric-matched fallback overrides.
+"""Instance + subset the site font (Figtree) to Latin WOFF2 and compute metric-matched fallback overrides.
 Usage: python -I fonts.py <project_root>
 """
 import io
@@ -20,22 +20,11 @@ UNICODES = "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+03
 
 JOBS = [
     {
-        "name": "mona-sans-var",
-        "src": nm / "@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2",
-        "axes": {"wght": (500, 700)},
+        # Figtree is the only site font (client decision, 15 October 2026): headings, body and accent words
+        "name": "figtree-var",
+        "src": nm / "@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2",
+        "axes": {"wght": (400, 700)},
         "fallback": "C:/Windows/Fonts/arial.ttf",
-    },
-    {
-        "name": "google-sans-var",
-        "src": nm / "@fontsource-variable/google-sans/files/google-sans-latin-wght-normal.woff2",
-        "axes": {"wght": (400, 500)},
-        "fallback": "C:/Windows/Fonts/arial.ttf",
-    },
-    {
-        "name": "playfair-display-italic-500",
-        "src": nm / "@fontsource/playfair-display/files/playfair-display-latin-500-italic.woff2",
-        "axes": None,
-        "fallback": "C:/Windows/Fonts/georgia.ttf",
     },
 ]
 

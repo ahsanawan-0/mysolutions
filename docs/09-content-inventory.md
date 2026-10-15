@@ -8,10 +8,10 @@
 ## 1. Content sources
 | Source | File | Status | Use |
 |---|---|---|---|
-| **New About-page copy** (client) | `website_content/My Solutionz - Website content.docx` | ✅ Received | **Final copy** for `/about-us/` (5 sections) + reusable lines for Home |
+| **Client content docx** | `website_content/My Solutionz - Website content.docx` | ✅ Received (About 13 Oct 2026; **updated 15 Oct 2026** with *Our Services*: Bid & Proposal Management + its 3 sub-services; About text unchanged) | **Final copy** for `/about-us/` (5 sections), the Bid & Proposal category page and its 3 sub-service pages (transcribed into `website_content/services/01*.md`) + reusable lines for Home |
 | About-page order sketch | `website_content/pages_ref.jpeg` | ✅ Received | Locks the About order |
 | **Current site scrape** | `website_content/current-site-content-scrape.md` | ✅ Captured 13 Oct 2026 | Base material for service pages, FAQ, 1 blog post (to be **rewritten**, not copied as-is) |
-| **Service content (written with the client, step by step)** | `website_content/services/*.md` | 🟡 1 of 15 drafted | Category + sub-service landing pages |
+| **Service content (written with the client, step by step)** | `website_content/services/*.md` | 🟡 **4 of 15 final** (client copy 15 Oct 2026: `01`, `01a`, `01b`, `01c`) | Category + sub-service landing pages |
 | Remaining page content | — | ❗ Awaited | Home, sectors, FAQ, blog |
 
 ## 2. What the current site tells us (scrape findings)
@@ -19,7 +19,7 @@
 - Real content: **Home, About Us, Our Services, Contact Us**, **6 service pages** (Tender Writing, Tender Review, Tender Search, Website Development, Social Media Management, **CQC Registration**), and **1 relevant blog post** (health & social care tender vocabulary).
 - Positioning today is **heavily healthcare** ("Expert Healthcare Tender Writing"); the new content (docx) is **multi-sector**. The new site keeps healthcare & social care as the **priority sector** but presents the full multi-sector offer.
 - **Unsupported claims** on the current site (⚠ must be confirmed with evidence or dropped, per ASA/CAP rules): *150+ satisfied customers*, *250+ projects completed*, *75% success ratio*, *100% quickest response*, *100% customer satisfaction*, *100% satisfaction guaranteed*, *24/7 support centre*, *"testimonials and case studies"* (none exist).
-- **Years of experience:** ✅ client confirmed **10+**. Change "over 16 years" in the docx's Our Story to "over 10 years". Wording is always "business development **experience**" (the company was incorporated on 24 April 2024).
+- **Years of experience:** ✅ client confirmed **10+**. Change "over 16 years" in the docx's Our Story to "over 10 years". Wording is always "business development **experience**" (the company was incorporated on 24 April 2024). *15 Oct 2026: the new services copy says "over 16 years" 5 more times (Tender & Bid Writing ×2, Opportunity Identification ×1, Expert Review ×2); all are written as "over 10 years" in `services/01a`–`01c` (L05c).*
 - A portrait photo **"Wasim Amjad"** exists in the media library (unused). ❗ Founder/team member? Permission to use?
 - Logo on the site: 328×86 PNG (low-res) + 512×512 monogram PNG. ❗ Vector still needed.
 - Contact behaviour: the business actively uses **WhatsApp** (`wa.me/447466063564`). → The new site gets a **WhatsApp click-to-chat** link (Phosphor `whatsapp-logo`) in the contact cards, footer and mobile sticky bar. No third-party chat widget.
@@ -38,7 +38,7 @@
 | Home testimonials | Client | ❗ (hidden until supplied) |
 | Home FAQ teaser | Scrape FAQ Q1–Q4 (rewritten) + new | 🟡 |
 | About Us (5 sections) | **docx verbatim** (light edit for web scannability; keep meaning) | ✅ |
-| Service pages (3 categories + 12 sub-services) | Written step by step in `website_content/services/` (current-site copy used as raw material for Tender Writing, Expert Review, Opportunity Identification, CQC, Website, Social Media) | 🟡 1 of 15 drafted |
+| Service pages (3 categories + 12 sub-services) | Written step by step in `website_content/services/`. Bid & Proposal category + Tender & Bid Writing, Opportunity Identification, Expert Review = **client copy** (15 Oct 2026); current-site copy remains raw material for CQC, Website, Social Media | 🟡 4 of 15 final |
 | Sector pages (7) | New | ❗ Client input on real experience per sector |
 | FAQ page | Scrape Q1–Q4 + new questions (process, pricing, timelines, confidentiality, Procurement Act 2023, first-time bidders, frameworks, CQC) | 🟡 |
 | Insights | 1 migrated post (originality check + update) + new posts | ❗ |
@@ -50,11 +50,11 @@ Content is produced **step by step: category landing page first, then its sub-se
 
 | Category / sub-service | Slug | Phosphor icon (light) | Content status |
 |---|---|---|---|
-| **1. Bid & Proposal Management** (Azure) | `bid-proposal-management` | `kanban` | ✅ Draft: `services/01-bid-proposal-management.md` |
-| 1.1 Tender & Bid Writing | `tender-bid-writing` | `pen-nib` | ⏳ Next |
-| 1.2 Opportunity Identification | `opportunity-identification` | `binoculars` | ⏳ |
-| 1.3 Expert Review | `expert-review` | `list-checks` | ⏳ |
-| **2. Compliance & Virtual Assistance** (Navy) | `compliance-virtual-assistance` | `seal-check` | ⏳ |
+| **1. Bid & Proposal Management** (Azure) | `bid-proposal-management` | `kanban` | ✅ Final client copy (15 Oct): `services/01-bid-proposal-management.md` (6 step descriptions, subs intro and FAQs still provisional) |
+| 1.1 Tender & Bid Writing | `tender-bid-writing` | `pen-nib` | ✅ Final client copy: `services/01a-tender-bid-writing.md` |
+| 1.2 Opportunity Identification | `opportunity-identification` | `binoculars` | ✅ Final client copy: `services/01b-opportunity-identification.md` |
+| 1.3 Expert Review | `expert-review` | `list-checks` | ✅ Final client copy: `services/01c-expert-review.md` |
+| **2. Compliance & Virtual Assistance** (Navy) | `compliance-virtual-assistance` | `seal-check` | ⏳ Next |
 | 2.1 CQC Registration | `cqc-registration` | `shield-check` | ⏳ (current-site copy available) |
 | 2.2 Policy Management | `policy-management` | `files` | ⏳ |
 | 2.3 Carbon Reduction Plan | `carbon-reduction-plan` | `leaf` | ⏳ |

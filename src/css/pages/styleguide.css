@@ -48,7 +48,7 @@
 }
 .sg__gradient code { background: rgb(var(--ink-rgb) / .6); color: var(--ms-white); }
 .sg__gradient--text { background: var(--ms-white); border: 1px solid var(--ms-line); color: var(--ms-ink); }
-.sg__gradient--text > span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-accent); font-style: italic; font-size: 56px; }
+.sg__gradient--text > span { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: var(--fw-display); font-size: 56px; }
 .sg__gradient--text code { background: var(--ms-mist); color: var(--ms-ink); }
 .sg__gradient--glow { background: var(--navy-900); }
 .sg__glow-ring {

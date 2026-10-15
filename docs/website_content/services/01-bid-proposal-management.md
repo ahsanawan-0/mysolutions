@@ -1,8 +1,15 @@
 # Bid & Proposal Management (Category Landing Page)
 
-> **Page type:** Service category landing page (1 of 3). Sub-pages: Tender & Bid Writing · Opportunity Identification · Expert Review.
-> **Status:** 🟡 Draft for client approval · Written 13 Oct 2026 · UK English
-> **Length:** ≈ 1,500 words of body copy (substantial enough for a competitive head term, while the sub-pages carry the deep detail)
+> **Page type:** Service category landing page (1 of 3). Sub-pages: Tender & Bid Writing (`01a`) · Opportunity Identification (`01b`) · Expert Review (`01c`).
+> **Status:** ✅ **Final client copy**, received 15 Oct 2026 in `website_content/My Solutionz - Website content.docx` → *Our Services* → *Bid & Proposal Management*. It replaces our 13 Oct draft (that draft is in git history). UK English.
+> **Use verbatim.** The only additions are marked: `PROVISIONAL` = written by us where the client copy has a gap (needs client approval), and the SEO pack / layout mapping.
+> **Length:** ≈ 1,000 words of client body copy.
+
+**Conventions in this file (apply to all service content docs)**
+- `*italic*` inside a heading = the two-voice **accent** words (rendered in the brand blue, `heading($level, $main, $accent)`); the wording is the client's.
+- `**bold**` inside a paragraph = the client's own emphasis → rendered as `<strong>`.
+- `[text](/path/)` = an internal link we added on the client's own words (the text is unchanged).
+- "Sub:" = the client's tagline under a heading → a styled paragraph directly under the H2 (not an H3).
 
 ---
 
@@ -13,17 +20,17 @@
 | **URL** | `https://mysolutionz.co.uk/services/bid-proposal-management/` |
 | **Title tag** (52 chars) | `Bid & Proposal Management Services UK \| My Solutionz` |
 | **Meta description** (155 chars) | `Bid and proposal management for UK businesses. Tender writing, opportunity identification and expert review, from strategy to submission. Get a free quote.` |
-| **H1** | Bid & Proposal Management Services |
+| **H1** | Bid & Proposal Management (client heading; the title tag carries "Services UK") |
 | **Primary keyword** | bid management services |
-| **Secondary keywords** | bid and proposal management · bid management consultancy UK · tender management services · proposal management services · bid management support |
-| **Supporting terms (used naturally)** | tender writing, bid writing, bid/no-bid, evaluation criteria, compliance, Procurement Act 2023, Find a Tender, Central Digital Platform, Procurement Specific Questionnaire, frameworks, social value |
+| **Secondary keywords** | bid and proposal management services · outsourced bid management services · bid management consultancy UK · tender management services · proposal management |
+| **Supporting terms (already in the client copy)** | public and private sector contracts, framework agreement, procurement requirements, evaluation methodology, compliance, Procurement Act 2023, bid plan, submission deadlines |
 | **og:title** | Bid & Proposal Management Services |
 | **og:description** | From finding the right contracts to final submission, we manage your tenders so your team can focus on running the business. |
 | **og:image** | `/assets/og/bid-proposal-management.jpg` (1200×630, photographic) · alt: "Bid manager planning a tender response with a client team" |
 | **Canonical** | self |
 | **Breadcrumb** | Home › Services › Bid & Proposal Management |
-| **Schema (`@graph`)** | `WebPage` + `BreadcrumbList` + `Service` (`name: "Bid & Proposal Management"`, `serviceType: "Bid management"`, `provider: #organization`, `areaServed: GB`, `audience: BusinessAudience`, `hasOfferCatalog` → 3 sub-services as `Offer` › `itemOffered: Service` with their URLs). FAQ is visible content; `FAQPage` markup optional (no rich result since May 2026) |
-| **Internal links out** | 3 sub-service pages · `/sectors/healthcare-social-care/` + other sectors · `/about-us/` (Our Approach) · `/contact-us/#quote` · 1–2 Insights articles (e.g. Procurement Act explainer, once published) |
+| **Schema (`@graph`)** | `WebPage` + `BreadcrumbList` + `Service` (`name: "Bid & Proposal Management"`, `serviceType: "Bid management"`, `provider: #organization`, `areaServed: GB`, `audience: BusinessAudience`, `hasOfferCatalog` → the 3 sub-services as `Offer` › `itemOffered: Service` with their URLs). FAQ is visible content; no `FAQPage` markup needed (no rich result since 7 May 2026) |
+| **Internal links out** | 3 sub-service pages (cards) · sector pages (sector names in "Bid Management for Public and Private Sector Contracts") · `/about-us/#our-approach` · `/contact-us/?service=bid-proposal-management#quote` · 1–2 Insights articles once published (e.g. a Procurement Act 2023 explainer) |
 | **Internal links in** | Home (Services section), mega menu, footer, every sub-service page (breadcrumb + "Part of Bid & Proposal Management") |
 
 ---
@@ -31,135 +38,112 @@
 ## Page copy
 
 ### [Hero]
-**Eyebrow:** Bid & Proposal Management
+**Eyebrow:** Our Services *(category chip in the Azure category colour)*
 
-# Bid & Proposal Management Services
+# Bid & *Proposal Management*
 
-My Solutionz manages your tenders and proposals from the first opportunity to the final submission. We find the right contracts, build a clear bid strategy, write evidence-led responses and check every requirement before you submit. Your team keeps running the business while you compete with confidence for public and private sector work.
+**Sub:** Strategic Bid Management to Help Your Business Compete and Grow
+
+**Lead:** Securing valuable contracts requires more than preparing a convincing proposal. It demands careful planning, a clear understanding of procurement requirements and effective coordination throughout the bidding process. Without the right expertise and resources, even experienced businesses can struggle to present their capabilities effectively within demanding submission deadlines.
 
 **[Get a Free Quote]** → `/contact-us/?service=bid-proposal-management#quote`  **[Call +44 7466 063564]**
 
-**Trust line:** Over 10 years of business development experience · Public and private sector bids · Healthcare, transport, cleaning, security, education and facilities management
+**Trust line** *(assembled from approved facts)*: Over 10 years of business development experience · Public and private sector bids · Healthcare, transport, cleaning, security, education and facilities management
 
 ---
 
-### [Section 2] What is bid and proposal management?
-*(Direct answer first: this paragraph is written to be quoted by search and AI answers.)*
+### [Section 2] Intro *(directly under the hero, continues the client's opening)*
 
-Bid and proposal management is the process of planning, coordinating and delivering a competitive response to a tender or request for proposal. It covers everything around the writing: deciding which opportunities to pursue, understanding what the buyer will score, organising information and contributors, managing deadlines, and making sure the final submission is compliant, consistent and persuasive.
+At **My Solutionz**, we provide professional **bid and proposal management services** to businesses competing for public and private sector contracts across the UK. We combine commercial understanding, sector knowledge and practical bidding expertise to help organisations prepare well-structured, compliant and competitive submissions.
 
-Strong writing matters, but on its own it is rarely enough. Capable businesses still lose contracts because a mandatory document is missing, a word limit is exceeded, evidence does not match the specification, or an answer does not address the question being evaluated. Bid management closes those gaps by giving every submission a clear plan, a realistic timeline and a single point of ownership.
-
----
-
-### [Section 3] How our bid management service works
-Every tender is different, but our process gives each one the same discipline. We adapt the level of support to what you need, from managing a single bid to supporting your whole tender pipeline.
-
-**01. Qualify the opportunity**
-We review the opportunity against your capabilities, capacity and commercial goals, so you can make an informed bid/no-bid decision before time and money are committed.
-
-**02. Analyse the tender and plan the bid**
-We break down the invitation to tender: the specification, evaluation criteria, scoring weightings, mandatory requirements and submission instructions. We then agree a bid plan with clear deadlines, responsibilities and the key messages your response needs to prove.
-
-**03. Gather evidence and write**
-We work with your team to collect the policies, case studies, data and operational detail that buyers look for. We then turn that evidence into clear, specific responses written to each question and its marking scheme.
-
-**04. Review and check compliance**
-Every response is reviewed against the specification and scoring criteria. We check word and page limits, consistency between answers, supporting documents and each mandatory requirement, and we challenge vague or unsupported statements.
-
-**05. Submit, then keep improving**
-We prepare the final submission pack, support uploading to the buyer's portal where agreed and help with clarification questions. After the outcome, we use the buyer's feedback to strengthen your next bid.
+Whether you are pursuing your first public sector contract, applying for a framework agreement or managing several tender opportunities, we provide the professional support needed to approach each bid with confidence.
 
 ---
 
-### [Section 4] Our bid & proposal management services
-Choose the support you need, or combine all three for end-to-end bid management.
+### [Section 3] What Is *Bid & Proposal Management?*
+**Sub:** Managing the Complete Bidding Process with Clarity and Control
+*(Direct answer first: the first paragraph is the quotable definition for search and AI answers.)*
 
-**Tender & Bid Writing**
-Professional tender writers who develop compliant, evidence-led responses to quality and technical questions, method statements, social value questions and supplier questionnaires. Every answer is written around your business and the way buyers score.
-→ *Explore Tender & Bid Writing* (`/services/bid-proposal-management/tender-bid-writing/`)
+Bid and proposal management is the structured process of planning, coordinating and overseeing a business's response to a contract opportunity. It involves bringing together the people, information, resources and documentation needed to prepare a competitive proposal within the buyer's specified requirements and timescales.
 
-**Opportunity Identification**
-We search UK public and private sector tender portals for contracts that match your services, location and capacity, then help you qualify them, so your effort goes into bids you can genuinely compete for.
-→ *Explore Opportunity Identification* (`/services/bid-proposal-management/opportunity-identification/`)
+Effective bid management considers both the technical and commercial aspects of a submission. It requires an understanding of the buyer's objectives, the contract specification, evaluation methodology, financial considerations, compliance obligations and the organisation's capacity to deliver the proposed services.
 
-**Expert Review**
-An independent review of your draft or previous submissions from an evaluator's point of view. We assess your answers against the criteria, identify gaps, risks and unsupported claims, and give practical recommendations before you submit.
-→ *Explore Expert Review* (`/services/bid-proposal-management/expert-review/`)
+A proposal may involve contributions from directors, operational managers, finance teams, HR professionals and other specialists. Without proper coordination, important information can be overlooked, responses can become inconsistent and valuable time may be lost resolving issues close to the submission deadline.
 
----
+Professional bid management brings these activities together under a defined plan, with clear responsibilities, agreed timescales and regular checks on progress.
 
-### [Section 5] How bid management helps your business
+At My Solutionz, we take a coordinated approach that connects your business knowledge with the requirements of the tender. We help organise the preparation of your submission, address information gaps and bring consistency to the evidence and commitments presented to the buyer.
 
-**Frees up your team**
-Tendering takes a significant amount of time. We take on the coordination, writing and checking, so managers can stay focused on day-to-day operations.
-
-**Reduces the risk of disqualification**
-Structured compliance checks help ensure no mandatory document, declaration or requirement is missed and every limit is respected.
-
-**Gives every bid a clear strategy**
-Your key messages, evidence and added value are aligned with what the buyer has said it values, not with generic sales language.
-
-**Focuses effort where it counts**
-Honest bid/no-bid decisions help you pursue the contracts that fit your capacity, experience and growth plans.
-
-**Builds reusable bid content**
-Over time we help you build a library of policies, case studies and approved content that makes each future tender faster to prepare.
-
-**Supports long-term growth**
-A consistent, organised approach to tendering helps you build a steadier pipeline of public and private sector contracts.
+Our objective is to help you submit a bid that demonstrates not only what your organisation offers, but how it intends to fulfil the contract and deliver the expected outcomes.
 
 ---
 
-### [Section 6] Who we support
-We support organisations of different sizes and levels of tendering experience:
+### [Section 4] How We *Manage Your Bids*
+**Sub:** A Structured Process from Initial Assessment to Final Submission
 
-- **First-time bidders** preparing their first public sector tender
-- **Small and medium-sized businesses** growing into larger contracts and frameworks
-- **Established providers** who need extra bid capacity at busy times
-- **Incumbent providers** re-bidding for contracts they already deliver
+Every procurement opportunity has its own requirements, deadlines and level of complexity. We adapt our bid management process accordingly, while keeping the essential stages of preparation, coordination and quality control consistent. At My Solutionz, we take a structured, collaborative approach to managing tender submissions. We begin by understanding your business and assessing the contract requirements, evaluation criteria and potential challenges.
 
-Our experience spans **healthcare and social care, transport, cleaning, education and training, security, facilities management and building maintenance**. Each sector has its own regulations, workforce challenges and buyer expectations, and our responses reflect them.
-*(Each sector name links to its sector page.)*
+We then establish a clear bid plan, coordinate supporting information, manage documentation and oversee the preparation of responses. Throughout the process, we monitor deadlines, address information gaps and review the submission against the buyer's requirements.
 
----
+Our involvement allows your team to focus on operational priorities while we manage the agreed bidding activities, keeping you informed and involved in important decisions.
 
-### [Section 7] Bidding under the Procurement Act 2023
-Since 24 February 2025, most public sector tenders in England, Wales and Northern Ireland have been run under the Procurement Act 2023. The new rules changed how suppliers register, qualify and are evaluated, and successful bids need to reflect them.
+**The 6 steps** *(titles = client copy; the client supplied headings only, so each one-line description is* `PROVISIONAL` *and built from the client's own sentences above, awaiting approval)*
 
-Key changes we help clients navigate include:
-
-- **Supplier registration** on the Central Digital Platform, where your core supplier information is held and shared with buyers
-- **The Procurement Specific Questionnaire (PSQ)**, which replaced the old Selection Questionnaire
-- **"Most advantageous tender"** as the basis for contract award, with evaluation criteria published in advance
-- **The competitive flexible procedure**, which can include stages such as negotiation, presentations or site visits
-- **Frameworks and dynamic markets** (dynamic markets replaced dynamic purchasing systems)
-- **Assessment summaries** that explain how your tender was scored, which are valuable for improving future bids
-- **Social value** and, for many central government contracts, a **Carbon Reduction Plan**
-
-For healthcare services commissioned by the NHS, the **Provider Selection Regime** applies instead of the Procurement Act. We keep up to date with these frameworks so your responses use the right terminology and meet current requirements.
+| # | Step title (client) | Icon | Description (`PROVISIONAL`) |
+|---|---|---|---|
+| 01 | Understanding the Opportunity and Its Requirements | `magnifying-glass` | We get to know your business and assess the contract requirements, evaluation criteria and potential challenges. |
+| 02 | Establishing a Clear Bid Plan | `strategy` | We agree a bid plan with clear responsibilities, agreed timescales and regular checks on progress. |
+| 03 | Coordinating Information and Supporting Evidence | `files` | We coordinate the information, documents and evidence your submission needs and address any gaps early. |
+| 04 | Aligning the Proposal with the Contract | `target` | We shape each response around the specification, the evaluation criteria and what your organisation can genuinely deliver. |
+| 05 | Managing Compliance, Quality and Deadlines | `calendar-check` | We monitor every deadline and review the submission against the buyer's requirements before it is finalised. |
+| 06 | Preparing for Submission and Next Steps | `paper-plane-tilt` | We bring the final submission together and agree the next steps with you, keeping you involved in important decisions. |
 
 ---
 
-### [Section 8] Why choose My Solutionz for bid management?
+### [Section 5] Our Bid & Proposal *Management Services* (`PROVISIONAL` heading + intro: the client copy has no section for the sub-service cards, which L35 / `08` §7a require)
+Choose the support you need, or combine all three for end-to-end bid management. `PROVISIONAL`
 
-**Business development experience that matters**
-With over 10 years of business development experience, we look beyond the questions in a tender to your commercial objectives and the value the contract could bring to your organisation.
+Three large cards, generated from `app/data/services.php`; each card's text is the **client's tagline from that sub-service page**:
 
-**Your business, not a generic template**
-Every response is built around your services, people, systems and track record, so it accurately reflects what you can deliver.
-
-**Focused on what evaluators score**
-We plan and write against the specification, the evaluation criteria and the marking scheme, backed by practical evidence.
-
-**Straightforward, flexible support**
-Support for a single tender or ongoing bid management, with clear communication and no unnecessary complexity.
-
-**[More About Our Approach]** → `/about-us/#our-approach`
+| Card | Text (client tagline) | Link |
+|---|---|---|
+| **Tender & Bid Writing** (`pen-nib`) | Professional Tender Writing That Gives Your Business a Competitive Advantage | → *Explore Tender & Bid Writing* `/services/bid-proposal-management/tender-bid-writing/` |
+| **Opportunity Identification** (`binoculars`) | Find the Right Opportunities. Compete Where Your Business Has the Strongest Potential. | → *Explore Opportunity Identification* `/services/bid-proposal-management/opportunity-identification/` |
+| **Expert Review** (`list-checks`) | Expert Eyes. Stronger Bids. Better Opportunities to Compete. | → *Explore Expert Review* `/services/bid-proposal-management/expert-review/` |
 
 ---
 
-### [Section 9] Bid & proposal management FAQs
+### [Section 6] Why Choose *Professional Bid Management?*
+
+A competitive tender requires more than good writing. It demands consistency, relevant evidence, compliance and a clear understanding of what the buyer expects.
+
+Our **outsourced bid management services** help businesses reduce administrative pressure, improve submission quality and make better use of their internal resources. We identify potential issues early, strengthen coordination and help develop proposals that reflect your organisation's genuine capabilities.
+
+With experience across healthcare, transport, cleaning, education, security and facilities management, we understand the different challenges businesses face when competing for contracts.
+
+**[More About Our Approach]** → `/about-us/#our-approach` *(split button, as in `08` §7a item 8)*
+
+---
+
+### [Section 7] Bid Management for *Public and Private Sector Contracts*
+**Sub:** Understanding Different Buyers, Industries and Procurement Requirements
+*(Rendered as the category's "current standards / regulation" band, `08` §7a item 7. Visible "Last updated 15 October 2026" because it refers to current UK law.)*
+
+Public and private sector procurement can differ considerably in structure, evaluation methods, contractual obligations and submission procedures. An effective bid management process needs to account for these differences while responding to the specific requirements of each buyer.
+
+For public sector tenders, this includes understanding the relevant procurement rules, supplier eligibility requirements, evaluation criteria and applicable submission procedures.
+
+We work with businesses competing under the UK's current procurement arrangements, including opportunities governed by the Procurement Act 2023, as well as procurements subject to other applicable regulations or transitional requirements.
+
+For private sector proposals, we consider the buyer's commercial objectives, service expectations, supplier requirements and the structure of their selection process.
+
+Our experience spans industries including [healthcare and social care](/sectors/healthcare-social-care/), [transport](/sectors/transport/), [cleaning](/sectors/cleaning/), [education and training](/sectors/education-training/), [security](/sectors/security/), [facilities management](/sectors/facilities-management/) and [building maintenance](/sectors/building-maintenance/).
+
+Each sector requires an understanding of its operational and compliance requirements. We bring this awareness into the bid management process while working closely with clients to establish how their own services, people and resources meet the needs of the proposed contract.
+
+---
+
+### [Section 8] Bid & proposal management FAQs (`PROVISIONAL`: the client copy has no FAQs; these 8 are from our 13 Oct draft and await client approval, see `15` Q06c)
 
 **What is the difference between bid writing and bid management?**
 Bid writing focuses on the written responses to the tender questions. Bid management covers the whole process around them: qualifying the opportunity, planning, coordinating contributors and evidence, compliance checks, reviews and submission. We provide either service, or both together.
@@ -187,39 +171,43 @@ Yes. We can help you respond to clarification questions from the buyer and revie
 
 ---
 
-### [Section 10] Call to action
-## Have a tender coming up?
-Tell us about the opportunity and your deadline. We'll explain how we can help and give you a clear, no-obligation quote.
+### [Section 9] Closing CTA band
+## Let's Build a Stronger Approach to *Your Next Bid*
+**Sub:** Your Next Opportunity Deserves the Right Preparation
 
-**[Get a Free Quote]**  **[Call +44 7466 063564]**  **[WhatsApp us]**
+Every tender represents an investment in your business's future. At My Solutionz, we take that responsibility seriously, providing the expertise, organisation and attention to detail needed to support your bidding activities.
+
+Whether you are preparing for an important contract opportunity or looking to improve how your business manages tenders, we are here to help you take the next step.
+
+**Speak to our team about your bid management requirements and discover how we can support your business.**
+
+**[Get a Free Quote]** → `/contact-us/?service=bid-proposal-management#quote` *(site default label: the client gave no CTA label for this page)*  **[Call +44 7466 063564]**  **[Chat on WhatsApp]**
 
 ---
 
-## Design and motion notes (for the build prompt)
+## Design and motion notes (for P20)
 | Section | Layout | Motion (`06`) |
 |---|---|---|
-| Hero | Inner-page hero (Sun Over pill image columns + floating labels: *Bid Strategy*, *Compliance*, *Evidence-Led Writing*); Azure category colour accents | `split-lines` H1, `parallax` columns |
-| What is… | Text left (max 68ch) + notched image right | `fade-up`, `img-reveal` |
-| Process 01–05 | Pinned steps with progress line | `pin-steps`, `draw` |
-| 3 sub-services | 3 large glass cards with hex icon tiles (`pen-nib`, `binoculars`, `list-checks`), corner-notch arrow | `stagger`, `tilt` |
-| Benefits | 6-tile bento | `stagger` |
-| Who we support | 4 persona chips + sector chips marquee (links) | `marquee` |
-| Procurement Act | Dark navy band, checklist with icons, small "Updated" date | `fade-up`, read-along text (opacity .2 → 1) |
-| Why us | Two-voice heading + 4 points + split button | `two-voice` |
-| FAQ | Accordion, answers in HTML | accordion |
-| CTA | CTA band (grid-wave) | S10 rising logo-mark |
+| Hero | `hero-inner` `category` variant: Azure category chip + glow, hex icon (`kanban`) in the glowing frame, optional pill image columns with floating labels *Bid Strategy*, *Compliance*, *Evidence-Led Writing* | `split-lines` H1, `parallax` columns |
+| Intro | Two short paragraphs, first one at lead size, max 68ch, centred under the hero | `fade-up` |
+| What is… | Text left (max 68ch, 6 paragraphs) + sticky notched image right | `fade-up`, `img-reveal` |
+| How we manage your bids | 3 intro paragraphs, then the process component (`compact`, 6 steps), pinned on desktop | `pin-steps`, `draw` |
+| Sub-service cards | 3 large glass cards with hex icon tiles (`pen-nib`, `binoculars`, `list-checks`), corner-notch arrow | `stagger`, `tilt` |
+| Why choose professional bid management | Two-voice heading + 3 paragraphs + split button | `two-voice`, `fade-up` |
+| Public and private sector | Navy 900 band, 6 paragraphs in two columns on desktop, sector links as chips under paragraph 5, "Last updated" date | `fade-up`, `read-along` on the first paragraph |
+| FAQ | Accordion (`faqs.php`, tag `bid-proposal-management`) | accordion |
+| CTA | CTA band (grid-wave) with the client's closing copy | S10 rising logo-mark |
 
 ## Images (suggested)
-| Slot | File name | Alt text |
+| Slot | Image key / file | Alt text |
 |---|---|---|
-| Hero column 1 | `bid-management-team-planning.avif` | Bid manager planning a tender timeline with a client team |
-| Hero column 2 | `tender-documents-review.avif` | Tender documents and evaluation criteria laid out for review |
-| Hero column 3 | `london-office-meeting.avif` | Business owners discussing a contract opportunity in a London office |
-| "What is" image | `bid-strategy-whiteboard.avif` | Consultant mapping a bid strategy on a whiteboard |
+| Hero columns | `home/tender-consultancy-meeting` (existing) + 2 new: `bid-management-team-planning`, `tender-documents-review` | Bid manager planning a tender timeline with a client team · Tender documents and evaluation criteria laid out for review |
+| "What is" image | `bid-strategy-whiteboard` (new) | Consultant mapping a bid strategy on a whiteboard |
 
 ## Notes for the client (please confirm)
-1. **"Free quote" / "free, no-obligation quote"**: the current site offers a free consultation. Is a free quote still offered?
-2. **Portal uploads** ("support uploading to the buyer's portal where agreed") comes from your content doc. Confirm you still offer it.
-3. **Private sector proposals / RFPs**: confirm these are supported.
-4. Procurement Act 2023 section: accurate as of October 2026. We'll add a visible "Last updated" date and review it at least yearly.
-5. No win-rate or "guaranteed" claims are used (UK advertising rules). If you have evidenced results (e.g. contracts won by value or number, with dates), we can add them.
+1. **How We Manage Your Bids:** the six steps arrived as headings only. We added a one-line description to each (built from your own sentences, marked provisional). Please approve them or send your own text.
+2. **Sub-service cards:** the section heading "Our Bid & Proposal Management Services" and its one-line intro are ours; the card texts are your sub-page taglines.
+3. **FAQs:** your copy has none, so the 8 FAQs from our earlier draft are kept as provisional. Approve, edit or remove.
+4. **Free quote** (button + meta description): still to confirm (`15` Q06b). Private-sector proposals are now confirmed by your own copy.
+5. Our earlier draft's extra sections (6 benefit tiles, "Who we support" personas, the detailed Procurement Act 2023 checklist, 4 "why" points) are **removed** because your copy replaces them. Tell us if you want any of them back.
+6. No win-rate or "guaranteed" claims are used (UK advertising rules). Evidenced results (contracts won, with dates) can be added later.

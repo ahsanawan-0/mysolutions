@@ -14,9 +14,9 @@ The ThemeForest preview shows a Cloudflare bot check, so the theme's own demo do
 
 | Item | Innovax value (verified) | Adopted? |
 |---|---|---|
-| **Heading font** | **Mona Sans** (`--dt-typography-secondary-font-family`), H2 = 60px / 70px, weight 500, letter-spacing −3px | ✅ **Adopted** |
-| **Body font** | **Google Sans** (`--dt-typography-body-font-family`) | ✅ **Adopted** |
-| **Italic accent** | **Playfair Display italic**, weight 500, same size as heading, primary colour. Markup: `<h2>Our Approach to <span class="title-sub">Business Growth</span></h2>` | ✅ **Adopted** (our colour: Azure) |
+| **Heading font** | **Mona Sans** (`--dt-typography-secondary-font-family`), H2 = 60px / 70px, weight 500, letter-spacing −3px | ~~Adopted~~ → replaced by **Figtree** (client, 15 Oct 2026, L11) |
+| **Body font** | **Google Sans** (`--dt-typography-body-font-family`) | ~~Adopted~~ → replaced by **Figtree** (L11) |
+| **Italic accent** | **Playfair Display italic**, weight 500, same size as heading, primary colour. Markup: `<h2>Our Approach to <span class="title-sub">Business Growth</span></h2>` | ~~Adopted~~ → accent words are upright **Figtree** in the brand blue (client, 15 Oct 2026, L15) (our colour: Azure) |
 | Glass nav | `background: rgba(255,255,255,.05); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,.06); border-radius: 8px; padding: 7px 5px;` links 14px/500 UPPERCASE, `padding: 12px 15px`, radius 5px, hover/active = white bg + dark text | ✅ Adopted (values tuned to our tokens) |
 | Glass utility | `.bg-glass-effect { background: rgba(255,255,255,.15); backdrop-filter: blur(20px); }` (eyebrow pills) | ✅ |
 | Sticky header | after 300px: fixed, dark background, bottom radii 20px, slide-in `translateY(-40px → 0)` 500ms | ✅ Adapted (ours hides on scroll-down, see 06) |

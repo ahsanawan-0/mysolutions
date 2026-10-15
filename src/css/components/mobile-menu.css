@@ -38,7 +38,7 @@ html.is-locked, html.is-locked body { overflow: hidden; }
   min-height: 56px;
   padding: var(--space-2) var(--space-2);
   font-family: var(--font-display);
-  font-size: 1.75rem;     /* 28px */
+  font-size: var(--fs-h3);
   font-weight: var(--fw-medium);
   letter-spacing: -0.02em;
   color: var(--ms-white);

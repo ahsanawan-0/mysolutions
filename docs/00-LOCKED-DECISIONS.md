@@ -29,7 +29,7 @@
 |---|---|---|
 | L09 🔒 | Colours come **from the logo and its family**: Sky `#8DD6FF`, Azure `#009AF0`, Navy `#003C8C` + generated tints/shades + cool neutrals | 02 |
 | L10 🔒 | **Hexagon** = brand shape motif; **120°/60° diagonal** = brand motion angle (both from the logo) | 02 |
-| L11 🔒 | Fonts **scraped from the Innovax reference**: **Mona Sans** (headings), **Google Sans** (body), **Playfair Display Italic** (accent words). Self-hosted | 02, 04 |
+| L11 🔒 | **Figtree is the only font**, everywhere (headings, body, accent words), self-hosted. **Paragraphs are 14px** and the heading scale steps up from there (tokens in `src/css/tokens.css`). *Changed by the client on 15 October 2026; replaces Mona Sans / Google Sans / Playfair Display Italic from the Innovax reference.* | 02, 04 |
 | L12 🔒 | One icon library: **Phosphor Icons** (inline SVG sprite, no CDN) | 02 |
 
 ## D. UI/UX
@@ -37,14 +37,14 @@
 |---|---|---|
 | L13 🔒 | **Apple design principles** (clarity, deference, depth, hierarchy, harmony, consistency, simplicity) applied to the web, with concrete tokens | 03 |
 | L14 🔒 | **Super UI/UX**: premium, unique sections, glass effects, parallax | 03, 04, 06 |
-| L15 🔒 | **Innovax** is the primary UI reference: glass nav pill, two-voice headings (grotesk + italic serif), notched cards, image-filled numbers, team cards, blog cards | 04 |
+| L15 🔒 | **Innovax** is the primary UI reference: glass nav pill, two-voice headings, notched cards, image-filled numbers, team cards, blog cards. *15 October 2026: the two-voice accent words are the same upright Figtree, set apart by the brand blue only (no italic serif).* | 04 |
 | L16 🔒 | All images in `inspirations/` are references for section layouts and backgrounds (Sun Over, Alternate Futures hex tiles, Vencap bento, glass skyscraper, node network, ribbon, swirl lines, grid-wave) | 04 |
 | L17 🔒 | **About page order:** About Us → Our Story → Our Approach → Why Work With Us? → Our Mission & Vision | 08 |
 
 ## E. Hero (non-negotiable)
 | # | Decision | Doc |
 |---|---|---|
-| L18 🔒 | The home hero is **exactly** the `hero_should.jfif` composition (dark rounded panel, building photo, nav inside, badge, 2-line headline, search-style bar, quick links, S-curve notch, bottom mini card + 4 chips) | 05 |
+| L18 🔒 | The home hero is **exactly** the `hero_should.jfif` composition (dark rounded panel, building photo, nav inside, 2-line headline, search-style bar, quick links, S-curve notch, bottom mini card + 4 chips). *15 October 2026: the client removed the glass badge pill above the headline.* | 05 |
 | L19 🔒 | The card where the reference says **"Comfortable" is a SLIDER** (services carousel with faded neighbours) | 05 |
 | L20 🔒 | The **"Our Special Service" border is animated**: a light that moves around the frame, shining and glowing | 05 |
 
@@ -79,7 +79,7 @@
 | ~~P03~~ ✅ | Years of experience → **10+** (resolved, see L05c) |
 | ~~P04~~ ✅ | Vector (SVG) logo → rebuilt as exact SVG from the JPEGs in P07 (`public/assets/brand/`); the client's original vector remains welcome as a cross-check |
 | P05 🟡 | VAT number (only if VAT-registered). Company number and registered office ✅ resolved (L05b) |
-| P06 ❗ | Remaining content: 2 more category pages, 12 sub-service pages, sectors, Home, FAQs, blog posts |
+| P06 ❗ | Remaining content: 2 more category pages, **9** sub-service pages, sectors, Home, FAQs, blog posts. *15 Oct 2026: Bid & Proposal Management + its 3 sub-services received (final client copy, `website_content/services/01*.md`)* |
 | P07 ❗ | Testimonials, team photos, case studies, accreditations (or decision to omit) |
 | P08 ❗ | Office hours |
 | ~~P09~~ ✅ | Services list → resolved (section K) |

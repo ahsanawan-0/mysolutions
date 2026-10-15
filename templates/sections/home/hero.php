@@ -3,7 +3,7 @@ declare(strict_types=1);
 /**
  * Home hero (docs/05 §1–§3 🔒, PROMPTS P08): the hero_should composition 1:1.
  *   canvas frame → dark rounded panel (photo on the right, faded into the navy) → the header's `hero` variant
- *   inside the panel → left column (3D badge, two-line H1, lead, Quick-Start form, two quick links) → right column
+ *   inside the panel → left column (two-line H1, lead, Quick-Start form, two quick links) → right column
  *   (the services slider: 12 server-rendered cards, prev / active / next visible, the "Our Special Service" tag with
  *   its frame above the active card) → helper text bottom-right → the canvas notch tab (S-curve) → below the panel:
  *   the mini insight card and the sector chips (a marquee of all seven below 1024px).
@@ -55,46 +55,32 @@ $helper = str_replace(
 
     <div class="hero__grid">
       <div class="hero__copy">
-        <p class="hero__badge glass-thin-dark">
-          <span class="hero__badge-mark" aria-hidden="true">
-            <svg class="hero__badge-defs" width="0" height="0" focusable="false" aria-hidden="true">
-              <defs>
-                <linearGradient id="hero-grad-sky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--sky-100)"/><stop offset="1" style="stop-color: var(--sky-300)"/></linearGradient>
-                <linearGradient id="hero-grad-azure" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--azure-300)"/><stop offset="1" style="stop-color: var(--azure-650)"/></linearGradient>
-                <linearGradient id="hero-grad-navy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--navy-400)"/><stop offset="1" style="stop-color: var(--navy-800)"/></linearGradient>
-              </defs>
-            </svg>
-            <?= inline_svg('brand/logo-mark.svg', ['prefix' => 'badge', 'title' => false, 'class' => 'hero__badge-svg']) ?>
-          </span>
-          <span class="hero__badge-text"><?= e($h['badge']) ?></span>
-        </p>
-
         <h1 class="hero__title"><?= e($h['title']) ?><br><em><?= e($h['accent']) ?></em></h1>
         <p class="hero__lead"><?= e($h['lead']) ?></p>
 
         <form class="quick-start" action="<?= e(url($qs['action'])) ?>" method="get" aria-label="Quick start">
-          <div class="quick-start__field">
+          <div class="quick-start__field" data-select-anchor>
             <label class="quick-start__label" for="qs-sector"><?= icon($qs['sector_icon'], 'light', ['size' => 16]) ?><?= e($qs['sector_label']) ?></label>
-            <span class="quick-start__control">
+            <span class="quick-start__control select" data-module="select" data-sprite="<?= e(asset('icons/sprite.svg')) ?>">
               <select class="quick-start__select" id="qs-sector" name="sector">
-                <option value=""><?= e($qs['sector_any']) ?></option>
+                <option value="" data-icon="squares-four"><?= e($qs['sector_any']) ?></option>
                 <?php foreach ($sectors as $sector): ?>
-                <option value="<?= e($sector['slug']) ?>"><?= e($sector['name']) ?></option>
+                <option value="<?= e($sector['slug']) ?>" data-icon="<?= e($sector['icon']) ?>"><?= e($sector['name']) ?></option>
                 <?php endforeach; ?>
-                <option value="other"><?= e($qs['sector_other']) ?></option>
+                <option value="other" data-icon="hexagon"><?= e($qs['sector_other']) ?></option>
               </select>
               <?= icon('caret-down', 'regular', ['size' => 14, 'class' => 'quick-start__caret']) ?>
             </span>
           </div>
-          <div class="quick-start__field">
+          <div class="quick-start__field" data-select-anchor>
             <label class="quick-start__label" for="qs-service"><?= icon($qs['service_icon'], 'light', ['size' => 16]) ?><?= e($qs['service_label']) ?></label>
-            <span class="quick-start__control">
+            <span class="quick-start__control select" data-module="select" data-sprite="<?= e(asset('icons/sprite.svg')) ?>">
               <select class="quick-start__select" id="qs-service" name="service">
-                <option value=""><?= e($qs['service_any']) ?></option>
+                <option value="" data-icon="squares-four"><?= e($qs['service_any']) ?></option>
                 <?php foreach ($services as $category): ?>
-                <optgroup label="<?= e($category['name']) ?>">
+                <optgroup label="<?= e($category['name']) ?>" data-icon="<?= e($category['icon']) ?>" data-colour="<?= e($category['colour']) ?>">
                   <?php foreach ($category['subs'] as $sub): ?>
-                  <option value="<?= e($sub['slug']) ?>"><?= e($sub['name']) ?></option>
+                  <option value="<?= e($sub['slug']) ?>" data-icon="<?= e($sub['icon']) ?>"><?= e($sub['name']) ?></option>
                   <?php endforeach; ?>
                 </optgroup>
                 <?php endforeach; ?>

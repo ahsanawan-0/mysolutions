@@ -9,11 +9,12 @@
 |---|---|---|---|
 | Q01 ✅ | ~~Years of experience~~ → **10 years** (answered 13 Oct 2026) | | |
 | Q02 ✅ | ~~Final services list~~ → **3 categories / 12 sub-services** (answered 13 Oct 2026, see `00` §K) | | |
-| Q03 ❗ | **Content** for: 2 remaining service categories + 12 sub-services (being written step by step), Home, sector pages, FAQ, blog posts | Prompts paste exact copy | — |
+| Q03 ❗ | **Content** for: 2 remaining service categories + **9** sub-services (being written step by step), Home, sector pages, FAQ, blog posts. *15 Oct 2026: Bid & Proposal Management + Tender & Bid Writing, Opportunity Identification and Expert Review received (`website_content/services/01*.md`).* | Prompts paste exact copy | — |
 | ~~Q04~~ ✅ | **Vector logo** (SVG/AI/EPS)? | Splash animation, crisp header, favicon | Done in P07: the mark redrawn as 3 exact polygons and the wordmark outlined in Khand from the JPEGs (overlay IoU 0.99, `public/assets/brand/`). The original vector is still welcome as a cross-check |
 | Q05 ✅ | ~~Company details~~ → **My Solutionz Ltd, no. 15677749** (verified on Companies House). Only open point: **VAT number, if VAT-registered** | Legal footer | No VAT line |
 | Q06 🟡 | ~~Which address~~ → **London confirmed**. Still open: is Unit A53, 4–6 Greatorex Street a **staffed office** customers can visit, or a virtual/mail address? | Google Business Profile eligibility; LocalBusiness vs Organization schema | Organization schema, no GBP address until confirmed |
-| Q06b | Bid & Proposal page: confirm (a) a **free quote** is offered, (b) you upload submissions to buyer portals when agreed, (c) you support **private sector proposals/RFPs** | Claims in the copy must be true | Kept as written |
+| Q06b | Bid & Proposal page: confirm (a) a **free quote** is offered, (b) you upload submissions to buyer portals when agreed (About copy, Approach step 05). ~~(c) private sector proposals~~ ✅ confirmed by the client's own services copy (15 Oct 2026) | Claims in the copy must be true | Kept as written |
+| Q06c | Bid & Proposal copy (15 Oct 2026) gaps, all marked provisional until approved: (a) one-line descriptions for the **6 steps** under "How We Manage Your Bids" (you sent the headings only), (b) heading + intro for the **sub-service cards** section on the category page, (c) the **8 FAQs** (category) and the existing FAQs tagged for Tender & Bid Writing / Expert Review (your copy has no FAQs), (d) a CTA button label for Tender & Bid Writing (default "Get a Free Quote"), (e) the short one-liners for the 3 sub-services in menus and cards. Your services copy also says "over 16 years" 5 times: written as "over 10 years" per your 13 Oct confirmation (L05c) | Final page copy | Our wording, as listed in `services/01*.md` |
 
 ## B. Content and trust
 | # | Question | Default |

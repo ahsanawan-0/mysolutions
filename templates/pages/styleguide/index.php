@@ -129,7 +129,7 @@ $typeScale = [
   <!-- ============ Type ============ -->
   <section class="sg__section" id="type">
     <?= heading(2, 'Type', 'scale') ?>
-    <p class="lead">Mona Sans for headings, Google Sans for body, Playfair Display Italic for the accent words. All self-hosted from <code>/assets/fonts/</code>.</p>
+    <p class="lead">Figtree everywhere: headings, body and the accent words (upright, set apart by colour). Paragraphs are 14px and the headings step up from there. Self-hosted from <code>/assets/fonts/</code>.</p>
     <ul class="sg__type">
       <?php foreach ($typeScale as [$token, $label, $sample]): ?>
         <li class="sg__type-row">

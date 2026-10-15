@@ -47,8 +47,8 @@ const svg = `
   <rect width="${W}" height="${H}" fill="url(#bg)"/>
   <rect width="${W}" height="${H}" fill="url(#hex)"/>
   <g transform="translate(100 ${((H - 120) - lockupH) / 2 + 20}) scale(${lockupScale})">${lockupInner}</g>
-  <text x="100" y="${H - 96}" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="26" fill="${c.white}" fill-opacity="0.85">Bid &amp; Proposal Management · Compliance &amp; Virtual Assistance · Digital Presence</text>
-  <text x="100" y="${H - 50}" font-family="Google Sans, Arial, Helvetica, sans-serif" font-size="26" fill="${c.sky}">mysolutionz.co.uk</text>
+  <text x="100" y="${H - 96}" font-family="Figtree, Arial, Helvetica, sans-serif" font-size="26" fill="${c.white}" fill-opacity="0.85">Bid &amp; Proposal Management · Compliance &amp; Virtual Assistance · Digital Presence</text>
+  <text x="100" y="${H - 50}" font-family="Figtree, Arial, Helvetica, sans-serif" font-size="26" fill="${c.sky}">mysolutionz.co.uk</text>
 </svg>`;
 
 const outDir = path.join(root, 'public/assets/og');

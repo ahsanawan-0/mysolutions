@@ -28,8 +28,7 @@ $icons = [
 <meta name="robots" content="<?= e($page['robots']) ?>">
 <script>document.documentElement.classList.replace('no-js','js')</script>
 <!-- Consent Mode v2 default (denied) is injected here by P28 only if Google tags are used -->
-<link rel="preload" href="/assets/fonts/mona-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/google-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/figtree-var.woff2" as="font" type="font/woff2" crossorigin>
 <?= vite('src/js/main.js') ?>
 <?php if ($page['canonical'] !== false): ?>
 <meta property="og:locale" content="en_GB">

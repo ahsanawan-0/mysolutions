@@ -34,7 +34,7 @@
 }
 .cta-band__copy { max-width: 36ch; }
 .cta-band__heading { margin-top: var(--space-4); }
-.cta-band__text { margin-top: var(--space-5); max-width: 48ch; font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--navy-200); }
+.cta-band__text { margin-top: var(--space-5); max-width: 48ch; font-size: var(--fs-body); line-height: var(--lh-lead); color: var(--navy-200); }
 .cta-band__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
 @media (min-width: 1024px) {

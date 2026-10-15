@@ -106,12 +106,12 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 
 | # | Component | Key specs |
 |---|---|---|
-| C01 | **Eyebrow** | 12–13px uppercase, +0.12em, Azure 700, with a small hexagon bullet |
-| C02 | **Two-voice heading** | Line 1 grotesk ink + line 2 italic serif Azure (gradient on ≥ 48px). `<h2>` is one element; the accent is a `<em>` inside it |
+| C01 | **Eyebrow** | 12px Figtree uppercase, +0.1em, Azure 700, with a small hexagon bullet |
+| C02 | **Two-voice heading** | Line 1 ink + line 2 the same upright Figtree in Azure 600 (Sky 300 on dark; gradient on the display size). `<h2>` is one element; the accent is a `<em>` inside it. *No italic serif since 15 October 2026 (L11/L15).* |
 | C03 | **Buttons** | Primary pill (Azure 650 → hover Navy 700, 48px high, 24px x-padding); Secondary glass/outlined pill; **Split button** (label + white square arrow tile, from Innovax); Text link with arrow that slides 4px on hover |
 | C04 | **Glass nav bar** | see `04` §1.1; sticky; hide-on-scroll-down/show-on-up; active pill slides (GSAP Flip) |
 | C05 | **Mega menu (Services)** | Glass-thick panel, 2 columns of services with icons + 1 featured card; opens on hover-intent (150ms) and click; full keyboard support; ESC closes |
-| C06 | **Mobile menu** | Full-screen navy sheet, items stagger in, large 28px links, contact block at bottom; focus trap; body scroll lock |
+| C06 | **Mobile menu** | Full-screen navy sheet, items stagger in, large 20–24px links (`--fs-h3`), contact block at bottom; focus trap; body scroll lock |
 | C07 | **Hex icon tile** | Rounded hexagon (SVG clip), 64px, Azure 50 fill, Azure 600 Phosphor-light icon; hover: brand gradient fill + white icon |
 | C08 | **Service card** | Glass (on dark) or white (on light), icon, title, 2-line text, arrow link; notch variant |
 | C09 | **Notched media** | Image with a cut-out corner holding a card/button (inverted-corner CSS) |
@@ -136,6 +136,7 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 | C28 | **Splash** | see `07` |
 | C29 | **Section dividers** | SVG wave / diagonal (120°) dividers |
 | C30 | **Custom cursor (optional, desktop only)** | Small azure dot + ring that grows over links/cards; disabled on touch & reduced motion |
+| C31 | **Select (custom listbox)** | Enhances a native `<select>` (`data-module="select"`, `src/js/modules/select.js` + `components/select.css`): APG select-only combobox, white popup (radius 16, Shadow 3) in the top layer, option icons from `data-icon`, optgroups as eyebrow-style groups tinted by `data-colour`, check on the selected option, type-ahead; the native control stays in the form (no-JS fallback). Added 15 October 2026 at the client's request |
 
 ---
 

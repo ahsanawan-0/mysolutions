@@ -51,29 +51,23 @@ h3 { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--l
 h4 { font-size: var(--fs-h4); line-height: var(--lh-h4); letter-spacing: var(--ls-h4); font-weight: var(--fw-h4); }
 h5, h6 { font-family: var(--font-display); font-size: var(--fs-body); font-weight: var(--fw-h4); }
 
-.lead  { font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.lead  { font-size: var(--fs-body); line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
 .small { font-size: var(--fs-small); line-height: var(--lh-small); }
 p { text-wrap: pretty; }
 p + p { margin-top: 1em; }
 strong, b { font-weight: var(--fw-medium); }
 
-/* Two-voice heading: the accent words are an <em> inside the heading.
-   Playfair Display Italic 500, Azure 600 as solid text (docs/02: the "large text" step; Azure 500 is 2.85:1 on the
-   canvas, under the 3:1 AA floor for large text), the brand gradient once the line is ≥ 48px. */
+/* Two-voice heading: the accent words are an <em> inside the heading, set in the same upright Figtree and weight
+   (client decision, 15 October 2026: no italic serif) and told apart by colour: Azure 600 as solid text (docs/02:
+   the "large text" step; Azure 500 is 2.85:1 on the canvas, under the 3:1 AA floor), the brand gradient on the
+   display size (≥ 36px). */
 h1 em, h2 em, h3 em, .display em {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: inherit;
   color: var(--azure-600);
 }
 .display em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-@media (min-width: 640px) {   /* --fs-h1 reaches 48px here */
-  h1 em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-}
-@media (min-width: 1080px) {  /* --fs-h2 reaches 48px here */
-  h2 em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-}
 /* On dark surfaces the accent stays Sky (readable) rather than a navy gradient */
 .on-dark h1 em, .on-dark h2 em, .on-dark h3 em, .on-dark .display em {
   background: none; color: var(--sky-300);

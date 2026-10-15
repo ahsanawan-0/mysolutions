@@ -38,7 +38,7 @@
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110'%3E%3Cpolygon points='50,4 94,29 94,81 50,106 6,81 6,29' fill='%23000' stroke='%23000' stroke-width='8' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 .marquee--display .marquee__track > li {
-  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  font-size: clamp(2rem, 4.5vw, 3.75rem);
   font-weight: var(--fw-bold);
   letter-spacing: -0.03em;
   line-height: 1;

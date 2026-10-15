@@ -69,6 +69,7 @@ $typeScale = [
         <a class="chip chip--outline" href="#<?= $id ?>"><?= $label ?></a>
       <?php endforeach; ?>
       <a class="chip chip--outline" href="<?= e(url('/styleguide/motion/')) ?>">Motion →</a>
+      <a class="chip chip--outline" href="<?= e(url('/styleguide/heroes/')) ?>">Inner heroes →</a>
     </nav>
   </header>
 

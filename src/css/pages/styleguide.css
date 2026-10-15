@@ -145,3 +145,7 @@
 @media (max-width: 767px) {
   .sg__type-row { grid-template-columns: 1fr; }
 }
+
+/* Inner-hero styleguide (P17): label bands between the full-width hero demos */
+.sg-heroes__label { padding: var(--space-16) 0 var(--space-6); background: var(--ms-canvas); }
+.sg-heroes__label .small { margin: var(--space-2) 0 0; color: var(--text-2); }

@@ -19,6 +19,9 @@
       var(--sky-300) 290deg, var(--ms-white) 310deg, var(--azure-500) 330deg,
       rgb(var(--white-rgb) / .10) 360deg);
 }
+/* Hug variant (inner hero C32, P17): the frame simply surrounds its box 12px out */
+.special-frame--hug { inset: -12px; height: auto; }
+
 .special-frame::before,
 .special-frame::after {
   content: "";

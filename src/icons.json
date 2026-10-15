@@ -15,6 +15,7 @@
     "caret-down", "caret-right", "caret-left", "list", "x", "arrow-right", "arrow-left", "arrow-up-right", "arrow-up",
     "plus", "minus", "phone", "whatsapp-logo", "envelope-simple", "map-pin", "clock", "share-network",
     "linkedin-logo", "instagram-logo", "facebook-logo", "check-circle", "magnifying-glass", "play", "pause",
-    "check", "warning-circle", "info", "x-circle", "cookie", "copy", "link", "hexagon"
+    "check", "warning-circle", "info", "x-circle", "cookie", "copy", "link", "hexagon",
+    "calendar-blank", "user"
   ]
 }

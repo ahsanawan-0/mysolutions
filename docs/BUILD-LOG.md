@@ -729,3 +729,35 @@
 **Follow-ups**
 - Client: approve or replace the Q06c items (step descriptions, subs intro, FAQs, CTA label, one-liners); free quote + portal uploads (Q06b).
 - Next service content: Category 2 (Compliance & Virtual Assistance) in the same shape.
+
+---
+
+## P17 — Inner-page hero component
+**Date:** 15 October 2026
+
+**Files created**
+- `templates/components/hero-inner.php` (C32): one component, 4 variants. Parameters: `variant`, `breadcrumbs`, `eyebrow`, `title`, `accent`, `sub`, `lead`, `ctas`, `trust`, `images` (+ `focus`), `labels`, `icon`, `icon_label`, `colour`, `parent`, `chip`, `meta`, `image`, `id`, `level`, `class`.
+  - `columns`: Navy 900 hero-gradient panel, bottom-left radius `--r-section` (40 → 80px), skyscraper line art at 9 %, copy left (white breadcrumbs, eyebrow, two-voice H1, lead, CTAs), 3 image columns right (wide one `--r-section`, two narrow true pills), up to 3 floating labels (icon tile + text) overlapping the edges.
+  - `category`: same panel, category glow (`--hi-glow`), category chip eyebrow, large hex tile in the glowing frame (`.special-frame--hug`), sub line + trust line; with `images` the framed tile floats over the wide column; `parent` prints the "Part of …" chip linking up.
+  - `simple`: canvas, breadcrumbs + H1 (h1 size) + lead, hairline below. `article`: canvas, chip, H1, lead, meta row (`<time>`), 16:9 featured image (priority).
+- `src/css/components/hero-inner.css` (imported after `special-frame.css`): layout, the 3 breakpoints (≥ 1024 two columns · 768–1023 stacked with the columns kept · < 768 one 4:3 image with the labels as a wrapping row below), entrance pre-states under `html.js` + no-preference with a 3s safety.
+- `src/js/modules/hero-inner.js` (`data-module="hero-inner"`, 1.15 KB gzip): entrance after `splash:done` (breadcrumbs/eyebrow, wide image 1.12 → 1, narrow pills clip up, H1 lines in SplitText masks, sub/lead/CTAs/trust, framed card rises, frame draws then orbits, labels float in with `back.out`), 4s safety; parallax ≥ 1024 only from each `[data-speed]` (columns 0.9/1/1.1, labels 1.1/1/0.9, framed tile). Reduced motion: no entrance, no parallax, resting frame.
+- `templates/pages/styleguide/heroes.php` + route `/styleguide/heroes/` (local only; linked from the styleguide nav): the 4 variants + category-with-columns, using the real About, Bid & Proposal, Expert Review and article copy.
+
+**Files changed**
+- `src/css/tokens.css`: `--r-section`. `src/css/components/special-frame.css`: `.special-frame--hug`. `src/icons.json` (+ sprite): regular `calendar-blank`, `user`. `src/css/pages/styleguide.css`: demo label bands. `docs/03` C32 row, CLAUDE.md pointer.
+
+**Decisions / deviations**
+- Extra parameters beyond the prompt's list (`sub`, `trust`, `parent`, `icon_label`, `chip`, `meta`, `image`, `level`, `focus`) so P20/P21 (client sub-headings + trust line), P26 (article) and the demo page need no component changes.
+- The demo lives on its own local page because full-width heroes need the overlay header; only its first hero is an H1 (`level` 2 for the rest).
+- Parallax runs inside the module (≥ 1024 only) from the `data-speed` attributes instead of `data-anim="parallax"`, so the labels do not drift apart in the mobile row.
+- The wide column is the LCP image: it is never clipped or faded (scale only); only the narrow pills clip in. Same for the article image.
+- Labels and the framed card use a denser navy glass (`navy-900` at 74 %) instead of plain `glass-thin-dark`: white text over light photos was too faint; solid under reduced transparency.
+
+**Checks**
+- `php -l` clean; `npm run build` clean (`hero-inner` chunk 2.47 KB); `/styleguide/heroes/` HTTP 200, no PHP notices.
+- Playwright at 1440 / 1024 / 768 / 360: no console errors or 4xx, no horizontal scroll, nothing left hidden after the entrance, frames drawn and orbiting, one H1; reduced motion at 1440 + 360: everything visible, no intro; keyboard: every hero link/button reachable with a visible focus ring; parallax measured (columns lag/lead by 0.1 × scroll).
+- `seo-audit --all` PASS (4 pages); `check-content` 115 (+1 = the new draft styleguide page).
+
+**Follow-ups**
+- P18/P19 (About), P20/P21 (services), P22 (sectors), P26 (articles), P27–P29 call this component; inner pages need real photos for the columns (placeholders until then).

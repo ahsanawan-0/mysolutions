@@ -414,6 +414,14 @@ function home(string $key, mixed $default = null): mixed
     return data_get($home, $key, $default);
 }
 
+/** About page copy (app/data/about.php): about('story.paras'). */
+function about(string $key, mixed $default = null): mixed
+{
+    static $about = null;
+    $about ??= require base_path('app/data/about.php');
+    return data_get($about, $key, $default);
+}
+
 /** Dot-path lookup in a nested array: data_get($arr, 'a.b.c'). */
 function data_get(array $data, string $key, mixed $default = null): mixed
 {

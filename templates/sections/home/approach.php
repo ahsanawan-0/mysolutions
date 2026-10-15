@@ -6,25 +6,10 @@ declare(strict_types=1);
  *           docs/04 §1.5 🔒 rule for notches over images) and holds the Office Hours card (brand gradient).
  *   right : the image-filled "10+" numerals (fill-text pans the photo on scroll, counter counts up), the sector
  *           avatar stack with its uppercase label, the intro paragraph and the "More About Us" split button.
- * Copy: app/data/home.php → approach. Hours: config('hours') (provisional until the client confirms, docs/15 P08).
+ * Copy: app/data/home.php → approach. The Office Hours card is C33 (components/hours-card.php, config('hours')).
  * Below 1024 the columns stack and the hours card moves under the image (no notch).
  */
 $a = home('approach');
-$hours = config('hours');
-
-/** "Monday … Friday" → "Mon–Fri"; a single day stays "Sat". */
-$dayRange = static function (array $days): string {
-    $short = array_map(static fn (string $d): string => substr($d, 0, 3), $days);
-    return count($short) > 1 ? $short[0] . '–' . $short[count($short) - 1] : ($short[0] ?? '');
-};
-$rows = [];
-foreach ($hours['days'] ?? [] as $spec) {
-    $rows[] = [$dayRange($spec['days']), $spec['opens'] . '–' . $spec['closes']];
-}
-if (!empty($hours['closed'])) {
-    $rows[] = [$dayRange($hours['closed']), $a['hours']['closed']];
-}
-
 $fillSrc = App\Image::src($a['number']['image']['key'], 800);   // null → brand gradient (motion.css .fill-text)
 ?>
 <section class="section approach" id="approach" aria-labelledby="approach-title" data-header-theme="light">
@@ -40,22 +25,14 @@ $fillSrc = App\Image::src($a['number']['image']['key'], 800);   // null → bran
           <?= img($a['image']['key'], ['alt' => $a['image']['alt'], 'ratio' => '5/4', 'sizes' => '(min-width: 1024px) 50vw, 100vw', 'cover' => true, 'pattern' => false]) ?>
         </div>
 
-        <aside class="approach__hours on-dark" data-anim="fade-up" data-x="40" data-y="-40" data-delay="0.35" aria-labelledby="approach-hours-title">
-          <h3 class="approach__hours-title" id="approach-hours-title">
-            <?= icon('clock', 'regular', ['size' => 20]) ?><?= e($a['hours']['title']) ?>
-          </h3>
-          <dl class="approach__hours-list">
-            <?php foreach ($rows as [$days, $time]): ?>
-            <div class="approach__hours-row"><dt><?= e($days) ?></dt><dd><?= e($time) ?></dd></div>
-            <?php endforeach; ?>
-          </dl>
-          <?php if (!empty($hours['email_anytime'])): ?>
-          <p class="approach__hours-email">
-            <span><?= e($a['hours']['email_lead']) ?></span>
-            <a href="mailto:<?= e(config('email')) ?>"><?= e(config('email')) ?></a>
-          </p>
-          <?php endif; ?>
-        </aside>
+        <?= component('hours-card', [
+            'title'      => $a['hours']['title'],
+            'closed'     => $a['hours']['closed'],
+            'email_lead' => $a['hours']['email_lead'],
+            'id'         => 'approach-hours-title',
+            'class'      => 'approach__hours',
+            'attrs'      => ['data-anim' => 'fade-up', 'data-x' => '40', 'data-y' => '-40', 'data-delay' => '0.35'],
+        ]) ?>
       </div>
     </div>
 

@@ -761,3 +761,37 @@
 
 **Follow-ups**
 - P18/P19 (About), P20/P21 (services), P22 (sectors), P26 (articles), P27–P29 call this component; inner pages need real photos for the columns (placeholders until then).
+
+---
+
+## P18 — About page part 1: About Us + Our Story
+**Date:** 15 October 2026
+
+**Files created**
+- `app/data/about.php` + `about()` helper: SEO pack, hero, sub-nav labels, About Us (5 paragraphs) and Our Story (8 paragraphs + closing statement), verbatim from `about-us-content.md` ("over 10 years", L05c). Each section's eyebrow is the client's section name, the two-voice H2 its sub-heading.
+- `templates/pages/about.php`: `$page` (title 50 chars, description 152, `AboutPage` + `BreadcrumbList`, breadcrumbs Home › About Us, **published**, primary image = the hero photo), hero-inner `columns` (labels Bid Strategy / Compliance / Evidence-Led Writing), C34 sub-nav, then the sections by anchor id. P19 appends its sections to the same list.
+- `templates/sections/about/intro.php` (A1 `#about-us`): two-voice H2, the 5 paragraphs (the first in ink, medium weight), sticky notched image (`.notch--tr`) with the Office Hours card in the cut-out, sector chips row linking to the 7 sector pages.
+- `templates/sections/about/story.php` (A2 `#our-story`): swirl lines drawn behind the header, sticky photo column that crossfades per paragraph (`modules/about-story.js`, ≥ 1024), the 8 paragraphs with `read-along` on "We have never believed in taking a standard approach to every tender." and on the last paragraph, and the closing statement large in Azure 650 with a Phosphor quote mark that draws itself.
+- `templates/components/subnav.php` + `components/subnav.css` + `modules/subnav.js` (C34): sticky glass pill bar, scrollspy with `aria-current` + sliding navy pill, horizontal scroll on small screens.
+- `templates/components/hours-card.php` + `components/hours-card.css` (C33): the P10 Office Hours card as a component (copy `ui('hours_card')`); the home approach section now uses it (its CSS keeps only the positioning).
+- `src/css/pages/about.css`.
+
+**Files changed**
+- `src/js/core/motion.js`: `alignHash()`: when a page opens with a `#hash`, re-align on the target after load and after every ScrollTrigger refresh for 3 s (until the reader scrolls). **Fixes a P06 bug**: `/#approach`, `/styleguide/motion/#parallax` and `/about-us/#our-story` used to stay at the top (the native jump happened before the layout settled and ScrollTrigger's refresh reset it).
+- `src/js/modules/header.js`: toggles `html.is-header-hidden` so sticky bars can follow the header.
+- `templates/sections/home/approach.php`, `src/css/pages/home-approach.css`, `app/data/ui.php`, `app/lib/helpers.php`, `src/css/main.css`, `docs/03` (C33, C34), CLAUDE.md.
+
+**Decisions / deviations**
+- L11 over the prompt: paragraphs stay 14px (the prompt's "first paragraph as `--fs-lead`" predates the Figtree change), and the pull quote is upright Figtree in the brand blue, not Playfair italic. The quote is the client's own closing line, so it is a styled statement, not a `<blockquote>`.
+- The sub-nav lists only sections the page renders (About Us, Our Story for now), so it never links to a missing anchor; P19's sections appear in it automatically.
+- Photos: the generated editorial set is reused (hero: consultancy meeting + building + care; About Us: planning session; Our Story: building → care → facilities) until real team/office photos arrive (Q19).
+- Sector chips link to the sector pages, which are still drafts until P22 (the home page already links to them).
+
+**Checks**
+- `php -l` clean; `npm run build` clean (`subnav` 0.72 KB gzip, `about-story` 0.27 KB); every About Us + Our Story paragraph and both headings present verbatim in the server HTML, no "16 years"; JSON-LD `AboutPage` + `BreadcrumbList`.
+- Playwright 1440 / 1024 / 768 / 360 (+ reduced motion at 1440 / 360): no console errors or 4xx, no horizontal scroll, one H1; while wheel-scrolling the current link follows the sections (About Us → Our Story), the pill sits exactly under it, the bar sticks under the header and slides up with it, the story photo changes 0 → 1 → 2; `/about-us/#our-story` opened from the home page lands just below the bar (148px at 1440). Keyboard: hero links, CTAs and sub-nav links all show the focus ring. Home approach section unchanged.
+- `seo-audit --all` PASS (5 pages, incl. `/about-us/`); `check-content` 114 (−1: `/about-us/` has its template now).
+
+**Follow-ups**
+- P19: Our Approach, Why Work With Us?, Mission & Vision, Team (hidden while empty), CTA band.
+- Real team / office photos for the About hero and sections (Q19); a photographic OG crop for `/about-us/` in P30.

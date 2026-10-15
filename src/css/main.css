@@ -38,6 +38,8 @@
 
 @import '/src/css/components/special-frame.css';
 @import '/src/css/components/hero-inner.css';
+@import '/src/css/components/hours-card.css';
+@import '/src/css/components/subnav.css';
 @import '/src/css/pages/home.css';
 @import '/src/css/pages/home-services.css';
 @import '/src/css/pages/home-approach.css';
@@ -46,5 +48,6 @@
 @import '/src/css/pages/home-triage.css';
 @import '/src/css/pages/home-faq.css';
 @import '/src/css/pages/home-insights.css';
+@import '/src/css/pages/about.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

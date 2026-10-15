@@ -17,6 +17,13 @@ return [
         'whatsapp'  => ['Chat on WhatsApp', config('whatsapp')],
     ],
 
+    // Office Hours card (templates/components/hours-card.php); the hours themselves come from config('hours')
+    'hours_card' => [
+        'title'      => 'Office Hours',
+        'closed'     => 'Closed',
+        'email_lead' => 'Email us any time',   // the address itself comes from config('email')
+    ],
+
     // Micro-CTA row (templates/components/micro-cta.php)
     'micro_cta' => [
         'text'  => 'Not sure which service you need?',

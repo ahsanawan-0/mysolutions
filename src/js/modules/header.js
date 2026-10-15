@@ -50,11 +50,13 @@ function initSticky(header, state) {
   const show = () => {
     if (!hidden) return;
     hidden = false;
+    root.classList.remove('is-header-hidden');   // sticky bars under the header follow it (subnav.css)
     gsap.to(header, { yPercent: 0, duration: reducedMotion() ? 0 : 0.4, ease: 'apple', overwrite: true });
   };
   const hide = () => {
     if (hidden) return;
     hidden = true;
+    root.classList.add('is-header-hidden');
     gsap.to(header, { yPercent: -100, duration: reducedMotion() ? 0 : 0.4, ease: 'apple', overwrite: true });
   };
 

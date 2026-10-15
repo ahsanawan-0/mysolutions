@@ -1,0 +1,70 @@
+/* C34 In-page sub-nav (templates/components/subnav.php, modules/subnav.js). The bar straddles the edge of the hero
+   above it, then sticks under the header; when the header hides on scroll down (html.is-header-hidden, header.js)
+   the stuck bar slides up with it. Small screens: the same pill scrolls sideways, the active chip is kept in view. */
+:root { --subnav-h: 64px; }
+html:has(.subnav) { scroll-padding-top: calc(var(--header-h) + var(--subnav-h)); }
+
+.subnav {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 700;
+  margin-top: calc(var(--subnav-h) / -2);
+  padding-block: var(--space-2);
+  pointer-events: none;              /* only the pill takes clicks; the strip around it stays scroll-through */
+  transition: transform var(--dur-ui) var(--ease-apple), top var(--dur-ui) var(--ease-apple);
+}
+html.is-header-hidden .subnav.is-stuck { transform: translateY(calc(-1 * var(--header-h))); }
+.subnav__bar { display: flex; justify-content: center; }
+.subnav__track {
+  position: relative;
+  max-width: 100%;
+  padding: 6px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-2);
+  pointer-events: auto;
+}
+.subnav__track::-webkit-scrollbar { display: none; }
+.subnav__list { position: relative; z-index: 1; display: flex; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+.subnav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-5);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease-apple), background-color var(--dur-hover) var(--ease-apple);
+}
+.subnav__link:hover { color: var(--ms-ink); background: rgb(var(--ink-rgb) / .05); }
+.subnav__link[aria-current="true"],
+.subnav__link[aria-current="true"]:hover { color: var(--ms-white); background: transparent; }
+.subnav__link:focus-visible { outline-offset: -2px; }
+/* The sliding pill under the active link (subnav.js sets x + width) */
+.subnav__pill {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: 0;
+  border-radius: var(--r-pill);
+  background: var(--navy-900);
+  opacity: 0;
+  pointer-events: none;
+}
+/* Without the pill (no JS yet, reduced transparency) the active link carries its own fill */
+html:not(.js) .subnav__link[aria-current="true"] { background: var(--navy-900); }
+
+@media (max-width: 767px) {
+  :root { --subnav-h: 60px; }
+  .subnav__link { padding: 0 var(--space-4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .subnav { transition: none; }
+}

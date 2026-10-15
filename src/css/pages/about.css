@@ -1,0 +1,162 @@
+/* ==========================================================================
+   About page /about-us/ (PROMPTS P18–P19, docs/08 §5). The hero is C32 (components/hero-inner.css), the sticky
+   in-page nav C34 (components/subnav.css), the Office Hours card C33 (components/hours-card.css).
+   Paragraphs stay at the 14px body size (docs/00 L11); the first About Us paragraph is set apart by weight/colour.
+   ========================================================================== */
+
+/* ---------- A1 About Us: text + notched image with the Office Hours card ---------- */
+.about-intro {
+  /* notch geometry (components/notch.css): --nw × --nh hole, --gap canvas gap round the card, concentric --nr */
+  --nw: 320px;
+  --nh: 248px;
+  --gap: 12px;
+  --nr: calc(var(--r-xl) + var(--gap));
+  --nf: var(--r-xl);
+  --sticky-top: calc(var(--header-h) + var(--subnav-h) + var(--space-6));
+  padding-top: calc(var(--section-y) * .7);
+  background: var(--ms-canvas);
+}
+.about-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+  column-gap: clamp(var(--space-10), 6vw, var(--space-24));
+  row-gap: var(--space-12);
+  align-items: start;
+}
+.about-intro__title { margin: var(--space-4) 0 var(--space-8); max-width: 16ch; text-wrap: balance; }
+.about-intro__copy { display: grid; gap: var(--space-4); max-width: 62ch; }
+.about-intro__copy p { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-intro__copy .about-intro__first { color: var(--ms-ink); font-weight: var(--fw-medium); }
+
+.about-intro__figure { position: sticky; top: var(--sticky-top); }
+.about-intro__image { border-radius: var(--r-xl); aspect-ratio: 4 / 5; }
+.about-intro__image picture,
+.about-intro__image img,
+.about-intro__image .img-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
+.about-intro__hours {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: calc(var(--nw) - var(--gap));
+  height: calc(var(--nh) - var(--gap));
+}
+
+/* Sector chips row */
+.about-intro__sectors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--ms-line);
+}
+.about-intro__sectors-title {
+  margin: 0;
+  font-size: var(--fs-eyebrow);
+  line-height: var(--lh-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.about-intro__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.about-intro__chip { gap: var(--space-2); min-height: 44px; padding-inline: var(--space-4); }
+.about-intro__chip .icon { flex: none; color: var(--azure-600); }
+
+/* ---------- A2 Our Story: sticky crossfading photos + the story ---------- */
+.about-story {
+  --sticky-top: calc(var(--header-h) + var(--subnav-h) + var(--space-6));
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;                  /* the art bleeds; clip (not hidden) keeps position: sticky working */
+  background: var(--ms-white);
+}
+/* Azure speed-line swirl behind the header (docs/04 §6), drawn on scroll */
+.about-story__art {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: -1;
+  height: calc(var(--section-y) + 200px);   /* the header band only: the lines never cross the paragraphs */
+  overflow: hidden;
+  color: var(--azure-500);
+  opacity: .28;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
+  mask-image: linear-gradient(180deg, #000 55%, transparent);
+}
+.about-story__art svg { position: absolute; top: -30%; right: -12%; width: 70%; height: 150%; }
+.about-story__head { max-width: 760px; margin-bottom: var(--space-16); }
+.about-story__title { margin: var(--space-4) 0 0; text-wrap: balance; }
+
+.about-story__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 9fr) minmax(0, 11fr);
+  column-gap: clamp(var(--space-10), 6vw, var(--space-24));
+  row-gap: var(--space-10);
+  align-items: start;
+}
+.about-story__media { position: sticky; top: var(--sticky-top); }
+.about-story__frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: calc(100svh - var(--sticky-top) - var(--space-8));
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--r-xl) var(--r-xl) var(--r-xl) var(--r-section);
+  background: var(--ms-mist);
+  box-shadow: var(--shadow-2);
+}
+.about-story__img { position: absolute; inset: 0; opacity: 0; transition: opacity 900ms var(--ease-apple); }
+.about-story__img.is-active { opacity: 1; }
+.about-story__img picture,
+.about-story__img img,
+.about-story__img .img-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.about-story__text { display: grid; gap: var(--space-6); max-width: 62ch; }
+.about-story__para { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-story__para--read,
+.about-story__read { color: var(--ms-ink); font-weight: var(--fw-medium); }
+
+/* Closing statement: large, brand blue, with a quote mark that draws itself */
+.about-story__statement { margin-top: var(--space-4); padding-top: var(--space-8); border-top: 1px solid var(--ms-line); }
+.about-story__mark { display: block; width: 56px; height: 56px; margin-bottom: var(--space-4); color: var(--azure-500); }
+.about-story__mark path { fill: rgb(var(--azure-500-rgb) / .12); stroke: currentColor; stroke-width: 6; stroke-linejoin: round; }
+.about-story__statement-text {
+  margin: 0;
+  font-size: var(--fs-h3);
+  line-height: 1.4;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-h3);
+  color: var(--azure-650);
+  text-wrap: pretty;
+}
+
+/* ---------- Laptop 1024–1279: a smaller hole ---------- */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .about-intro { --nw: 280px; --nh: 236px; }
+  .about-intro__hours { padding: var(--space-4) var(--space-5); gap: var(--space-2); }
+  .about-intro__hours .hours-card__row { font-size: var(--fs-small); }
+}
+
+/* ---------- Tablet and mobile < 1024: stacked; no notch, no sticky columns, one story photo ---------- */
+@media (max-width: 1023px) {
+  .about-intro__grid,
+  .about-story__grid { grid-template-columns: minmax(0, 1fr); }
+  .about-intro__figure { position: relative; top: auto; overflow-x: clip; }   /* the card's fade-up starts 40px right */
+  .about-intro__image { -webkit-mask: none; mask: none; aspect-ratio: 4 / 3; }
+  .about-intro__hours { position: static; width: auto; height: auto; margin-top: var(--space-4); }
+  .about-intro__sectors { margin-top: var(--space-12); }
+  .about-story__head { margin-bottom: var(--space-10); }
+  .about-story__media { position: relative; top: auto; }
+  .about-story__frame { aspect-ratio: 4 / 3; max-height: none; }
+  .about-story__img:not([data-story-img="0"]) { display: none; }
+  .about-story__img[data-story-img="0"] { opacity: 1; }
+}
+@media (max-width: 767px) {
+  .about-intro__hours { padding: var(--space-4) var(--space-5); }
+  .about-story__mark { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-story__img { transition: none; }
+}

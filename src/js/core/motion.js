@@ -56,14 +56,34 @@ function stopLenis() {
 
 function initLenis() {
   // Hash rule (docs/10 §9.6): with a #hash on load the browser jumps natively first, then Lenis takes over.
-  // history.scrollRestoration stays 'auto'; nothing here forces a scroll position on load.
+  // history.scrollRestoration stays 'auto'; the only position forced on load is the #hash target (alignHash).
   if (location.hash) {
-    const go = () => requestAnimationFrame(startLenis);
+    const go = () => requestAnimationFrame(() => {
+      startLenis();
+      alignHash();
+    });
     document.readyState === 'complete' ? go() : window.addEventListener('load', go, { once: true });
   } else {
     startLenis();
   }
   reduceMQ.addEventListener('change', (e) => (e.matches ? stopLenis() : startLenis()));
+}
+
+// The native jump lands on the target's position at parse time, but the layout keeps moving afterwards (fonts, the
+// dev-mode stylesheet, pin spacers, modules that load later), and ScrollTrigger's refresh can reset it. So once the
+// page has loaded, re-align on the #hash target, and again after every ScrollTrigger refresh during the next 3s,
+// unless the reader has started scrolling.
+function alignHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const target = id && document.getElementById(id);
+  if (!target) return;
+  let reader = false;
+  const stop = () => { reader = true; };
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((type) => window.addEventListener(type, stop, { once: true, passive: true }));
+  const align = () => { if (!reader) scrollTo(target, { immediate: true }); };
+  ScrollTrigger.addEventListener('refresh', align);
+  setTimeout(() => ScrollTrigger.removeEventListener('refresh', align), 3000);
+  align();
 }
 
 /* ---------- Anchor links (same page) ---------- */

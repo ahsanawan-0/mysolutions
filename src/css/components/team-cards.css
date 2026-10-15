@@ -1,0 +1,92 @@
+/* C11 Team cards (docs/04 §1.4; templates/components/team-cards.php, modules/team-cards.js): scroll-snap row of
+   portrait cards (4 on desktop, 2 on tablet, 1.1 on mobile), bottom gradient, name + role pill, a share button in a
+   notch at the top-right (true mask, the image shows the canvas through the cut-out) with a native popover. */
+.team-cards { --team-gap: var(--space-5); --team-cols: 4; }
+.team-cards__track {
+  display: flex;
+  gap: var(--team-gap);
+  margin: 0;
+  padding: var(--space-2) 0 var(--space-4);
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.team-cards__track::-webkit-scrollbar { display: none; }
+.team-cards__track:focus-visible { outline: 2px solid var(--ms-focus); outline-offset: 4px; border-radius: var(--r-lg); }
+.team-card {
+  position: relative;
+  flex: 0 0 calc((100% - (var(--team-cols) - 1) * var(--team-gap)) / var(--team-cols));
+  scroll-snap-align: start;
+  --nw: 72px;
+  --nh: 72px;
+  --nr: calc(var(--r-pill));
+  --nf: var(--r-lg);
+}
+.team-card__media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: var(--ms-mist); }
+.team-card__media picture, .team-card__media img, .team-card__media .img-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
+.team-card__shade {
+  position: absolute;
+  inset: 40% 0 0;
+  background: linear-gradient(180deg, transparent, rgb(var(--navy-900-rgb) / .85));
+}
+.team-card__share {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  color: var(--ms-ink);
+  box-shadow: var(--shadow-1);
+}
+.team-card__share:hover { background: var(--azure-650); color: var(--ms-white); }
+.team-card__pop {
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--ms-line);
+  border-radius: var(--r-md);
+  background: var(--ms-white);
+  box-shadow: var(--shadow-3);
+  inset: auto;              /* team-cards.js places it under its share button (viewport coordinates, top layer) */
+}
+html:not(.js) .team-card__pop { inset: 0; margin: auto; }   /* no JS: the browser's centred default */
+.team-card__pop-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  color: var(--ms-ink);
+  text-decoration: none;
+}
+.team-card__pop-link:hover { background: var(--navy-50); color: var(--azure-700); }
+.team-card__caption { position: absolute; left: 0; right: 0; bottom: 0; display: grid; justify-items: start; gap: var(--space-2); padding: var(--space-5); }
+.team-card__name { margin: 0; font-family: var(--font-display); font-size: var(--fs-h3); font-weight: var(--fw-h3); line-height: var(--lh-h3); color: var(--ms-white); }
+.team-card__role {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  color: var(--ms-ink);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.team-cards__controls { display: flex; align-items: center; justify-content: center; gap: var(--space-4); margin-top: var(--space-2); }
+.team-cards__btn:disabled { opacity: .35; pointer-events: none; }
+.team-cards__dots { display: flex; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.team-cards__dot { width: 12px; height: 12px; padding: 0; border: 0; border-radius: var(--r-pill); background: var(--navy-100); cursor: pointer; }
+.team-cards__dot[aria-current] { width: 28px; background: var(--azure-650); }
+.team-cards__dot:focus-visible { outline: 2px solid var(--ms-focus); outline-offset: 3px; }
+html:not(.js) .team-cards__controls { display: none; }
+
+@media (max-width: 1023px) { .team-cards { --team-cols: 2; } }
+@media (max-width: 639px)  { .team-cards { --team-cols: 1.15; } }

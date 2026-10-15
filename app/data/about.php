@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Each section's eyebrow is the client's section name; its two-voice H2 is the client's sub-heading.
  * Images: the generated editorial set (assets-src/images/README.md) until real team / office photos arrive (Q19);
  * swapping a key here swaps the photo.
- * P18 builds hero, nav, about_us, story; P19 adds approach, why, mission, team.
+ * P18 built hero, nav, about_us, story; P19 adds approach, why, mission (team lives in app/data/team.php).
  */
 return [
     'seo' => [
@@ -85,4 +85,88 @@ return [
             ['key' => 'sectors/facilities-manager-plant-room', 'alt' => 'Facilities manager checking plant-room equipment with a tablet'],
         ],
     ],
+
+    // A3: Our Approach (about-us-content.md §3): 2 intro paragraphs, the 5 steps (full, two paragraphs each) in the
+    // C15 process component, then the closing statement on Navy 900. Icons as in P13 (home process).
+    'approach' => [
+        'eyebrow' => 'Our Approach',
+        'title'   => 'A Practical, Strategic Approach to',
+        'accent'  => 'Tender Writing and Bid Management',
+        'paras'   => [
+            'At My Solutionz, we believe a strong tender submission starts with a thorough understanding of the business behind it. Every contract has different requirements, and every client brings their own experience, capabilities and strengths. Our approach to tender writing and bid management focuses on bringing these elements together to develop clear, compliant and competitive bids.',
+            "We combine practical business knowledge, sector-specific expertise and a structured bid management process to support our clients from the initial tender assessment through to final submission. Rather than relying on standard templates or broad claims, we build each response around the buyer's requirements, relevant supporting evidence and the client's ability to deliver.",
+        ],
+        'steps_eyebrow' => 'How we work',
+        'steps_title'   => 'Five steps,',
+        'steps_accent'  => 'one standard',
+        'steps' => [
+            ['title' => 'Understanding Your Business', 'icon' => 'magnifying-glass', 'image' => 'home/tender-consultancy-meeting', 'detail_image' => 'sectors/education-adult-training-workshop',
+             'text'   => 'Before beginning any tender response, we take time to understand your organisation, services, operational processes, workforce, experience and commercial objectives. This allows us to identify your competitive strengths and gather the information needed to present your business accurately.',
+             'detail' => ['Whether you operate in healthcare, transport, cleaning, security, education or facilities management, we approach each tender with an understanding of the particular standards and expectations within your sector.']],
+            ['title' => 'Tender Analysis & Bid Strategy', 'icon' => 'strategy', 'image' => 'sectors/education-adult-training-workshop', 'detail_image' => 'home/tender-consultancy-meeting',
+             'text'   => 'We carefully review the invitation to tender (ITT), service specification, evaluation criteria, contractual requirements and submission instructions. This helps us identify mandatory requirements, potential risks, scoring priorities and areas where your business can demonstrate added value.',
+             'detail' => ["Using these findings, we develop a clear bid strategy, establish response priorities and plan how best to address the contracting authority's expectations."]],
+            ['title' => 'Evidence-Led Tender Writing', 'icon' => 'pen-nib', 'image' => 'services/digital-presence-web-designer', 'detail_image' => 'home/tender-consultancy-meeting',
+             'text'   => 'Our professional tender writers develop responses that are specific to your business and the contract you are pursuing. We focus on explaining how your services will be delivered, the resources available, how quality will be monitored and how contractual outcomes will be achieved.',
+             'detail' => ['We draw on relevant operational evidence, previous contract experience, policies and working practices to produce persuasive, well-structured responses that directly address the evaluation questions.']],
+            ['title' => 'Quality Review & Compliance Checks', 'icon' => 'seal-check', 'image' => 'home/tender-consultancy-meeting', 'detail_image' => 'services/digital-presence-web-designer',
+             'text'   => 'Before finalising a submission, we review each response against the tender specification and scoring criteria. We check that questions have been fully addressed, supporting evidence is consistent, word limits have been respected and the required documents are accounted for.',
+             'detail' => ['Our tender review process also identifies unclear statements, unsupported claims and gaps that could affect the quality or compliance of the submission.']],
+            ['title' => 'Final Submission & Ongoing Support', 'icon' => 'paper-plane-tilt', 'image' => 'services/digital-presence-web-designer', 'detail_image' => 'sectors/education-adult-training-workshop',
+             'text'   => 'We support clients through the final stages of the bidding process, including document preparation, submission checks and uploading tender responses where agreed.',
+             'detail' => ['Our involvement does not have to end with one tender. We also provide ongoing bid management, tender opportunity searches and strategic support to help businesses build a more consistent approach to securing public and private sector contracts.']],
+        ],
+        'closing' => [
+            'title'  => 'Every Bid Deserves a',
+            'accent' => 'Well-Considered Approach',
+            'paras'  => [
+                'We recognise the time, resources and commercial importance involved in preparing a tender. That is why we treat every submission with the attention it deserves, combining detailed preparation, open communication and a clear understanding of what the buyer is asking for.',
+                'Our aim is simple: to help you submit bids that represent your business at its best and give you a stronger basis to compete.',
+            ],
+        ],
+    ],
+
+    // A4: Why Work With Us? (about-us-content.md §4): 2 intro paragraphs, 7 reasons as sticky stacking cards
+    // (icons from P14, home why bento), closing line.
+    'why' => [
+        'eyebrow' => 'Why Work With Us?',
+        'title'   => 'More Than Tender Writers.',
+        'accent'  => 'A Partner in Your Business Growth.',
+        'paras'   => [
+            'Choosing the right tender writing consultancy can make a significant difference to how your business competes for contracts. At My Solutionz, we bring together business development experience, specialist bid writing knowledge and an understanding of the commercial pressures our clients face.',
+            'We know that tendering demands time, careful preparation and a thorough understanding of what buyers expect. Our role is to take that pressure off your team while helping you present a stronger, more convincing case for winning the contract.',
+        ],
+        'reasons' => [
+            ['icon' => 'trend-up',           'title' => 'Business Development Experience That Matters',  'text' => 'With over 10 years of business development experience, we understand the commercial decisions behind every tender opportunity. We look beyond the questions in a tender document to consider your business objectives, competitive advantages and the value a potential contract could bring to your organisation.'],
+            ['icon' => 'squares-four',       'title' => 'Expertise Across Multiple Industries',            'text' => 'From healthcare and social care to transport, cleaning, security, education and training, and facilities management, we understand that different sectors demand different approaches. Our tender writing services reflect the operational requirements, compliance standards and procurement expectations relevant to each industry.'],
+            ['icon' => 'fingerprint',        'title' => 'Your Business, Not a Generic Template',           'text' => 'No two businesses are identical, and their tender responses should not be either. We focus on your experience, workforce, systems, delivery methods and achievements to develop submissions that accurately represent your organisation. Every response is written around the contract requirements and the evidence your business can provide.'],
+            ['icon' => 'target',             'title' => 'Focused on What Buyers Actually Evaluate',        'text' => "A well-written tender is only valuable if it answers the question being assessed. We pay close attention to tender evaluation criteria, service specifications and scoring requirements, helping you demonstrate how your organisation meets the buyer's expectations through relevant, practical evidence."],
+            ['icon' => 'hand-heart',         'title' => 'Professional Support Without the Extra Pressure', 'text' => 'Preparing a competitive tender can place considerable demands on business owners and management teams. We take responsibility for the agreed writing and bid management activities, organise information requests and keep communication straightforward, allowing your team to concentrate on running the business.'],
+            ['icon' => 'sliders-horizontal', 'title' => 'Flexible Support That Works Around You',          'text' => 'Some clients need professional bid writers for a single tender submission. Others require ongoing tender search, bid management, independent tender reviews or support with framework applications. We adapt our services to the level of involvement your business needs, without making the process unnecessarily complicated.'],
+            ['icon' => 'handshake',          'title' => 'Committed to Your Long-Term Success',             'text' => 'We believe a strong working relationship goes beyond a single tender submission. By understanding your business goals, growth plans and future opportunities, we can provide bid writing and tender management support that remains relevant as your business develops. Our focus is on building lasting partnerships through consistent quality, reliable communication and a genuine commitment to helping our clients compete for new contracts.'],
+        ],
+        'closing' => "Whether you're pursuing your first public sector contract or preparing a major competitive bid, we're here to help you approach the opportunity with confidence.",
+    ],
+
+    // A5: Our Mission & Vision (about-us-content.md §5): Mission card (3 paragraphs), Vision card (1), closing statement.
+    'mission' => [
+        'eyebrow' => 'Our Mission & Vision',
+        'title'   => 'Creating Opportunities, Strengthening Businesses,',
+        'accent'  => 'Supporting Growth',
+        'cards'   => [
+            ['key' => 'mission', 'icon' => 'compass', 'title' => 'Mission', 'paras' => [
+                'At My Solutionz, our mission is to help businesses realise their full potential by making professional tender writing, bid management and business development support accessible, practical and effective. We believe that securing valuable contracts should not be limited to organisations with dedicated bidding departments or extensive procurement experience. Every capable business deserves the opportunity to compete on the strength of its expertise, experience and ability to deliver.',
+                'We aim to make a meaningful difference to the businesses we work with by removing the barriers that often make tendering a demanding and resource-intensive process. Through our specialist services, we help clients identify suitable contract opportunities, understand procurement requirements, develop competitive tender submissions and present their capabilities with clarity and confidence.',
+                'Our commitment extends beyond preparing individual bids. We want to help businesses strengthen their position in the market, pursue larger opportunities and establish a more consistent approach to securing public and private sector contracts. By combining sector knowledge, commercial understanding and professional bid management, we strive to give our clients the support they need to make informed decisions and work towards their long-term business objectives.',
+            ]],
+            ['key' => 'vision', 'icon' => 'binoculars', 'title' => 'Vision', 'paras' => [
+                "Looking ahead, our vision is to establish My Solutionz as one of the UK's most trusted multi-sector tender writing and business support consultancies, recognised not simply for the quality of our work, but for the contribution we make to our clients' progress. We want to build a business where professional expertise, dependable relationships and a genuine understanding of our clients' ambitions remain at the centre of everything we do.",
+            ]],
+        ],
+        'statement' => 'Ultimately, our purpose is to help businesses turn their capabilities into competitive opportunities and those opportunities into lasting growth.',
+    ],
+
+    // A6: Team heading (cards from app/data/team.php; the section is absent while that file is empty)
+    'team' => ['eyebrow' => 'Our Team', 'title' => 'Behind', 'accent' => 'Our Expertise'],
 ];
+

@@ -249,6 +249,14 @@ $typeScale = [
       <?= component('chip', ['label' => 'Digital Presence', 'variant' => 'digital', 'dot' => true]) ?>
     </div>
 
+    <h3 class="sg__h3">C11 Team cards (demo placeholders, not real people; the About section stays hidden until <code>app/data/team.php</code> has members)</h3>
+    <div class="sg__row sg__row--flush">
+      <?= component('team-cards', ['label' => 'Team cards demo', 'members' => array_map(static fn (int $i): array => [
+          'name' => 'Team member ' . $i, 'role' => $i % 2 ? 'Bid Writer' : 'Consultant', 'image' => 'team/member-' . $i, 'alt' => 'Placeholder portrait',
+          'linkedin' => $i % 3 ? 'https://www.linkedin.com/' : null, 'email' => $i % 2 ? config('email') : null,
+      ], range(1, 6))]) ?>
+    </div>
+
     <h3 class="sg__h3">C14 Avatar stack</h3>
     <div class="sg__row cluster">
       <?= component('avatar-stack', ['avatars' => [['initials' => 'MS', 'alt' => 'Team member'], ['initials' => 'WA', 'alt' => 'Team member'], ['initials' => 'JB', 'alt' => 'Team member']], 'more' => 2, 'label' => 'Strategic bids for sustainable growth']) ?>

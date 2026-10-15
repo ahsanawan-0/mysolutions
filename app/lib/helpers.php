@@ -414,6 +414,14 @@ function home(string $key, mixed $default = null): mixed
     return data_get($home, $key, $default);
 }
 
+/** Team members (app/data/team.php): [] until real people with permission are supplied (docs/15 Q08). */
+function team(): array
+{
+    static $team = null;
+    $team ??= require base_path('app/data/team.php');
+    return $team;
+}
+
 /** About page copy (app/data/about.php): about('story.paras'). */
 function about(string $key, mixed $default = null): mixed
 {

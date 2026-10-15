@@ -5,6 +5,8 @@
 //   skyscraper.svg  the glass skyscraper, upward perspective, thin frame lines (some_section_bg.jpeg): <g id="skyscraper">
 //   swirl.svg       the thin speed-line swirl (WhatsApp … 9.34.00 PM (1).jpeg): a standalone <svg> that templates
 //                   inline (inline_svg) so its paths can be drawn on scroll with data-anim="draw"
+//   ribbon.svg      the painted azure ribbon loops (some_section_bg (3).jpeg) as concentric U-loops: standalone,
+//                   inlined by the About Mission & Vision section and drawn on scroll
 // Usage: npm run art   (also runs automatically before `npm run build`)
 
 import { writeFile, mkdir } from 'node:fs/promises';
@@ -125,4 +127,28 @@ await mkdir(outDir, { recursive: true });
     `<g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round">${paths.join('')}</g>` +
     `</svg>\n`;
   await write('swirl.svg', svg, `${paths.length} curves`);
+}
+
+/* ---------- 4. Ribbon loops (Mission & Vision) ---------- */
+{
+  // Five concentric U-loops: a band that comes down from the top-left, turns at the bottom-right and sweeps back up
+  // to the top-right, like the painted ribbon. Each loop is the centre loop scaled about the turn's focal point.
+  const W = 1200, H = 900;
+  const LOOPS = 5;
+  const cx = 700, cy = 560;                       // focal point of the turn
+  const base = [                                   // centre loop: M p0, C p1 p2 p3, S p4 p5, S p6 p6
+    [40, -40], [260, 240], [520, 520], [700, 700], [1000, 540], [960, 330], [1180, -40],
+  ];
+  const paths = [];
+  for (let i = 0; i < LOOPS; i++) {
+    const k = 1 + (i - (LOOPS - 1) / 2) * 0.17;    // 0.66 … 1.34 scale about the focal point
+    const pt = ([x, y]) => `${f(cx + (x - cx) * k)} ${f(cy + (y - cy) * k)}`;
+    const d = `M${pt(base[0])} C${pt(base[1])}, ${pt(base[2])}, ${pt(base[3])} S${pt(base[4])}, ${pt(base[5])} S${pt(base[6])}, ${pt(base[6])}`;
+    paths.push(`<path d="${d}" stroke-opacity="${f(0.55 + 0.45 * (1 - Math.abs(i - 2) / 2))}"/>`);
+  }
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">` +
+    `<g fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round">${paths.join('')}</g>` +
+    `</svg>\n`;
+  await write('ribbon.svg', svg, `${paths.length} loops`);
 }

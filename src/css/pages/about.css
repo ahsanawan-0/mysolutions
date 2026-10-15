@@ -160,3 +160,138 @@
 @media (prefers-reduced-motion: reduce) {
   .about-story__img { transition: none; }
 }
+
+/* ==========================================================================
+   P19: A3 Our Approach, A4 Why Work With Us?, A5 Mission & Vision, A6 Team
+   ========================================================================== */
+
+/* ---------- A3 Our Approach: intro on the canvas, the full process (C15), closing band on Navy 900 ---------- */
+.about-approach { padding-bottom: 0; background: var(--ms-canvas); }
+.about-approach__intro { max-width: 860px; }
+.about-approach__title { margin: var(--space-4) 0 var(--space-6); max-width: 22ch; text-wrap: balance; }
+.about-approach__paras { display: grid; gap: var(--space-4); max-width: 68ch; }
+.about-approach__paras p { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-approach__steps { margin-top: var(--space-12); }
+.about-approach__closing { padding-block: var(--section-y); background: var(--navy-900); }
+.about-approach__closing-inner { display: grid; gap: var(--space-8); max-width: 980px; }
+.about-approach__closing-title { margin: 0; max-width: 18ch; text-wrap: balance; }
+.about-approach__closing-paras { display: grid; gap: var(--space-4); max-width: 68ch; }
+.about-approach__closing-paras p { margin: 0; line-height: var(--lh-lead); color: var(--text-2-on-dark); text-wrap: pretty; }
+.about-approach__closing-paras .about-approach__aim { font-size: var(--fs-h4); line-height: var(--lh-h4); font-weight: var(--fw-medium); color: var(--sky-300); }
+@media (min-width: 1024px) {
+  .about-approach__closing-inner { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-16); align-items: start; }
+  /* While pinned, only the active step shows its paragraphs so five full steps fit one viewport */
+  html.js .about-approach .process-steps.is-anim .process-steps__step:not(.is-active) :is(.process-steps__text, .process-steps__detail) { display: none; }
+}
+
+/* ---------- A4 Why Work With Us?: 7 sticky stacking cards ---------- */
+.about-why { background: var(--ms-white); }
+.about-why__head { max-width: 860px; margin-bottom: var(--space-12); }
+.about-why__title { margin: var(--space-4) 0 var(--space-6); text-wrap: balance; }
+.about-why__paras { display: grid; gap: var(--space-4); max-width: 68ch; }
+.about-why__paras p { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-why__stack {
+  --stack-top: calc(var(--header-h-initial) + var(--subnav-h) + var(--space-4));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.about-why__card {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  column-gap: var(--space-8);
+  align-items: start;
+  min-height: 300px;
+  padding: var(--space-10);
+  border: 1px solid var(--ms-line);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  box-shadow: var(--shadow-2);
+}
+.about-why__card--mist { background: var(--ms-mist); }
+/* stack-cards.js dims a covered card with opacity; these cards stay opaque (the text of the card beneath would show
+   through a half-dimmed card), so only the scale and the shadow say "covered" */
+html.js .about-why__card { opacity: 1 !important; }
+.about-why__n { font-family: var(--font-display); font-size: var(--fs-h3); font-weight: var(--fw-bold); line-height: 1; color: var(--azure-500); font-variant-numeric: tabular-nums; }
+.about-why__body { display: grid; gap: var(--space-3); max-width: 62ch; }
+.about-why__card-title { margin: 0; text-wrap: balance; }
+.about-why__text { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-why__closing {
+  max-width: 34ch;
+  margin: var(--space-16) auto 0;
+  font-size: var(--fs-h3);
+  line-height: 1.4;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-h3);
+  text-align: center;
+  color: var(--ms-ink);
+  text-wrap: balance;
+}
+
+/* ---------- A5 Mission & Vision: two cards over the ribbon loops ---------- */
+.about-mission { position: relative; isolation: isolate; overflow-x: clip; background: var(--ms-canvas); }
+.about-mission__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: var(--azure-500);
+  opacity: .1;
+  pointer-events: none;
+}
+.about-mission__art svg { position: absolute; top: -4%; right: -8%; width: 70%; height: 108%; }
+.about-mission__head { max-width: 860px; margin-bottom: var(--space-12); }
+.about-mission__title { margin: var(--space-4) 0 0; text-wrap: balance; }
+.about-mission__cards { display: grid; gap: var(--space-6); }
+.about-mission__card {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  padding: var(--space-10);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  border: 1px solid var(--ms-line);
+  box-shadow: var(--shadow-2);
+}
+.about-mission__card--vision {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--azure-650) 0%, var(--navy-700) 100%);
+  color: var(--ms-white);
+}
+.about-mission__card-title { margin: 0; }
+.about-mission__card--vision .about-mission__card-title { color: var(--ms-white); }
+.about-mission__text { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.about-mission__card--vision .about-mission__text { color: var(--sky-100); }
+.about-mission__card--vision .hex-tile { --tile-fill: rgb(var(--white-rgb) / .14); --tile-colour: var(--ms-white); }
+.about-mission__statement {
+  max-width: 40ch;
+  margin: var(--space-16) auto 0;
+  font-size: var(--fs-h3);
+  line-height: 1.4;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-h3);
+  text-align: center;
+  color: var(--azure-650);
+  text-wrap: balance;
+}
+@media (min-width: 1024px) {
+  .about-mission__cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); }
+  .about-mission__card { padding: var(--space-12); }
+}
+
+/* ---------- A6 Team ---------- */
+.about-team { background: var(--ms-white); }
+.about-team__head { max-width: 760px; margin-bottom: var(--space-10); }
+.about-team__title { margin: var(--space-4) 0 0; }
+
+/* ---------- Tablet and mobile < 1024 ---------- */
+@media (max-width: 1023px) {
+  .about-why__stack > * { position: static; }       /* a plain list, no stacking */
+  .about-why__stack { gap: var(--space-5); }
+  .about-why__card { grid-template-columns: auto minmax(0, 1fr); row-gap: var(--space-4); min-height: 0; padding: var(--space-6); }
+  .about-why__n { grid-column: 1 / -1; }
+  .about-why__icon { --tile-size: 64px; }
+  .about-mission__art svg { width: 110%; right: -30%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-why__stack > * { position: static; }
+}

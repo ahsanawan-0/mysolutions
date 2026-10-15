@@ -795,3 +795,33 @@
 **Follow-ups**
 - P19: Our Approach, Why Work With Us?, Mission & Vision, Team (hidden while empty), CTA band.
 - Real team / office photos for the About hero and sections (Q19); a photographic OG crop for `/about-us/` in P30.
+
+---
+
+## P19 — About page part 2: Approach, Why Us, Mission & Vision
+**Date:** 15 October 2026
+
+**Files created**
+- `templates/sections/about/approach.php` (A3 `#our-approach`): eyebrow + two-voice H2 + the 2 intro paragraphs; the C15 process component in its `full` variant (5 steps, both client paragraphs each, pinned ≥ 1024 at 0.8 × 60vh per step); closing band on Navy 900 with H3 "Every Bid Deserves a *Well-Considered Approach*" and the 2 closing paragraphs (the aim line in Sky 300).
+- `templates/sections/about/why.php` (A4 `#why-work-with-us`): H2 + 2 intro paragraphs; the 7 reasons as `stack-cards` (number 01–07, large hex icon from P14, H3, the full paragraph; white / mist alternating); closing line large and centred with `read-along`.
+- `templates/sections/about/mission.php` (A5 `#mission-vision`): H2; Mission card (white, `compass`, 3 paragraphs) and Vision card (Azure 650 → Navy 700, white, `binoculars`) side by side over the azure ribbon loops (`public/assets/img/art/ribbon.svg`, new in `scripts/art.mjs`, inlined and drawn on scroll); closing statement centred in Azure 650.
+- `templates/sections/about/team.php` (A6): absent while `team()` is empty. `templates/sections/about/cta.php` (A7): the default CTA band with WhatsApp.
+- `templates/components/team-cards.php` + `components/team-cards.css` + `modules/team-cards.js` (C11), `app/data/team.php` (`[]`) + `team()` helper; a placeholder demo on `/styleguide/` (no real people).
+- `app/data/about.php`: `approach`, `why`, `mission`, `team` copy, verbatim from `about-us-content.md` §3–§5.
+
+**Files changed**
+- `templates/pages/about.php`: the section list is now the full locked order (About Us → Our Story → Our Approach → Why Work With Us? → Our Mission & Vision → Team → CTA); the sub-nav shows the five content sections. `src/css/pages/about.css` (+ P19 sections), `src/css/main.css`, `scripts/art.mjs` (ribbon), `docs/03` C11, CLAUDE.md.
+
+**Decisions / deviations**
+- The `full` process is pinned, so while pinned only the active step shows its paragraphs (CSS, desktop + motion only): five full steps would not fit a 1024 × 800 viewport otherwise (the block now measures exactly the viewport height at 1024 and 1440). Under reduced motion, on mobile and without JS every paragraph is visible.
+- The stacking cards stay opaque (`opacity: 1 !important` under `html.js`): the shared `stack-cards` effect dims a covered card, and the card beneath showed through a half-dimmed one.
+- L11/L15 over the prompt: the closing statement is upright Figtree in the brand blue, not Playfair italic.
+- The team share popover is positioned by JS (viewport coordinates) rather than CSS anchor positioning, which this Chromium does not support; it follows the button on scroll and closes once the button leaves the viewport.
+
+**Checks**
+- `php -l` clean; `npm run build` clean (`team-cards` chunk 0.93 KB gzip); all 47 lines of `about-us-content.md` §3–§5 present verbatim in the server HTML, no "16 years"; `seo-audit --all` PASS (5 pages); `check-content` 114 (unchanged).
+- Playwright 1440 / 1024 / 768 / 360 (+ reduced motion 1440 / 360): no console errors or 4xx, no horizontal scroll, one H1; the sub-nav follows all five sections; the pinned process block is 900 / 800 px tall at 1440 / 1024 (= the viewport), the stacking cards stack at header + sub-nav + 16 px and scale to 0.94; the About hero anchor still lands at 148 px. Team demo at 1440 / 360: next button scrolls one card, dots follow the page, the popover opens under its button, Esc closes it.
+
+**Follow-ups**
+- Team members, photos and LinkedIn links from the client (Q08); real About photos (Q19).
+- P20 next: services hub + category template + the Bid & Proposal page from the client's copy.

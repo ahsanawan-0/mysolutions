@@ -116,7 +116,7 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 | C08 | **Service card** | Glass (on dark) or white (on light), icon, title, 2-line text, arrow link; notch variant |
 | C09 | **Notched media** | Image with a cut-out corner holding a card/button (inverted-corner CSS) |
 | C10 | **Blog card** | Innovax notched card (date tab + corner arrow notch) |
-| C11 | **Team card** | Innovax portrait card (share notch, gradient, name + role pill) |
+| C11 | **Team card** | Innovax portrait card (share notch, gradient, name + role pill). Built in P19: `component('team-cards', ['members' => team()])` (`templates/components/team-cards.php`, `components/team-cards.css`, `modules/team-cards.js`): scroll-snap slider (4 / 2 / 1.15 cards), prev/next + dots, the share button in a true-mask notch opening a native popover with LinkedIn / e-mail; the About section is absent while `app/data/team.php` is empty (real people with permission only). Demo on `/styleguide/` |
 | C12 | **Image-filled stat** | Giant numerals with `background-clip:text` + label; count-up on enter |
 | C13 | **Counter stat** | Number counts up (GSAP), suffix "+", label below |
 | C14 | **Avatar stack** | 3–4 overlapping circles, 3px white ring |

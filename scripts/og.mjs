@@ -57,14 +57,24 @@ const out = path.join(outDir, 'default.jpg');
 await sharp(Buffer.from(svg)).jpeg({ quality: 86, mozjpeg: true, progressive: true }).toFile(out);
 console.log(`[og] wrote ${path.relative(root, out)} (${W}×${H})`);
 
-// Home (P16, docs/10 §5 "preferred image"): a photographic 1200×630 crop of the hero building photo, written only
-// when the client's source photo exists in assets-src/images/home/. templates/pages/home.php uses it when present.
-const heroDir = path.join(root, 'assets-src/images/home');
-const hero = (await readdir(heroDir).catch(() => [])).find((n) => /^hero-building\.(jpe?g|png|webp|avif|tiff?)$/i.test(n));
-if (hero) {
-  const outHome = path.join(outDir, 'home.jpg');
-  await sharp(path.join(heroDir, hero)).resize(W, H, { fit: 'cover', position: 'attention' }).jpeg({ quality: 84, mozjpeg: true, progressive: true }).toFile(outHome);
-  console.log(`[og] wrote ${path.relative(root, outHome)} from ${hero} (${W}×${H})`);
-} else {
-  console.log('[og] no assets-src/images/home/hero-building.* yet: the home page falls back to default.jpg');
+// Photographic 1200×630 crops (docs/10 §5 "preferred image"): written only when the source photo exists in
+// assets-src/images/; the page templates use the crop when present and fall back to default.jpg otherwise.
+//   home.jpg (P16)                        ← home/hero-building
+//   bid-proposal-management.jpg (P20)     ← home/tender-consultancy-meeting (SEO pack alt: "Bid manager planning a
+//                                           tender response with a client team")
+const PHOTO_OG = [
+  { out: 'home.jpg', src: 'home/hero-building' },
+  { out: 'bid-proposal-management.jpg', src: 'home/tender-consultancy-meeting' },
+];
+for (const { out: name, src } of PHOTO_OG) {
+  const dir = path.join(root, 'assets-src/images', path.dirname(src));
+  const base = path.basename(src);
+  const file = (await readdir(dir).catch(() => [])).find((n) => new RegExp(`^${base}\.(jpe?g|png|webp|avif|tiff?)$`, 'i').test(n));
+  if (!file) {
+    console.log(`[og] no assets-src/images/${src}.* yet: ${name} is not written (the page falls back to default.jpg)`);
+    continue;
+  }
+  const target = path.join(outDir, name);
+  await sharp(path.join(dir, file)).resize(W, H, { fit: 'cover', position: 'attention' }).jpeg({ quality: 84, mozjpeg: true, progressive: true }).toFile(target);
+  console.log(`[og] wrote ${path.relative(root, target)} from ${src} (${W}×${H})`);
 }

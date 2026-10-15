@@ -825,3 +825,50 @@
 **Follow-ups**
 - Team members, photos and LinkedIn links from the client (Q08); real About photos (Q19).
 - P20 next: services hub + category template + the Bid & Proposal page from the client's copy.
+
+---
+
+## P20 — Services hub + category landing template + 3 category pages
+**Date:** 16 October 2026
+**Commit:** `P20: services hub, category template and Bid & Proposal page`
+
+**Files created**
+- `app/data/service-pages/bid-proposal-management.php`: the client's final copy from `01-bid-proposal-management.md`, verbatim and in its order: SEO pack (title 52, description 155, OG title/description/image + alt, `serviceType` "Bid management"), hero (eyebrow, H1 "Bid &" + *Proposal Management*, sub, lead, CTAs, trust line, kanban icon, 3 photo columns + labels Bid Strategy / Compliance / Evidence-Led Writing), `sections[]` = intro (2 paras) → text "What Is …?" (6 paras + notched photo) → steps "How We Manage Your Bids" (3 paras + 6 steps; client titles, one-line descriptions `// PROVISIONAL`) → subs (heading + intro `// PROVISIONAL`, card text = the client's sub-page taglines) → text `mist` "Why Choose …" (3 paras + split button → `/about-us/#our-approach`) → text `band` "Bid Management for Public and Private Sector Contracts" (6 paras, the 7 sector names linked, `updated` 2026-10-15); FAQ intro; the client's closing CTA (heading, sub, 2 paras, bold line, default "Get a Free Quote" label). **Published.**
+- `app/data/service-pages/compliance-virtual-assistance.php`, `digital-presence.php`: the same block sequence, hero lead = the `services.php` summary, sub-service cards from `services.php`, every other block a `[[PENDING: …]]` marker naming the copy needed; titles as the prompt; descriptions `[[PENDING]]`. **Draft.**
+- `app/data/service-pages/_hub.php` + `templates/pages/services/index.php` (`/services/`): hero-inner `columns`; the 3 category panels (category colour band, hex tile, number, count chip, summary, sub-service hex links, "Explore …" split button); "How we work" (the five approach steps from `home('process.steps')`, a 5-up strip with a connecting line, link to `/about-us/#our-approach`); sectors chip marquee (links, pause button, static wrapped row under reduced motion / no JS); FAQ (items tagged `services`); default CTA band. Schema: WebPage + BreadcrumbList + ItemList of the categories. Title 52, description 142. **Published.**
+- `templates/pages/services/category.php`: one template for the three categories (hero-inner `category` with the category colour → the data's blocks → FAQ by `faq_tag` → CTA band prefilled `?service=<slug>#quote`); OG = the photographic crop when it exists; schema `serviceCategory()` with `hasOfferCatalog` (sub-service name, URL, tagline/summary).
+- `templates/sections/service/{intro,text,steps,subs,list,why,faq,pending}.php` + `src/css/pages/service.css` (C35) and `src/css/pages/services-hub.css`.
+- `templates/pages/styleguide/service-blocks.php` + route `/styleguide/service-blocks/` (local only, linked from the styleguide nav): `list` and `why` with the client's Tender & Bid Writing copy (P21 preview) and the pending block.
+
+**Files changed**
+- `app/lib/helpers.php`: `service_page()`, `pending_note()`, `rich()` (escape first, then `**…**` → `<strong>`, `[label](/path/)` → `<a href="url(path)">`, root-relative paths only).
+- `app/data/faqs.php`: the 3 missing Bid & Proposal FAQs (bid writing vs bid management, notice before a deadline, private sector), all `// PROVISIONAL`; items ordered as in the client doc; `services` tag on four general questions for the hub. The home teaser keeps its five items (order now: never tendered, cost, guarantee, confidentiality, after submission).
+- `app/lib/Schema.php`: `serviceCategory()` takes `serviceType` and adds `audience` (BusinessAudience).
+- `templates/components/cta-band.php` + `cta-band.css`: optional `sub`, `text` as a string or a list of paragraphs, `strong` (bold closing line); `.cta-band--long` widens the copy column; the default band is unchanged.
+- `templates/components/process-steps.php`: no eyebrow/H2 when `heading` is empty (the service steps block prints its own heading, sub line and intro above the pinned list).
+- `src/css/components/hero-inner.css`: with image columns in the `category` variant, label 3 moves to the bottom-right (the framed tile covered it at the bottom-left).
+- `scripts/og.mjs`: a `PHOTO_OG` map writes `home.jpg` and the new `bid-proposal-management.jpg` (1200×630 attention crop of the consultancy photo). `bin/check-content.php`: image keys are also read from `app/data/*/` and from `key` / `detail_image` entries. `src/icons.json` (+ sprite): light `list-numbers`, `shield-warning`, `folder-open` (P21 list icons). `src/css/main.css`, `app/routes.php`, `docs/03` C35, CLAUDE.md.
+
+**Decisions**
+- Paragraphs stay 14px (docs/00 L11): the intro's "first paragraph at lead size" and the "What is" definition are set apart by ink colour + medium weight instead (as on the About page).
+- The steps block shows its heading, sub line and three intro paragraphs as a normal header and pins only the 01–06 list with the image panels: the pinned block measures exactly the viewport (800 / 900 px at 1024 / 1440), 0.5 × 60vh per step.
+- Sector names in the band stay inline links in the client's paragraph (no duplicate chip row), as the prompt's "sector names linked".
+- Image-less `default` / `mist` text blocks use heading + button left, paragraphs right on desktop (a single column left half the section empty).
+- The sub-service cards are frosted glass over a stronger azure/sky wash: plain light glass on the pale canvas was barely visible.
+- A draft's `[[PENDING]]` meta description stays visible off production (check-content, draft ribbon) and is replaced by the category summary on production, so no marker reaches production HTML.
+- Photos reuse the generated editorial set (the doc's suggested `bid-strategy-whiteboard` / `bid-management-team-planning` photos do not exist): "What is" = the training-room planning photo with matching alt text.
+
+**Deviations**
+- None against the prompt.
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean (0 warnings); `npm run og` + `npm run icons` ran.
+- Client copy: a script extracts the client copy from `01-bid-proposal-management.md` (headings, subs, lead, trust line, every paragraph, the 6 step titles, the 3 card taglines, the closing CTA) and finds all 48 items in the rendered page text; "over 10 years" present, "16 years" absent. Server HTML: steps 01–06, `Last updated <time datetime="2026-10-15">15 October 2026</time>`, the CTA heading/sub/paras/bold line and the prefilled quote link; one H1; JSON-LD WebPage + BreadcrumbList (Home › Services › Bid & Proposal Management) + Service (`serviceType` Bid management, 3 offers).
+- `seo-audit --all` PASS (10 pages incl. the 4 new ones). `check-content` 155: the new `// PROVISIONAL` items (step descriptions, cards intro, FAQs, hub copy), the drafts' `[[PENDING]]` blocks and descriptions (2 route issues), the 4 styleguide image keys.
+- Production mode (second server, `APP_ENV=production`): the draft category renders without pending blocks or markers and stays `noindex`; the Bid page and the hub are indexable; no draft ribbon. Locally the drafts show the dashed pending blocks and are `noindex`.
+- Internal links in the 4 pages' `<main>` (76) all return 200 locally (sub-service and sector pages are still P21/P22 dev stubs).
+- Playwright, motion on, wheel-scrolled to the end at 360 / 768 / 1024 / 1440 on `/services/`, the Bid page, a draft and `/styleguide/service-blocks/`: no horizontal scroll, no console errors or 4xx, nothing left hidden (only the inactive pinned steps at their 0.35 dim); mid-pin the block holds at `top: 0` with step 04 active and the line at 64–66 %. Reduced motion at 360 / 1440: everything visible. Keyboard: card links (ring on the card surface), split buttons, inline sector links, FAQ summaries, hub category / sub-service links, Explore buttons and sector chips, all with a visible ring, in visual order.
+
+**Follow-ups**
+- Client (docs/15 Q06c): approve or replace the 6 step descriptions, the cards heading + intro and the 8 FAQs; copy for Categories 2–3 in the same shape (then their blocks fill in and `status` → published).
+- P21: the sub-service template reuses these blocks (+ related services); the 3 Bid & Proposal sub-pages publish with the client copy. P22: sector pages (linked from the band). Real photos for the hero columns / "What is" image when available (Q19).

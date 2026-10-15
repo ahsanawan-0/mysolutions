@@ -9,7 +9,8 @@
     "trophy", "users-three", "check-circle", "arrows-clockwise", "handshake", "chats-circle", "medal", "user-focus",
     "calendar-check", "briefcase", "rocket-launch", "lightning", "magnifying-glass",
     "strategy", "paper-plane-tilt", "trend-up", "squares-four", "fingerprint", "target", "hand-heart",
-    "sliders-horizontal", "compass", "eye", "clock", "quotes", "hexagon"
+    "sliders-horizontal", "compass", "eye", "clock", "quotes", "hexagon",
+    "list-numbers", "shield-warning", "folder-open"
   ],
   "regular": [
     "caret-down", "caret-right", "caret-left", "list", "x", "arrow-right", "arrow-left", "arrow-up-right", "arrow-up",

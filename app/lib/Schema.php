@@ -170,8 +170,8 @@ final class Schema
     }
 
     /**
-     * Category landing page: Service + hasOfferCatalog of its sub-services.
-     * $category keys: name, description, url (path), subs[] (name, url, description?).
+     * Category landing page: Service + hasOfferCatalog of its sub-services (docs/10 §6, P20).
+     * $category keys: name, description, url (path), serviceType?, subs[] (name, url, description?).
      */
     public static function serviceCategory(array $category): array
     {
@@ -180,11 +180,12 @@ final class Schema
             '@type'       => 'Service',
             '@id'         => $url . '#service',
             'name'        => $category['name'],
-            'serviceType' => $category['name'],
+            'serviceType' => $category['serviceType'] ?? $category['name'],
             'description' => $category['description'] ?? '',
             'url'         => $url,
             'provider'    => ['@id' => self::organizationId()],
             'areaServed'  => ['@type' => 'Country', 'name' => 'United Kingdom'],
+            'audience'    => ['@type' => 'BusinessAudience', 'name' => 'UK businesses and organisations bidding for contracts'],
             'hasOfferCatalog' => [
                 '@type'           => 'OfferCatalog',
                 'name'            => $category['name'],

@@ -81,6 +81,7 @@ $routes += [
     '/styleguide/'        => ['template' => 'pages/styleguide/index',  'built_by' => 'P02', 'local_only' => true],
     '/styleguide/motion/' => ['template' => 'pages/styleguide/motion', 'built_by' => 'P06', 'local_only' => true],
     '/styleguide/heroes/' => ['template' => 'pages/styleguide/heroes', 'built_by' => 'P17', 'local_only' => true],
+    '/styleguide/service-blocks/' => ['template' => 'pages/styleguide/service-blocks', 'built_by' => 'P20', 'local_only' => true],
 ];
 
 // Any category/sub-service/sector slug not listed above falls through to 404 on purpose (no doorway pages).

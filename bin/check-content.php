@@ -122,9 +122,11 @@ foreach ($it as $file) {
         }
     }
 }
-// Also keys referenced from data files
-foreach (glob(base_path('app/data/*.php')) ?: [] as $dataFile) {
-    if (preg_match_all('/[\'"]image[\'"]\s*=>\s*[\'"]([^\'"]+)[\'"]/', (string) file_get_contents($dataFile), $mm)) {
+// Also keys referenced from data files (incl. app/data/service-pages/, P20): 'image' / 'detail_image' => 'key' and
+// image arrays ['key' => 'home/…', 'alt' => …]
+$dataFiles = array_merge(glob(base_path('app/data/*.php')) ?: [], glob(base_path('app/data/*/*.php')) ?: []);
+foreach ($dataFiles as $dataFile) {
+    if (preg_match_all('/[\'"](?:image|detail_image|key)[\'"]\s*=>\s*[\'"]([a-z0-9-]+\/[a-z0-9\/-]+)[\'"]/', (string) file_get_contents($dataFile), $mm)) {
         foreach ($mm[1] as $key) {
             if (!isset($manifest[$key])) {
                 $missing[$key][] = str_replace('\\', '/', substr($dataFile, strlen(BASE_PATH) + 1));

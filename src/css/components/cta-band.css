@@ -35,12 +35,18 @@
 .cta-band__copy { max-width: 36ch; }
 .cta-band__heading { margin-top: var(--space-4); }
 .cta-band__text { margin-top: var(--space-5); max-width: 48ch; font-size: var(--fs-body); line-height: var(--lh-lead); color: var(--navy-200); }
+/* P20: the client's closing copy (sub line, several paragraphs, bold closing line) */
+.cta-band__sub { margin-top: var(--space-3); font-size: var(--fs-h4); line-height: var(--lh-h4); font-weight: var(--fw-medium); color: var(--sky-300); }
+.cta-band__text + .cta-band__text { margin-top: var(--space-3); }
+.cta-band__strong { margin-top: var(--space-5); max-width: 52ch; line-height: var(--lh-lead); color: var(--ms-white); }
+.cta-band__strong strong { font-weight: var(--fw-bold); }
 .cta-band__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
 @media (min-width: 1024px) {
   .cta-band__inner { grid-template-columns: 1.4fr 1fr; gap: var(--space-12); }
   .cta-band__actions { justify-content: flex-end; }
   .cta-band__copy { max-width: 40ch; }
+  .cta-band--long .cta-band__copy { max-width: 60ch; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .cta-band__wave { display: none; }

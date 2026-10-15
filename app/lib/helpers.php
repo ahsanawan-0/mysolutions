@@ -430,6 +430,53 @@ function about(string $key, mixed $default = null): mixed
     return data_get($about, $key, $default);
 }
 
+/**
+ * Service page copy (app/data/service-pages/<slug>.php, PROMPTS P20/P21): service_page('bid-proposal-management'),
+ * service_page('_hub'). Returns [] when the file does not exist.
+ */
+function service_page(string $slug): array
+{
+    static $pages = [];
+    if (!array_key_exists($slug, $pages)) {
+        $file = base_path('app/data/service-pages/' . basename($slug) . '.php');
+        $pages[$slug] = is_file($file) ? require $file : [];
+    }
+    return $pages[$slug];
+}
+
+/**
+ * The note of the first `[[PENDING: …]]` marker anywhere in $data (a block, a string), or null when there is none.
+ * Service blocks with a marker render as a "Content pending" placeholder off production and are omitted on it.
+ */
+function pending_note(mixed $data): ?string
+{
+    if (is_string($data)) {
+        return preg_match('/\[\[PENDING:?\s*(.*?)\]\]/s', $data, $m) === 1 ? trim($m[1]) : null;
+    }
+    if (is_array($data)) {
+        foreach ($data as $value) {
+            $note = pending_note($value);
+            if ($note !== null) {
+                return $note;
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * The client copy conventions (docs/website_content/services/*.md) as safe HTML: the text is escaped first, then
+ * `**bold**` → <strong> and `[label](/path/)` → <a href="url(path)"> (root-relative paths only). Nothing else
+ * becomes HTML. Service page paragraphs are printed with rich().
+ */
+function rich(string $text): string
+{
+    $html = e($text);
+    $html = preg_replace('/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $html) ?? $html;
+    return preg_replace_callback('#\[([^\]]+)\]\((/[^)\s]*)\)#', static fn (array $m): string =>
+        '<a href="' . e(url(html_entity_decode($m[2], ENT_QUOTES | ENT_HTML5))) . '">' . $m[1] . '</a>', $html) ?? $html;
+}
+
 /** Dot-path lookup in a nested array: data_get($arr, 'a.b.c'). */
 function data_get(array $data, string $key, mixed $default = null): mixed
 {

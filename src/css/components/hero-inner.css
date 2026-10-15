@@ -163,6 +163,8 @@
   .hero-inner__label-wrap--1 { top: 7%;  left: -5%; }      /* over the wide column's top-left edge */
   .hero-inner__label-wrap--2 { top: 46%; right: -3%; }     /* across the two narrow columns */
   .hero-inner__label-wrap--3 { bottom: 6%; left: 12%; }    /* over the wide column's bottom edge */
+  /* Category with columns: the framed tile holds the bottom-left corner, so label 3 moves to the bottom-right (P20) */
+  .hero-inner--with-cols .hero-inner__label-wrap--3 { left: auto; right: -3%; bottom: 10%; }
 }
 
 /* ---------- Category: hex tile in the glowing frame ---------- */

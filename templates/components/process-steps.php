@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
 /**
- * C15 Process steps (docs/03 C15, docs/04 §3 "Sun Over" numbered list, PROMPTS P13): the 01–05 numbered list with a
+ * C15 Process steps (docs/03 C15, docs/04 §3 "Sun Over" numbered list, PROMPTS P13): the 01–0N numbered list with a
  * vertical progress line beside two overlapping images and an icon chip that change with the active step.
  * `data-anim="pin-steps"`: ≥ 1024 the block pins for N × (60vh × data-pin-length) and the active step / panel switch
  * at progress thresholds while the line fills; below 1024 the list simply stacks and each step activates as it
  * passes 60 % of the viewport; under reduced motion and without JS every step is fully visible and the first panel
  * shows. Used by the home page (compact) and the About page (full, P19).
  *
- * @var string      $eyebrow
- * @var string      $heading   Grotesk part of the two-voice H2
+ * @var string|null $eyebrow
+ * @var string|null $heading   First voice of the two-voice H2; null = no header (the page section prints its own
+ *                             heading, sub line and intro above the pinned list: service pages, P20)
  * @var string|null $accent    Italic accent words
  * @var string|null $id        id for the H2 (the section's aria-labelledby)
  * @var array<int, array{title: string, icon: string, text: string, detail?: string[], image?: string, image_alt?: string, detail_image?: string, detail_alt?: string}> $steps
@@ -31,8 +32,10 @@ $pinLength = $pin_length ?? 0.6;
   <div class="process-steps__inner container">
 
     <div class="process-steps__copy">
-      <?= component('eyebrow', ['text' => $eyebrow]) ?>
+      <?php if (!empty($heading)): ?>
+      <?php if (!empty($eyebrow)): ?><?= component('eyebrow', ['text' => $eyebrow]) ?><?php endif; ?>
       <?= heading(2, $heading, $accent ?? null, 'process-steps__title', $id, ['data-anim' => 'two-voice']) ?>
+      <?php endif; ?>
 
       <ol class="process-steps__list">
         <span class="process-steps__line" aria-hidden="true"><span class="process-steps__fill" data-step-progress="y"></span></span>

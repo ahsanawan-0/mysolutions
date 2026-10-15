@@ -15,7 +15,7 @@ const LEAVE_DELAY = 200;
 export function initHeader() {
   const header = document.querySelector('[data-header="default"]');
   const mobileMenu = document.querySelector('[data-mobile-menu]');
-  const burger = document.querySelector('[data-burger]');
+  const burgers = [...document.querySelectorAll('[data-burger]')];   // the hero header and the follow header each have one
   const actionBar = document.querySelector('[data-action-bar]');
 
   const state = { menusOpen: 0, sheetOpen: false };
@@ -26,7 +26,7 @@ export function initHeader() {
     initPill(header);
   }
   document.querySelectorAll('[data-menu-trigger]').forEach((trigger) => initMenu(trigger, state));
-  if (mobileMenu && burger) initMobileMenu(mobileMenu, burger, state);
+  if (mobileMenu && burgers.length) initMobileMenu(mobileMenu, burgers, state);
   if (actionBar) initActionBar(actionBar, state);
 }
 
@@ -39,6 +39,13 @@ function initSticky(header, state) {
   let lastY = window.scrollY;
   let hidden = false;
   let ticking = false;
+  // Follow header (P16): hidden until the hero's own nav has scrolled out of the viewport
+  const heroNav = header.hasAttribute('data-follow') ? document.querySelector('[data-header="hero"]') : null;
+  const followFrom = () => (heroNav ? heroNav.getBoundingClientRect().bottom + window.scrollY : 0);
+  if (heroNav) {
+    hidden = true;
+    gsap.set(header, { yPercent: -100 });
+  }
 
   const show = () => {
     if (!hidden) return;
@@ -59,6 +66,15 @@ function initSticky(header, state) {
     root.style.setProperty('--header-h', scrolled ? hCompact : hInitial);
 
     const locked = state.menusOpen > 0 || state.sheetOpen || header.contains(document.activeElement);
+    if (heroNav) {
+      const following = y > followFrom();
+      header.classList.toggle('is-following', following);
+      if (!following) {
+        hide();
+        lastY = y;
+        return;
+      }
+    }
     if (y > lastY + 4 && y > HIDE_AFTER && !locked) hide();
     else if (y < lastY - 4 || y <= HIDE_AFTER) show();
     lastY = y;
@@ -227,17 +243,20 @@ function closeOthers(except) {
 }
 
 /* ---------- Mobile sheet ---------- */
-function initMobileMenu(sheet, burger, state) {
+function initMobileMenu(sheet, burgers, state) {
   const closeBtn = sheet.querySelector('[data-mobile-close]');
+  let opener = burgers[0];
+  const expanded = (v) => burgers.forEach((b) => b.setAttribute('aria-expanded', String(v)));
   const items = sheet.querySelectorAll('[data-mobile-item]');
   const focusable = () => [...sheet.querySelectorAll('a[href], button, summary, [tabindex]:not([tabindex="-1"])')]
     .filter((el) => el.offsetParent !== null || el === closeBtn);
 
-  const open = () => {
+  const open = (e) => {
     if (state.sheetOpen) return;
     state.sheetOpen = true;
+    opener = e?.currentTarget || opener;
     sheet.hidden = false;
-    burger.setAttribute('aria-expanded', 'true');
+    expanded(true);
     document.documentElement.classList.add('is-locked');
     window.lenis?.stop?.();
     if (!reducedMotion()) {
@@ -249,15 +268,15 @@ function initMobileMenu(sheet, burger, state) {
   const close = () => {
     if (!state.sheetOpen) return;
     state.sheetOpen = false;
-    burger.setAttribute('aria-expanded', 'false');
+    expanded(false);
     document.documentElement.classList.remove('is-locked');
     window.lenis?.start?.();
-    const done = () => { sheet.hidden = true; burger.focus(); };
+    const done = () => { sheet.hidden = true; opener.focus(); };
     if (reducedMotion()) done();
     else gsap.to(sheet, { autoAlpha: 0, duration: 0.2, ease: 'apple', overwrite: true, onComplete: done });
   };
 
-  burger.addEventListener('click', open);
+  burgers.forEach((b) => b.addEventListener('click', open));
   closeBtn.addEventListener('click', close);
   sheet.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {

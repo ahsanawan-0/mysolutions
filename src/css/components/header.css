@@ -181,6 +181,11 @@ img.logo-img { height: auto; }
   transform: translateX(-50%);
   box-shadow: 0 0 8px var(--azure-500);
 }
+/* Follow header (P16): the sticky default header on hero pages, hidden until the hero's own nav has scrolled out
+   (header.js toggles .is-following); it then behaves like the compact glass header on every other page. */
+.site-header--follow { visibility: hidden; }          /* header.js parks it at yPercent −100 and reveals it */
+.site-header--follow.is-following { visibility: visible; }
+
 .site-header--hero { position: relative; inset: auto; z-index: 5; height: auto; --h: 72px; }
 .site-header--hero .site-header__inner { height: var(--h); padding-inline: 0; }
 

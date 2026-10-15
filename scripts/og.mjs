@@ -3,7 +3,7 @@
 // Colours are read from src/css/tokens.css so no hex lives here. Output: public/assets/og/default.jpg
 // Generalised per page in P30. Usage: npm run og
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -56,3 +56,15 @@ await mkdir(outDir, { recursive: true });
 const out = path.join(outDir, 'default.jpg');
 await sharp(Buffer.from(svg)).jpeg({ quality: 86, mozjpeg: true, progressive: true }).toFile(out);
 console.log(`[og] wrote ${path.relative(root, out)} (${W}×${H})`);
+
+// Home (P16, docs/10 §5 "preferred image"): a photographic 1200×630 crop of the hero building photo, written only
+// when the client's source photo exists in assets-src/images/home/. templates/pages/home.php uses it when present.
+const heroDir = path.join(root, 'assets-src/images/home');
+const hero = (await readdir(heroDir).catch(() => [])).find((n) => /^hero-building\.(jpe?g|png|webp|avif|tiff?)$/i.test(n));
+if (hero) {
+  const outHome = path.join(outDir, 'home.jpg');
+  await sharp(path.join(heroDir, hero)).resize(W, H, { fit: 'cover', position: 'attention' }).jpeg({ quality: 84, mozjpeg: true, progressive: true }).toFile(outHome);
+  console.log(`[og] wrote ${path.relative(root, outHome)} from ${hero} (${W}×${H})`);
+} else {
+  console.log('[og] no assets-src/images/home/hero-building.* yet: the home page falls back to default.jpg');
+}

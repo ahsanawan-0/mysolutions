@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 $t = home('triage');
 ?>
-<section class="section triage on-dark" id="help" aria-labelledby="triage-title">
+<section class="section triage on-dark" id="help" aria-labelledby="triage-title" data-header-theme="dark">
   <div class="triage__glow" aria-hidden="true"></div>
   <div class="container">
     <?= component('eyebrow', ['text' => $t['eyebrow'], 'tag' => 'h2', 'id' => 'triage-title', 'class' => 'triage__eyebrow']) ?>

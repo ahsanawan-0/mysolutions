@@ -8,7 +8,7 @@ declare(strict_types=1);
 $f = home('faq');
 $items = faqs('home');
 ?>
-<section class="section faq" id="faq" aria-labelledby="faq-title">
+<section class="section faq" id="faq" aria-labelledby="faq-title" data-header-theme="light">
   <div class="container faq__layout">
     <div class="faq__intro">
       <?= component('eyebrow', ['text' => $f['eyebrow']]) ?>

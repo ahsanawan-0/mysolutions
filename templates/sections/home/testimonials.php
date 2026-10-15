@@ -9,7 +9,7 @@ $items = testimonials();
 if (!$items) return;
 $t = home('testimonials');
 ?>
-<section class="section testimonials-section" id="testimonials" aria-labelledby="testimonials-title">
+<section class="section testimonials-section" id="testimonials" aria-labelledby="testimonials-title" data-header-theme="light">
   <div class="container">
     <header class="testimonials-section__head">
       <?= component('eyebrow', ['text' => $t['eyebrow']]) ?>

@@ -18,7 +18,7 @@ $stats = [
 ];
 $tiles = $w['tiles'];
 ?>
-<section class="section why" id="why" aria-labelledby="why-title">
+<section class="section why" id="why" aria-labelledby="why-title" data-header-theme="light">
   <div class="container">
     <header class="why__head">
       <?= component('eyebrow', ['text' => $w['eyebrow']]) ?>

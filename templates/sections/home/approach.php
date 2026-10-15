@@ -27,7 +27,8 @@ if (!empty($hours['closed'])) {
 
 $fillSrc = App\Image::src($a['number']['image']['key'], 800);   // null → brand gradient (motion.css .fill-text)
 ?>
-<section class="section approach" id="approach" aria-labelledby="approach-title">
+<section class="section approach" id="approach" aria-labelledby="approach-title" data-header-theme="light">
+  <svg class="approach__art" aria-hidden="true" focusable="false" data-anim="parallax" data-speed="0.92"><use href="<?= e(asset('img/art/skyscraper.svg')) ?>#skyscraper"></use></svg>
   <div class="container approach__grid">
 
     <div class="approach__media">

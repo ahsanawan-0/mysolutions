@@ -12,6 +12,20 @@
   position: relative;
   padding-block: var(--section-y);
 }
+/* Optional background art (art => 'swirl'): the speed-line swirl, drawn on scroll (P16) */
+.process-steps__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--azure-500);
+  opacity: .35;
+}
+.process-steps__art svg { position: absolute; left: -10%; bottom: -8%; width: 120%; height: 90%; }
+.process-steps:has(.process-steps__art) { isolation: isolate; }
+.process-steps.on-dark .process-steps__art { color: var(--sky-300); opacity: .22; }
+
 .process-steps.on-dark {
   --ps-line: rgb(var(--white-rgb) / .14);
   --ps-fill: var(--sky-300);

@@ -1,0 +1,36 @@
+/* ==========================================================================
+   Home "Latest Insights" (docs/08 §4 H11, P16): header row + a grid of C10 blog cards. The "coming soon" card spans
+   the columns the missing posts would have taken (.insights__soon--span-N from the template; a class, not an inline
+   custom property, because the stagger effect clears inline styles when it finishes).
+   ========================================================================== */
+.insights { background: var(--ms-canvas); }
+.insights__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5) var(--space-8);
+  margin-bottom: var(--space-10);
+}
+.insights__intro { display: flex; flex-direction: column; gap: var(--space-4); }
+.insights__intro .eyebrow { margin: 0; }
+.insights__title { margin: 0; }
+.insights__all { margin-bottom: var(--space-2); }
+
+.insights__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: stretch;
+}
+@media (min-width: 768px) {
+  .insights__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.insights__soon { display: flex; min-width: 0; }
+.insights__soon .card-blog { width: 100%; }
+@media (min-width: 1024px) {
+  .insights__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .insights__soon--span-2 { grid-column: span 2; }
+  .insights__soon--span-3 { grid-column: span 3; }
+  .insights__soon .card-blog__soon { max-width: 56ch; }
+}

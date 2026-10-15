@@ -58,13 +58,14 @@ p + p { margin-top: 1em; }
 strong, b { font-weight: var(--fw-medium); }
 
 /* Two-voice heading: the accent words are an <em> inside the heading.
-   Playfair Display Italic 500, Azure 500 (large sizes only, ≥ 24px), gradient text once the line is ≥ 48px. */
+   Playfair Display Italic 500, Azure 600 as solid text (docs/02: the "large text" step; Azure 500 is 2.85:1 on the
+   canvas, under the 3:1 AA floor for large text), the brand gradient once the line is ≥ 48px. */
 h1 em, h2 em, h3 em, .display em {
   font-family: var(--font-accent);
   font-style: italic;
   font-weight: 500;
   letter-spacing: 0;
-  color: var(--azure-500);
+  color: var(--azure-600);
 }
 .display em { background: var(--ms-grad-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
 @media (min-width: 640px) {   /* --fs-h1 reaches 48px here */

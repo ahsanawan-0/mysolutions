@@ -16,7 +16,7 @@ $countLabel = static function (int $n) use ($s): string {
     return str_replace('{n}', (string) $n, $n === 1 ? $s['count']['one'] : $s['count']['other']);
 };
 ?>
-<section class="section services" id="services" aria-labelledby="services-title">
+<section class="section services" id="services" aria-labelledby="services-title" data-header-theme="light">
   <div class="container">
     <header class="services__head">
       <?= component('eyebrow', ['text' => $s['eyebrow']]) ?>
@@ -35,7 +35,7 @@ $countLabel = static function (int $n) use ($s): string {
         <div class="service-card__body">
           <div class="service-card__top">
             <?= component('hex-tile', ['icon' => $category['icon'], 'category' => $category['colour'], 'size' => 'lg']) ?>
-            <span class="service-card__num" aria-hidden="true"><?= sprintf('%02d', $i + 1) ?></span>
+            <span class="service-card__num" aria-hidden="true" data-n="<?= sprintf('%02d', $i + 1) ?>"></span>
           </div>
           <h3 class="service-card__title" id="<?= e($titleId) ?>"><?= e($category['name']) ?></h3>
           <p class="service-card__summary"><?= e($category['summary']) ?></p>
@@ -65,7 +65,7 @@ $countLabel = static function (int $n) use ($s): string {
 
         <div class="service-card__media">
           <div class="service-card__image notch notch--bl">
-            <?= img('services/' . $category['slug'], ['alt' => $s['images'][$category['slug']] ?? $category['name'], 'ratio' => '4/5', 'sizes' => '(min-width: 1024px) 40vw, 100vw', 'cover' => true, 'pattern' => false]) ?>
+            <?= img($s['image_keys'][$category['slug']] ?? 'services/' . $category['slug'], ['alt' => $s['images'][$category['slug']] ?? $category['name'], 'ratio' => '4/5', 'sizes' => '(min-width: 1024px) 40vw, 100vw', 'cover' => true, 'pattern' => false]) ?>
           </div>
           <div class="service-card__tab">
             <?= component('chip', ['label' => $countLabel($n), 'variant' => $category['colour'], 'icon' => 'hexagon']) ?>

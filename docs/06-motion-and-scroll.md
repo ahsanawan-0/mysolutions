@@ -55,7 +55,7 @@ Each effect is a module activated by a `data-anim` attribute in the PHP template
 | `data-anim` | Effect | Spec |
 |---|---|---|
 | `fade-up` | Default reveal | y 24 → 0, opacity 0 → 1, 0.7s `out`, start `top 85%`, once. Options (P10): `data-x`, `data-y` (start offset px), `data-delay` (s) |
-| `stagger` | Children reveal in sequence | children `fade-up`, stagger 0.08 |
+| `stagger` | Children reveal in sequence | children `fade-up`, stagger 0.08; on finish the children get `.is-done` and `clearProps: all`, so never put layout in a child's inline `style` (use a class) |
 | `split-lines` | Headline line reveal (masked) | SplitText lines, `yPercent 110 → 0`, stagger 0.1, 0.9s `out` |
 | `split-chars` | Display word reveal | chars, stagger 0.02, used max once per page |
 | `two-voice` | Two-voice heading | line 1 slides in from left 40px, *italic accent* clips in from the right with a slight skewX(−8deg → 0) |

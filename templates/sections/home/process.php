@@ -7,8 +7,9 @@ declare(strict_types=1);
  */
 $p = home('process');
 ?>
-<section class="process" id="process" aria-labelledby="process-title">
+<section class="process" id="process" aria-labelledby="process-title" data-header-theme="dark">
   <?= component('process-steps', [
+      'art'        => 'swirl',
       'eyebrow'    => $p['eyebrow'],
       'heading'    => $p['title'],
       'accent'     => $p['accent'],

@@ -25,7 +25,7 @@ $level = $level ?? 2;
 $id = 'cta-' . substr(md5($heading . $accent), 0, 6);
 $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u;
 ?>
-<section class="cta-band on-dark<?= isset($class) ? ' ' . e($class) : '' ?>" aria-labelledby="<?= e($id) ?>">
+<section class="cta-band on-dark<?= isset($class) ? ' ' . e($class) : '' ?>" aria-labelledby="<?= e($id) ?>" data-header-theme="dark">
   <div class="cta-band__bg" aria-hidden="true">
     <?= component('grid-wave', ['class' => 'cta-band__wave', 'animated' => true, 'align' => 'bottom']) ?>
     <?= inline_svg('brand/logo-mark.svg', ['prefix' => 'cta', 'class' => 'cta-band__mark', 'title' => false, 'attrs' => ['data-anim' => 'cta-mark']]) ?>

@@ -1,0 +1,145 @@
+/* C10 Blog card (templates/components/card-blog.php, docs/04 §1.3): white surface with two true-mask cut-outs —
+   the date tab in the image's bottom-left and the arrow button's concave corner at the surface's bottom-right.
+   The arrow is a sibling of the masked surface, so it paints inside the hole. */
+.card-blog {
+  --cb-arrow: 56px;
+  --cb-gap: var(--space-2);
+  --cb-inset: var(--space-1);
+  position: relative;
+  display: flex;
+  min-width: 0;
+  transition: transform var(--dur-hover) var(--ease-apple);
+}
+.card-blog__surface {
+  /* concave corner for the arrow: hole = button + gap, inner radius concentric with the button */
+  --nw: calc(var(--cb-arrow) + var(--cb-gap));
+  --nh: calc(var(--cb-arrow) + var(--cb-gap));
+  --nr: calc(var(--cb-arrow) / 2 + var(--cb-gap));
+  --nf: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--cb-inset);
+  border: 1px solid var(--ms-line);
+  border-radius: var(--r-lg);
+  background: var(--ms-white);
+}
+
+/* ---------- Image + date tab ---------- */
+.card-blog__media {
+  --nw: 184px;
+  --nh: 44px;
+  --nr: calc(var(--r-sm) + var(--cb-gap));
+  --nf: var(--r-md);
+  position: relative;
+  flex: none;
+}
+.card-blog__img {
+  border-radius: calc(var(--r-lg) - var(--cb-inset));
+  aspect-ratio: 16 / 10;
+}
+.card-blog__img :is(picture, img, .img-placeholder) { display: block; width: 100%; height: 100%; object-fit: cover; }
+.card-blog__img :is(img, .img-placeholder) { transition: scale var(--dur-reveal, 700ms) var(--ease-apple); transform-origin: center; }
+.card-blog__date {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: calc(var(--nw) - var(--cb-gap));
+  height: calc(var(--nh) - var(--cb-gap));
+  padding-inline: var(--space-3);
+  border-top-right-radius: var(--r-sm);
+  background: var(--ms-white);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-semibold);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--navy-800);
+}
+
+/* ---------- Body ---------- */
+.card-blog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  padding: var(--space-5) var(--space-5) var(--space-5);
+}
+.card-blog__title {
+  margin: 0;
+  font-size: var(--fs-h4);
+  line-height: var(--lh-h4);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-wrap: pretty;
+}
+.card-blog__link { color: inherit; text-decoration: none; }
+.card-blog__link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--r-lg); }
+.card-blog__link:focus-visible { outline: none; }
+.card-blog:has(.card-blog__link:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-offset); border-radius: var(--r-lg); }
+.card-blog__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin-top: auto;
+  padding-right: calc(var(--cb-arrow) + var(--cb-gap));   /* keeps the meta row clear of the corner hole */
+}
+.card-blog__author {
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-semibold);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.card-blog__text { margin: 0; color: var(--text-2); text-wrap: pretty; }
+
+/* ---------- Arrow button in the corner hole ---------- */
+.card-blog__arrow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--cb-arrow);
+  height: var(--cb-arrow);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ms-line);
+  background: var(--ms-white);
+  color: var(--navy-900);
+  pointer-events: none;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.card-blog__arrow .icon { width: 22px; height: 22px; rotate: -45deg; transition: rotate var(--dur-hover) var(--ease-apple); }
+.card-blog--soon .card-blog__arrow .icon { rotate: 0deg; }
+
+/* ---------- "Coming soon" card ---------- */
+.card-blog__soon {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 100%;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+}
+.card-blog__soon .card-blog__title { -webkit-line-clamp: 3; }
+.card-blog__soon .card-blog__meta { padding-top: var(--space-2); }
+
+/* ---------- Hover ---------- */
+@media (hover: hover) {
+  .card-blog:hover { transform: translateY(-4px); }
+  .card-blog:hover .card-blog__img :is(img, .img-placeholder) { scale: 1.06; }
+  .card-blog:hover .card-blog__arrow { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+  .card-blog:hover .card-blog__arrow .icon { rotate: 0deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-blog, .card-blog__arrow, .card-blog__arrow .icon, .card-blog__img :is(img, .img-placeholder) { transition: none; }
+  .card-blog:hover { transform: none; }
+  .card-blog:hover .card-blog__img :is(img, .img-placeholder) { scale: 1; }
+}

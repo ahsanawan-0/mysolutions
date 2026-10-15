@@ -24,6 +24,8 @@ $showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page
 <?php include templates_path('partials/splash'); ?>
 <?php if ($headerVariant === 'default'): ?>
 <?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme]) ?>
+<?php elseif ($headerVariant === 'hero'): ?>
+<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme, 'follow' => true]) ?>
 <?php endif; ?>
 <main id="main" tabindex="-1">
 <?= $content ?>

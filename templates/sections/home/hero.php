@@ -14,6 +14,11 @@ declare(strict_types=1);
  * Copy: app/data/home.php → hero. Cards: app/data/services.php. Chips: app/data/sectors.php.
  */
 $h = home('hero');
+// P16: the mini card shows the newest insight (App\Blog); the data's mini entry is the fallback while there are no posts
+$latest = App\Blog::latest(1)[0] ?? null;
+$mini = $latest !== null
+    ? ['eyebrow' => $h['mini']['eyebrow'], 'title' => $latest['title'], 'button' => $h['mini']['button'], 'url' => $latest['url'], 'image' => $latest['image'], 'alt' => $latest['image_alt']]
+    : $h['mini'];
 $qs = $h['quick_start'];
 $services = services();
 $sectors = sectors();
@@ -113,23 +118,23 @@ $helper = str_replace(
           <span class="special__tag"><?= e($h['tag']) ?></span>
         </div>
         <div class="hero__viewport" data-hero-viewport>
-          <ul class="hero__cards" role="list" data-hero-track>
+          <div class="hero__cards" data-hero-track>
             <?php foreach ($cards as $i => ['sub' => $sub, 'category' => $category]): ?>
-            <li class="hero__card<?= $i === $activeIndex ? ' is-active' : '' ?>" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> of <?= count($cards) ?>" data-hero-card>
+            <div class="hero__card<?= $i === $activeIndex ? ' is-active' : '' ?>" role="group" aria-roledescription="slide" aria-label="<?= $i + 1 ?> of <?= count($cards) ?>" data-hero-card>
               <a class="hero__card-link glass-thin-dark" href="<?= e(url($sub['url'])) ?>">
                 <?= component('chip', ['label' => $category['short'], 'variant' => $category['colour'], 'class' => 'hero__card-chip']) ?>
                 <?= component('hex-tile', ['icon' => $sub['icon'], 'category' => $category['colour'], 'size' => 'sm', 'class' => 'hero__card-icon']) ?>
                 <span class="hero__card-title"><?= e($sub['name']) ?></span>
                 <span class="hero__card-text"><?= e($sub['summary']) ?></span>
               </a>
-            </li>
+            </div>
             <?php endforeach; ?>
-          </ul>
+          </div>
         </div>
         <!-- Slider controls (subtle; revealed by hero-slider.js) + the live region that announces user-initiated changes -->
         <div class="hero__controls" data-hero-controls>
           <button class="hero__ctrl" type="button" data-hero-prev aria-label="Previous service"><?= icon('caret-left', 'regular', ['size' => 16]) ?></button>
-          <ol class="hero__dots" role="list">
+          <ol class="hero__dots" role="list" style="--dot-cols: <?= (int) ceil(count($cards) / 2) ?>">
             <?php foreach ($cards as $i => ['sub' => $sub]): ?>
             <li><button class="hero__dot" type="button" data-hero-dot="<?= $i ?>" aria-label="Go to <?= e($sub['name']) ?> (<?= $i + 1 ?> of <?= count($cards) ?>)"<?= $i === $activeIndex ? ' aria-current="true"' : '' ?>></button></li>
             <?php endforeach; ?>
@@ -166,11 +171,11 @@ $helper = str_replace(
 
   <div class="hero__bottom">
     <article class="hero__mini">
-      <div class="hero__mini-thumb"><?= img($h['mini']['image'], ['alt' => $h['mini']['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true, 'pattern' => false]) ?></div>
+      <div class="hero__mini-thumb"><?= img($mini['image'], ['alt' => $mini['alt'], 'ratio' => '1/1', 'sizes' => '96px', 'cover' => true, 'pattern' => false]) ?></div>
       <div class="hero__mini-body">
-        <?= component('eyebrow', ['text' => $h['mini']['eyebrow'], 'tag' => 'span', 'class' => 'hero__mini-eyebrow']) ?>
-        <p class="hero__mini-title"><?= e($h['mini']['title']) ?></p>
-        <?= component('button', ['label' => $h['mini']['button'], 'href' => url($h['mini']['url']), 'size' => 'sm', 'class' => 'hero__mini-btn', 'attrs' => ['aria-label' => $h['mini']['button'] . ': ' . $h['mini']['title']]]) ?>
+        <?= component('eyebrow', ['text' => $mini['eyebrow'], 'tag' => 'span', 'class' => 'hero__mini-eyebrow']) ?>
+        <p class="hero__mini-title"><?= e($mini['title']) ?></p>
+        <?= component('button', ['label' => $mini['button'], 'href' => url($mini['url']), 'size' => 'sm', 'class' => 'hero__mini-btn', 'attrs' => ['aria-label' => $mini['button'] . ': ' . $mini['title']]]) ?>
       </div>
     </article>
   </div>

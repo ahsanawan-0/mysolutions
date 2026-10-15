@@ -9,6 +9,11 @@ declare(strict_types=1);
  *
  * @var string|null $variant  'default' | 'hero'
  * @var string|null $theme    initial colour theme under the header: 'dark' (over a photo/navy hero) | 'light'
+ * @var bool|null   $follow   P16: a second, fixed `default` header printed on pages whose hero renders the `hero`
+ *                            variant. It stays hidden until the hero's own nav has scrolled out, then behaves like the
+ *                            sticky header everywhere else (compact glass, hide on scroll down, theme from the
+ *                            sections). Prints the <header> only (the mobile sheet and action bar come from the
+ *                            hero's header) and namespaces its logo ids with `hf-`.
  */
 $variant = $variant ?? 'default';
 $theme = $theme ?? 'light';
@@ -18,11 +23,13 @@ $sectors = sectors();
 $current = current_path();
 $isCurrent = static fn (array $item): bool => !empty($item['exact']) ? $current === $item['url'] : is_active($item['url']);
 $quoteUrl = url('/contact-us/') . '#quote';
+$follow = !empty($follow) && $variant === 'default';
+$logoPrefix = $follow ? 'hf' : 'hl';
 ?>
-<header class="site-header site-header--<?= e($variant) ?>" data-header="<?= e($variant) ?>" data-theme="<?= e($theme) ?>">
+<header class="site-header site-header--<?= e($variant) ?><?= $follow ? ' site-header--follow' : '' ?>" data-header="<?= e($variant) ?>" data-theme="<?= e($theme) ?>"<?= $follow ? ' data-follow' : '' ?>>
   <div class="site-header__inner">
     <a class="site-header__logo logo-link" href="<?= e(url('/')) ?>" aria-label="<?= e(config('name')) ?> home">
-      <?= logo('colour', ['height' => 40, 'inline' => true, 'prefix' => 'hl', 'class' => 'site-header__logo-svg']) ?>
+      <?= logo('colour', ['height' => 40, 'inline' => true, 'prefix' => $logoPrefix, 'class' => 'site-header__logo-svg']) ?>
     </a>
 
     <nav class="site-nav" aria-label="Primary">
@@ -99,6 +106,7 @@ $quoteUrl = url('/contact-us/') . '#quote';
     </div>
   </div>
 </header>
+<?php if ($follow) return; ?>
 
 <div class="mobile-menu" id="mobile-menu" hidden data-mobile-menu>
   <div class="mobile-menu__bar">

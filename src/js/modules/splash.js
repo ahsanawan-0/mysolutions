@@ -63,7 +63,7 @@ export function initSplash() {
     handingOff = true;
     const Flip = await flipReady;
     if (finished) return;
-    const header = document.querySelector('.site-header__logo-svg');
+    const header = document.querySelector('[data-header="hero"] .site-header__logo-svg') || document.querySelector('.site-header__logo-svg');
     tl = gsap.timeline({ defaults: { duration: HANDOFF, ease: 'apple' }, onComplete: finish });
     let flown = 0;
     if (Flip && header) {

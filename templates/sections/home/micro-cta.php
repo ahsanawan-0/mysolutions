@@ -5,4 +5,4 @@ declare(strict_types=1);
  * ("Not sure which service you need?" → "Let's talk"), between Our Approach and Sectors We Serve.
  */
 ?>
-<div class="container home-micro"><?= component('micro-cta') ?></div>
+<div class="container home-micro" data-header-theme="light"><?= component('micro-cta') ?></div>

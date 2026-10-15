@@ -13,7 +13,7 @@ declare(strict_types=1);
 $s = home('sectors');
 $sectors = sectors();
 ?>
-<section class="section sectors" id="sectors" data-anim="h-scroll" aria-labelledby="sectors-title">
+<section class="section sectors" id="sectors" data-anim="h-scroll" aria-labelledby="sectors-title" data-header-theme="light">
   <div class="sectors__bg nodes" data-module="nodes" data-count="40" data-link="150" aria-hidden="true"></div>
 
   <div class="sectors__layout">
@@ -31,7 +31,7 @@ $sectors = sectors();
         <li class="sectors__item" data-h-item>
           <article class="sector-card on-dark">
             <div class="sector-card__media notch notch--br" data-anim="velocity-skew">
-              <?= img('sectors/' . $sector['slug'], ['alt' => $s['images'][$sector['slug']] ?? $sector['name'], 'ratio' => '3/4', 'sizes' => '(min-width: 1024px) 320px, 76vw', 'cover' => true, 'pattern' => false]) ?>
+              <?= img($s['image_keys'][$sector['slug']] ?? 'sectors/' . $sector['slug'], ['alt' => $s['images'][$sector['slug']] ?? $sector['name'], 'ratio' => '3/4', 'sizes' => '(min-width: 1024px) 320px, 76vw', 'cover' => true, 'pattern' => false]) ?>
               <span class="sector-card__shade" aria-hidden="true"></span>
             </div>
             <div class="sector-card__body">

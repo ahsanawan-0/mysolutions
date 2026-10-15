@@ -281,16 +281,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-top: var(--space-2);
   opacity: .7;
   transition: opacity var(--dur-hover) var(--ease-apple);
+  container-type: inline-size;      /* the narrow layout below follows the slider's own width, not the viewport */
 }
 /* The controls keep their space from the server render (no layout shift when JS boots); they only show with JS */
 .hero__stage:not(.is-js) .hero__controls { visibility: hidden; }
 html.no-js .hero__controls { display: none; }
 .hero__stage:hover .hero__controls, .hero__stage:focus-within .hero__controls { opacity: 1; }
 .hero__ctrl {
+  flex: none;                       /* never squeezed below the 44 × 44 target by the dots */
   display: inline-grid;
   place-items: center;
   width: var(--target-min);
@@ -307,10 +309,11 @@ html.no-js .hero__controls { display: none; }
 .hero__ctrl--pause .icon--play { display: none; }
 .hero__ctrl--pause[aria-pressed="true"] .icon--pause { display: none; }
 .hero__ctrl--pause[aria-pressed="true"] .icon--play { display: block; }
-.hero__dots { display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.hero__ctrl--pause { margin-left: var(--space-1); }
+.hero__dots { display: flex; align-items: center; gap: 2px; margin: 0 var(--space-1); padding: 0; list-style: none; }
 .hero__dot {
   display: block;
-  width: 20px;
+  width: 24px;                      /* WCAG 2.5.8: 24 × 24 minimum target */
   height: var(--target-min);
   padding: 0;
   border: 0;
@@ -330,6 +333,12 @@ html.no-js .hero__controls { display: none; }
 .hero__dot:hover::before { background: rgb(var(--white-rgb) / .7); }
 .hero__dot[aria-current="true"]::before { background: var(--sky-300); transform: scale(1.5); }
 .hero__dot:focus-visible { outline: var(--focus-ring); outline-color: var(--sky-300); outline-offset: -8px; border-radius: var(--r-pill); }
+/* One row needs 3 × 44 + 12 dots + gaps ≈ 466px. Narrower sliders (phones, the 1024–1100 two-column hero) fold the
+   dots into two rows between prev and next (--dot-cols = half the cards, set by the template), DOM order kept. */
+@container (max-width: 465.98px) {
+  .hero__dots { display: grid; grid-template-columns: repeat(var(--dot-cols, 6), 24px); gap: 0; margin: 0; }
+  .hero__ctrl--pause { margin-left: 0; }
+}
 
 /* ---------- Entrance pre-states (P09, docs/05 §6): applied from first paint under html.js so the intro causes no
    layout shift; hero-intro.js adds .is-intro-live when GSAP takes over (and .is-intro-done at the end). The H1 is
@@ -416,9 +425,6 @@ html.no-js .hero__controls { display: none; }
 .hero__panel .hero__chip:hover { color: var(--azure-800); border-color: var(--azure-300); box-shadow: var(--shadow-1); transform: translateY(-2px); }
 .hero__chip-item--extra { display: none; }       /* desktop shows the four featured sectors (the reference's 4 tiles) */
 .hero__chips-pause { display: none; }
-
-/* Placeholders for the sections P10–P16 build (anchors for the quick links) */
-.home-placeholder { padding-block: var(--space-10); border-top: 1px solid var(--ms-line); }
 
 @media (min-width: 1024px) {
   .hero__chip-list { flex-wrap: nowrap; }   /* the four tiles on one row inside the notch, as in the reference */

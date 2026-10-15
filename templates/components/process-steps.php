@@ -17,12 +17,17 @@ declare(strict_types=1);
  * @var array|null  $cta       ['label' => …, 'url' => …] link under the list
  * @var string|null $class     Extra classes on the root (e.g. 'on-dark')
  * @var float|null  $pin_length  Scroll length per step as a fraction of the viewport (default 0.6)
+ * @var string|null $art       'swirl' → the azure speed-line swirl (public/assets/img/art/swirl.svg, inlined) drawn
+ *                             on scroll behind the content (docs/04 §6, P16)
  */
 $variant = $variant ?? 'compact';
 $id = $id ?? 'process-steps-title';
 $pinLength = $pin_length ?? 0.6;
 ?>
 <div class="process-steps process-steps--<?= e($variant) ?><?= isset($class) ? ' ' . e($class) : '' ?>" data-anim="pin-steps" data-pin-length="<?= e((string) $pinLength) ?>">
+  <?php if (($art ?? null) === 'swirl'): ?>
+  <div class="process-steps__art" aria-hidden="true"><?= inline_svg('img/art/swirl.svg', ['title' => false, 'attrs' => ['data-anim' => 'draw']]) ?></div>
+  <?php endif; ?>
   <div class="process-steps__inner container">
 
     <div class="process-steps__copy">

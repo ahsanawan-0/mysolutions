@@ -37,20 +37,20 @@ return [
             'consult_url'   => '/contact-us/#quote',
         ],
         'tag' => 'Our Special Service', // PROVISIONAL: or "Our Core Services"
-        // Mini card below the notch (P16 makes it the latest insight)
+        // Mini card below the notch: fallback copy while content/blog is empty (P16 shows the newest post instead)
         'mini' => [
             'eyebrow' => 'Latest insight',
             'title'   => 'Health & Social Care Tender Vocabulary, Explained', // PROVISIONAL
             'button'  => 'Read',
             'url'     => '/insights/',
-            'image'   => 'insights/health-social-care-tender-vocabulary',
-            'alt'     => 'Care worker reviewing tender paperwork',
+            'image'   => 'sectors/healthcare-social-care-consultation',
+            'alt'     => 'Care coordinator reviewing a folder with an older resident',
         ],
         // Sector chips below the notch (slugs from app/data/sectors.php); the full list loops as a marquee < 1024px
         'chips' => ['healthcare-social-care', 'transport', 'security', 'facilities-management'],
         'photo' => [
             'key' => 'home/hero-building',
-            'alt' => 'Glass office building in the City of London at dusk',
+            'alt' => 'Contemporary glass office tower at blue hour',
         ],
     ],
 
@@ -78,17 +78,17 @@ return [
     ],
 
     // P13 — "Our Process, Step by Step" (docs/08 §4 H6): the five Our Approach steps condensed from
-    // about-us-content.md §3 (client-approved headings; one-line summaries are ours). Images: process/step-0N(-detail).
+    // about-us-content.md §3 (client-approved headings; one-line summaries are ours). Images reuse the generated consultancy, training and digital photographs.
     'process' => [
         'eyebrow' => 'How We Work',
         'title'   => 'Our Process,',
         'accent'  => 'Step by Step',
         'steps'   => [
-            ['title' => 'Understanding Your Business',         'icon' => 'magnifying-glass', 'text' => 'We learn your services, operations, workforce and objectives to identify your competitive strengths.'],              // PROVISIONAL summary
-            ['title' => 'Tender Analysis & Bid Strategy',      'icon' => 'strategy',         'text' => 'We review the ITT, specification and evaluation criteria, then plan a clear bid strategy.'],                           // PROVISIONAL summary
-            ['title' => 'Evidence-Led Tender Writing',         'icon' => 'pen-nib',          'text' => 'Our writers build specific, persuasive responses around your evidence and the marking scheme.'],                     // PROVISIONAL summary
-            ['title' => 'Quality Review & Compliance Checks',  'icon' => 'seal-check',       'text' => 'Every answer is checked against the specification, scoring criteria, word limits and required documents.'],          // PROVISIONAL summary
-            ['title' => 'Final Submission & Ongoing Support',  'icon' => 'paper-plane-tilt', 'text' => 'We support your submission and stay with you for clarifications, feedback and your next opportunity.'],              // PROVISIONAL summary
+            ['image' => 'home/tender-consultancy-meeting', 'detail_image' => 'sectors/education-adult-training-workshop', 'title' => 'Understanding Your Business',         'icon' => 'magnifying-glass', 'text' => 'We learn your services, operations, workforce and objectives to identify your competitive strengths.'],              // PROVISIONAL summary
+            ['image' => 'sectors/education-adult-training-workshop', 'detail_image' => 'home/tender-consultancy-meeting', 'title' => 'Tender Analysis & Bid Strategy',      'icon' => 'strategy',         'text' => 'We review the ITT, specification and evaluation criteria, then plan a clear bid strategy.'],                           // PROVISIONAL summary
+            ['image' => 'services/digital-presence-web-designer', 'detail_image' => 'home/tender-consultancy-meeting', 'title' => 'Evidence-Led Tender Writing',         'icon' => 'pen-nib',          'text' => 'Our writers build specific, persuasive responses around your evidence and the marking scheme.'],                     // PROVISIONAL summary
+            ['image' => 'home/tender-consultancy-meeting', 'detail_image' => 'services/digital-presence-web-designer', 'title' => 'Quality Review & Compliance Checks',  'icon' => 'seal-check',       'text' => 'Every answer is checked against the specification, scoring criteria, word limits and required documents.'],          // PROVISIONAL summary
+            ['image' => 'services/digital-presence-web-designer', 'detail_image' => 'sectors/education-adult-training-workshop', 'title' => 'Final Submission & Ongoing Support',  'icon' => 'paper-plane-tilt', 'text' => 'We support your submission and stay with you for clarifications, feedback and your next opportunity.'],              // PROVISIONAL summary
         ],
         'cta' => ['label' => 'See our full approach', 'url' => '/about-us/#our-approach'],
     ],
@@ -101,14 +101,24 @@ return [
         // Client-approved copy (about-us-content.md §2 Our Story, verbatim)
         'text'    => 'Each sector presents different challenges, from regulatory compliance and workforce planning to service delivery, contract mobilisation and performance management. Understanding these differences is central to how we approach our work.',
         'link'    => ['label' => 'All sectors', 'url' => '/sectors/'],
-        'images'  => [   // PROVISIONAL alt text; keys = sectors/<slug> (placeholders until the photos arrive)
-            'healthcare-social-care' => 'Care worker talking with an older resident in a care home lounge',
-            'transport'              => 'Patient transport vehicle outside a hospital entrance',
+        // AI-generated illustrative photography; source files and prompts live in assets-src/images/.
+        'image_keys' => [
+            'healthcare-social-care' => 'sectors/healthcare-social-care-consultation',
+            'transport' => 'sectors/transport-passenger-minibus',
+            'cleaning' => 'sectors/commercial-office-cleaning',
+            'education-training' => 'sectors/education-adult-training-workshop',
+            'security' => 'sectors/security-office-reception',
+            'facilities-management' => 'sectors/facilities-manager-plant-room',
+            'building-maintenance' => 'sectors/building-maintenance-engineer',
+        ],
+        'images'  => [
+            'healthcare-social-care' => 'Care coordinator reviewing a folder with an older resident in a care home lounge',
+            'transport'              => 'Driver beside an accessible passenger minibus outside a healthcare building',
             'cleaning'               => 'Commercial cleaner at work in an office corridor',
             'education-training'     => 'Trainer leading a workshop for adult learners',
             'security'               => 'Security officer monitoring a building entrance',
-            'facilities-management'  => 'Facilities manager inspecting plant equipment on a site walk',
-            'building-maintenance'   => 'Maintenance engineer repairing a building system',
+            'facilities-management'  => 'Facilities manager checking plant-room equipment with a tablet',
+            'building-maintenance'   => 'Maintenance engineer checking a ventilation unit with a diagnostic device',
         ],
     ],
 
@@ -121,9 +131,14 @@ return [
         'intro'   => 'Three specialist service areas, one dependable partner. Choose the support you need, from a single tender to ongoing compliance and digital support.', // PROVISIONAL
         'explore' => 'Explore {name}',          // button label; {name} = category name
         'count'   => ['one' => '{n} service', 'other' => '{n} services'],
-        'images'  => [   // PROVISIONAL alt text; keys = services/<category-slug> (placeholders until the photos arrive)
+        'image_keys' => [
+            'bid-proposal-management' => 'home/tender-consultancy-meeting',
+            'compliance-virtual-assistance' => 'sectors/healthcare-social-care-consultation',
+            'digital-presence' => 'services/digital-presence-web-designer',
+        ],
+        'images'  => [
             'bid-proposal-management'       => 'Bid manager planning a tender response with a client team',
-            'compliance-virtual-assistance' => 'Compliance consultant checking policy documents with a care provider',
+            'compliance-virtual-assistance' => 'Care coordinator reviewing a folder with an older resident',
             'digital-presence'              => 'Designer reviewing a business website on a laptop and a phone',
         ],
     ],
@@ -135,7 +150,7 @@ return [
         'title'   => 'Our Approach to',
         'accent'  => 'Winning Contracts',
         'image'   => [
-            'key' => 'home/approach-meeting',
+            'key' => 'home/tender-consultancy-meeting',
             'alt' => 'Tender writing consultant reviewing a bid with a client team',
         ],
         'hours' => [
@@ -147,7 +162,7 @@ return [
             'value'  => 10,
             'suffix' => '+',
             'sr'     => 'Over 10 years of business development experience',   // L05c wording
-            'image'  => ['key' => 'home/approach-handshake', 'alt' => ''],      // fills the numerals; gradient until supplied
+            'image'  => ['key' => 'home/tender-consultancy-meeting', 'alt' => ''], // decorative image fill for the numerals
         ],
         'stack' => [
             'label'   => 'Strategic bids for sustainable growth',
@@ -209,7 +224,23 @@ return [
         'button'  => ['label' => 'View all FAQs', 'url' => '/faq/'],
     ],
 
-    // [[PENDING: insights + cta (P16)]]
-    'insights' => [],
-    'cta'      => [],
+    // P16 — Latest Insights (docs/08 §4 H11): the cards come from App\Blog (content/blog/*.md); this is the header and
+    // the "coming soon" card shown while there are fewer than three posts.
+    'insights' => [
+        'eyebrow' => 'Insights',
+        'title'   => 'Latest',
+        'accent'  => 'Insights',
+        'link'    => ['label' => 'View all insights', 'url' => '/insights/'],
+        'soon'    => [
+            'title' => 'More insights coming soon',
+            'text'  => 'Follow us on LinkedIn for new articles on tendering, compliance and growing your business.', // PROVISIONAL
+            'label' => 'Follow on LinkedIn',
+        ],
+    ],
+
+    // P16 — Final CTA band (docs/08 §4 H12): the C21 band with its default copy (app/data/ui.php → cta_band).
+    // C01 may add overrides here: eyebrow, heading, accent, text, primary [label, url], secondary [label, url].
+    'cta' => [
+        'show_whatsapp' => true,
+    ],
 ];

@@ -1,0 +1,154 @@
+{
+  "home/hero-building": {
+    "width": 1536,
+    "height": 1024,
+    "widths": [
+      400,
+      800,
+      1200,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792015169939.5237
+  },
+  "home/tender-consultancy-meeting": {
+    "width": 1536,
+    "height": 1024,
+    "widths": [
+      400,
+      800,
+      1200,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792015207047.066
+  },
+  "sectors/building-maintenance-engineer": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052588988.729
+  },
+  "sectors/commercial-office-cleaning": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052403301.7285
+  },
+  "sectors/education-adult-training-workshop": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052449058.3354
+  },
+  "sectors/facilities-manager-plant-room": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052540233.957
+  },
+  "sectors/healthcare-social-care-consultation": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052328706.7441
+  },
+  "sectors/security-office-reception": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052506126.2695
+  },
+  "sectors/transport-passenger-minibus": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792052362889.7358
+  },
+  "services/digital-presence-web-designer": {
+    "width": 1086,
+    "height": 1448,
+    "widths": [
+      400,
+      800,
+      1086
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "mtime": 1792015243583.9033
+  }
+}

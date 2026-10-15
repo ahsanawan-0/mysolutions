@@ -1,6 +1,6 @@
 // two-voice: the two-voice heading (C02). Line 1 slides in from the left (40px); the italic <em> accent clips in from
 // the right with a slight skew (−8° → 0). The heading stays one element: line 1 is wrapped in a span for the tween
-// and unwrapped again when the reveal has played.
+// and unwrapped again when the reveal has played. The heading clips horizontally until then (no sideways scroll).
 import { gsap } from '../core/motion.js';
 import { once, finish } from './_util.js';
 
@@ -27,7 +27,9 @@ export default function twoVoice(el) {
       line.replaceWith(...line.childNodes);
     },
   });
-  gsap.set(el, { visibility: 'visible' });
+  // overflow-x: clip while the accent waits at x: 24, so a heading ending near the viewport edge adds no sideways
+  // scroll (the visible part never passes its final edge); finish() clears it with the other inline props.
+  gsap.set(el, { visibility: 'visible', overflowX: 'clip' });
   if (nodes.length) tl.fromTo(line, { x: -40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.8, ease: 'out' }, 0);
   if (em) {
     tl.fromTo(em,

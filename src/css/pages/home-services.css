@@ -65,6 +65,7 @@
   gap: var(--space-6);
   width: 100%;
 }
+.service-card__num::before { content: attr(data-n); }
 .service-card__num {
   font-family: var(--font-display);
   font-weight: var(--fw-medium);

@@ -913,3 +913,38 @@
 **Follow-ups**
 - Client: approve or replace the Q06c items (one-liners, FAQs); copy for the 9 other sub-services (C03b Compliance & VA, C03c Digital Presence) in the same shape; real photos for the sub-service heroes / "What is" images and OG crops (Q19).
 - P22: sector pages (linked from the service copy).
+
+---
+
+## P22 — Sectors hub + sector template + 7 sector pages
+**Date:** 16 October 2026
+**Commit:** `P22: sectors hub, sector template and 7 sector pages`
+
+**Files created**
+- `app/data/sector-pages/<slug>.php` × 7 (status `draft`): `seo` (provisional titles 47–51 chars, e.g. "Health & Social Care Tender Writing | My Solutionz"; descriptions `[[PENDING]]`), `hero` (eyebrow, accent "Tender Writing", the 2 narrow column photos, 3 labels `// PROVISIONAL`; the lead is the sector summary), `challenges` `[[PENDING]]` (with the angle to cover), `how_we_help` = the client-approved Our Story sentence ("Each sector presents different challenges …"), Healthcare & Social Care adds the approved "Our experience in healthcare and social care …" sentence and a `// PROVISIONAL` note that NHS healthcare services are commissioned under the Provider Selection Regime, `services` (4 relevant sub-service slugs, `// PROVISIONAL`), `buyers` `[[PENDING]]` (with examples to confirm), `faq_tag`, `cta`.
+- `app/data/sector-pages/_hub.php` (draft until the hub copy is approved): hero (H1 "Sectors We" + *Serve*), cards intro `// PROVISIONAL`, "Why Sector Knowledge Matters" = Our Story paragraphs 4–5 verbatim.
+- `templates/pages/sectors/single.php`: hero-inner `columns` (the sector photo + 2 narrow columns, labels; H1 "<Sector> Tender Writing") → challenges (the service `list` block; pending → dashed block off production / omitted on production) → `sections/sector/help.php` (two-column text + the relevant sub-services as service cards; drafts skipped on production) → `sections/sector/buyers.php` (chips; pending for now) → FAQ by tag (omitted while none is tagged) → `sections/sector/others.php` (chip links to the other sectors) → CTA band prefilled `/contact-us/?sector=<slug>#quote`. Breadcrumbs Home › Sectors › Sector; schema WebPage (+ `about` the relevant services' `@id`s) + BreadcrumbList.
+- `templates/pages/sectors/index.php`: hero-inner `columns` → the 7 sector cards in a centred static grid (1 / 2 / 3 columns, the 7th card centred) → "Why sector knowledge matters" (the service `text` block, mist, button → `/about-us/#our-story`) → CTA band. Schema WebPage + BreadcrumbList + ItemList.
+- `templates/components/sector-card.php` (C36) + `src/css/components/sector-card.css`: the P12 card extracted (markup from `sections/home/sectors.php`, CSS from `pages/home-sectors.css`); the home row now uses it (`skew` adds `velocity-skew`). `templates/components/service-card.php` (C37): the glass service card extracted from P20/P21 (`subs.php`, `related.php` now use it). `src/css/pages/sector.css`.
+
+**Files changed**
+- `app/data/sectors.php`: each sector carries its photo (`image`, `image_alt`), moved from `app/data/home.php` (`sectors.image_keys` / `images` removed): one source for the home row, the hub and the sector heroes.
+- `app/lib/helpers.php`: `sector()`, `sector_page()`, `service_sub_find()`. `app/lib/Schema.php` + `Page.php`: optional `$page['about']` (extra WebPage `about` subjects). `app/data/ui.php`: `sector_page` headings. `templates/sections/service/pending.php`: labels for `challenges` / `buyers`.
+- `bin/check-content.php`: **anti-doorway rule** (docs/10 §3): each sector page's body (without the CTA band, the other-sectors row and pending placeholders) as 5-word shingles; a pair sharing > 50 % of the smaller page's shingles is listed.
+- `src/css/main.css`, `docs/03` C36 + C37, CLAUDE.md.
+
+**Decisions**
+- The hub stays `draft` (its lead and cards intro are ours); it renders and is linked from home, the header and the footer as before.
+- Typical buyers and challenges are `[[PENDING]]` with suggested angles in the marker (to confirm with the client, C04) rather than invented lists.
+- "Other sectors" chip links were added for hub-and-spoke internal linking (docs/10 §3); they are excluded from the doorway comparison, as is the shared CTA band.
+
+**Deviations**
+- None against the prompt.
+
+**Checks**
+- `php -l` clean; `npm run build` clean; all 8 routes HTTP 200 without PHP notices (7 sector pages with 2 pending blocks each); `seo-audit --all` PASS (30 pages + 6 legacy redirects).
+- `check-content`: the sector pending items and provisional lines are listed; the doorway rule flags 18 of the 21 sector pairs (51–80 % shared) while their copy is pending, as intended.
+- Playwright, motion on, wheel-scrolled at 360 / 768 / 1024 / 1440 on `/`, `/sectors/`, Healthcare & Social Care and Building Maintenance: no horizontal scroll, no console errors or 4xx; the home sector row renders the same cards through the component and links to the sector pages.
+
+**Follow-ups**
+- C04: per-sector copy (challenges, buyers, sector-specific "how we help", FAQs) until the doorway check is clean; approval of the hub copy, then `status` → published.

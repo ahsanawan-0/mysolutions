@@ -17,6 +17,15 @@ return [
         'whatsapp'  => ['Chat on WhatsApp', config('whatsapp')],
     ],
 
+    // Sector page section headings (templates/pages/sectors/single.php, P22); {sector} = the sector name
+    'sector_page' => [
+        'challenges' => ['eyebrow' => 'The challenges', 'heading' => 'Challenges in', 'accent' => '{sector}'],
+        'services'   => 'Services that fit this sector',
+        'buyers'     => ['eyebrow' => 'Who buys', 'heading' => 'Typical Buyers and', 'accent' => 'Contract Types'],
+        'faq'        => ['eyebrow' => 'FAQs', 'heading' => '{sector}', 'accent' => 'FAQs'],
+        'other'      => 'Other sectors we serve',
+    ],
+
     // Related services on the sub-service pages (templates/sections/service/related.php, P21)
     'related_services' => [
         'eyebrow' => 'Keep exploring',

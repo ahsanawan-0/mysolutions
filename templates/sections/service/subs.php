@@ -28,15 +28,7 @@ $taglines = $block['taglines'] ?? [];
     <ul class="svc-subs__grid svc-subs__grid--<?= count($subs) ?>" role="list" data-anim="stagger">
       <?php foreach ($subs as $sub): ?>
       <li class="svc-subs__item">
-        <article class="svc-card svc-card--<?= e($colour) ?>" data-anim="tilt" data-tilt="4">
-          <div class="svc-card__surface notch notch--br">
-            <?= component('hex-tile', ['icon' => $sub['icon'], 'category' => $colour, 'size' => 'lg', 'class' => 'svc-card__tile']) ?>
-            <h3 class="svc-card__title"><a class="svc-card__link" href="<?= e(url($sub['url'])) ?>"><?= e($sub['name']) ?></a></h3>
-            <p class="svc-card__text"><?= e($taglines[$sub['slug']] ?? $sub['summary']) ?></p>
-            <span class="svc-card__more" aria-hidden="true">Explore <?= e($sub['name']) ?></span>
-          </div>
-          <span class="svc-card__arrow" aria-hidden="true"><?= icon('arrow-right', 'regular') ?></span>
-        </article>
+        <?= component('service-card', ['sub' => $sub, 'category' => $ctx, 'text' => $taglines[$sub['slug']] ?? $sub['summary']]) ?>
       </li>
       <?php endforeach; ?>
     </ul>

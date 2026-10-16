@@ -103,6 +103,52 @@ foreach (['title' => $titles, 'description' => $descriptions] as $kind => $map) 
 }
 $found += $routeIssues;
 
+// ---------- 2b. Sector pages: no doorway pages (docs/10 §3, P22) ----------------------------------
+// Each sector page's body (the template output, without the shared CTA band, the "other sectors" row and pending
+// placeholders) is cut into 5-word shingles; a pair sharing more than 50 % of the smaller page's shingles is flagged.
+$heading('Sector pages: body text more than 50 % identical to another sector page');
+$bodies = [];
+foreach ($routes as $path => $route) {
+    if (($route['template'] ?? '') !== 'pages/sectors/single') {
+        continue;
+    }
+    $params = $route['params'] ?? [];
+    ob_start();
+    try {
+        (static function () use ($route, $params): void {
+            $page = [];
+            include templates_path($route['template']);
+        })();
+    } catch (Throwable) {
+        // a broken template is reported by the routes section
+    }
+    $html = (string) ob_get_clean();
+    $html = preg_replace('#<section class="cta-band.*?</section>|<nav class="sector-others.*?</nav>|<section class="svc-pending.*?</section>|<script\b.*?</script>|<svg\b.*?</svg>#s', ' ', $html) ?? $html;
+    $words = preg_split('/\W+/u', mb_strtolower(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5)), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+    $shingles = [];
+    for ($i = 0, $n = count($words) - 4; $i < $n; $i++) {
+        $shingles[implode(' ', array_slice($words, $i, 5))] = true;
+    }
+    $bodies[$path] = $shingles;
+}
+$doorways = 0;
+$paths = array_keys($bodies);
+foreach ($paths as $a => $pathA) {
+    foreach (array_slice($paths, $a + 1) as $pathB) {
+        $smaller = min(count($bodies[$pathA]), count($bodies[$pathB]));
+        if ($smaller === 0) {
+            continue;
+        }
+        $share = count(array_intersect_key($bodies[$pathA], $bodies[$pathB])) / $smaller;
+        if ($share > 0.5) {
+            printf("  !! %-36s ≈ %-36s %3d %% shared\n", $pathA, $pathB, (int) round($share * 100));
+            $doorways++;
+        }
+    }
+}
+echo $doorways === 0 ? "  none\n" : "  {$doorways} near-duplicate pair(s) → each sector page needs its own challenges, buyers and copy (C04)\n";
+$found += $doorways;
+
 // ---------- 3. Images missing from the manifest --------------------------------------------------
 $heading('Images: img() keys missing from public/assets/img/manifest.json');
 $manifestFile = public_path('assets/img/manifest.json');

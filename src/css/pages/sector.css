@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Sectors (PROMPTS P22, docs/08 §8): the /sectors/ hub grid and the sector page sections. The hero is C32
+   (components/hero-inner.css), the cards C36 (components/sector-card.css) and C37 (.svc-card in pages/service.css);
+   challenges reuse the service `list` block and the hub's "Why sector knowledge matters" the service `text` block.
+   ========================================================================== */
+
+/* ---------- Hub: the 7 sector cards (centred rows, so the 7th card is not stranded) ---------- */
+.sectors-hub { padding-block: var(--section-y); background: var(--ms-canvas); }
+.sectors-hub__head { display: grid; gap: var(--space-4); max-width: 62ch; margin-bottom: var(--space-12); }
+.sectors-hub__head .eyebrow { margin: 0; }
+.sectors-hub__title { margin: 0; text-wrap: balance; }
+.sectors-hub__intro { margin: 0; line-height: var(--lh-lead); color: var(--text-2); }
+.sectors-hub .sectors-hub__grid {   /* two classes: base.css resets ul[class] */
+  --cols: 1;
+  --gap: var(--space-6);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sectors-hub__item { width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
+.sectors-hub__item .sector-card { height: 100%; }
+@media (min-width: 640px) {
+  .sectors-hub .sectors-hub__grid { --cols: 2; }
+}
+@media (min-width: 1024px) {
+  .sectors-hub .sectors-hub__grid { --cols: 3; --gap: var(--space-8); }
+}
+
+/* ---------- Sector page: How we help (text + service cards) ---------- */
+.sector-help__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6) var(--space-16);
+  align-items: start;
+  margin-bottom: var(--space-12);
+}
+.sector-help__title { margin: 0; }
+.sector-help__copy { display: grid; gap: var(--space-4); max-width: 68ch; }
+.sector-help__copy p { margin: 0; line-height: var(--lh-lead); color: var(--text-2); text-wrap: pretty; }
+.sector-help__copy .sector-help__first { color: var(--ms-ink); font-weight: var(--fw-medium); }
+.sector-help__label {
+  margin: 0 0 var(--space-5);
+  font-size: var(--fs-eyebrow);
+  line-height: var(--lh-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+@media (min-width: 1024px) {
+  .sector-help__head { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  /* four service cards in one row on sector pages */
+  .sector-help .svc-subs__grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sector-help .svc-subs__grid--4 .svc-card__surface { padding: var(--space-6) var(--space-6) var(--space-8); }
+  .sector-help .svc-subs__grid--4 .svc-card__title { font-size: var(--fs-h4); line-height: var(--lh-h4); }
+}
+
+/* ---------- Typical buyers / contract types ---------- */
+.sector-buyers { padding-block: calc(var(--section-y) * .7); background: var(--ms-white); }
+.sector-buyers__inner { display: grid; gap: var(--space-8); }
+.sector-buyers__head { display: grid; gap: var(--space-4); }
+.sector-buyers__head .eyebrow { margin: 0; }
+.sector-buyers__title { margin: 0; }
+.sector-buyers .sector-buyers__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.sector-buyers__chips .chip { min-height: var(--target-min); padding-inline: var(--space-4); }
+
+/* ---------- Other sectors ---------- */
+.sector-others { padding-block: var(--space-12); background: var(--ms-white); border-top: 1px solid var(--ms-line); }
+.sector-others__inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); }
+.sector-others__title {
+  margin: 0;
+  font-size: var(--fs-eyebrow);
+  line-height: var(--lh-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.sector-others .sector-others__chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.sector-others__chip { gap: var(--space-2); min-height: var(--target-min); padding-inline: var(--space-4); }
+.sector-others__chip .icon { flex: none; color: var(--azure-600); }

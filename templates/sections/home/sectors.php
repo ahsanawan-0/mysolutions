@@ -6,9 +6,8 @@ declare(strict_types=1);
  * translates `[data-h-track]` by its overflow against `[data-h-viewport]`, filling `[data-h-progress]`; below 1024
  * and under reduced motion the track is a native scroll-snap row (motion.css). Behind it on desktop: the faint
  * `nodes` network (src/js/modules/nodes.js, hidden below 1024 so the canvas stays paused there).
- * Each card: 3:4 photo (`velocity-skew`), bottom gradient, hex icon, H3 whose link covers the whole card, summary,
- * and the arrow tile in a bottom-right cut-out (`.notch.notch--br`, a true mask).
- * Copy: app/data/home.php → sectors. Cards and URLs: app/data/sectors.php.
+ * Each card is the C36 sector-card component (3:4 photo with `velocity-skew`, hex icon, H3 link over the card, summary,
+ * arrow tile in a bottom-right cut-out). Copy: app/data/home.php → sectors. Cards, photos and URLs: app/data/sectors.php.
  */
 $s = home('sectors');
 $sectors = sectors();
@@ -29,18 +28,7 @@ $sectors = sectors();
       <ul class="sectors__track" data-h-track role="list" aria-label="Sectors we serve">
         <?php foreach ($sectors as $sector): ?>
         <li class="sectors__item" data-h-item>
-          <article class="sector-card on-dark">
-            <div class="sector-card__media notch notch--br" data-anim="velocity-skew">
-              <?= img($s['image_keys'][$sector['slug']] ?? 'sectors/' . $sector['slug'], ['alt' => $s['images'][$sector['slug']] ?? $sector['name'], 'ratio' => '3/4', 'sizes' => '(min-width: 1024px) 320px, 76vw', 'cover' => true, 'pattern' => false]) ?>
-              <span class="sector-card__shade" aria-hidden="true"></span>
-            </div>
-            <div class="sector-card__body">
-              <?= component('hex-tile', ['icon' => $sector['icon'], 'size' => 'sm']) ?>
-              <h3 class="sector-card__title"><a class="sector-card__link" href="<?= e(url($sector['url'])) ?>"><?= e($sector['name']) ?></a></h3>
-              <p class="sector-card__summary"><?= e($sector['summary']) ?></p>
-            </div>
-            <span class="sector-card__arrow" aria-hidden="true"><?= icon('arrow-up-right', 'regular', ['size' => 22]) ?></span>
-          </article>
+          <?= component('sector-card', ['sector' => $sector, 'skew' => true]) ?>
         </li>
         <?php endforeach; ?>
       </ul>

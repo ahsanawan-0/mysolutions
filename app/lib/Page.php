@@ -13,7 +13,8 @@ use Throwable;
  * og_title, og_description, og_image, og_image_alt, og_type (website|article), robots,
  * status (published|draft), breadcrumbs ([[label, path|null], …]), schema (graph nodes),
  * published, modified (ISO 8601 / Y-m-d), body_class, js_modules, web_page_type
- * (WebPage|AboutPage|ContactPage|CollectionPage), primary_image (absolute URL or path).
+ * (WebPage|AboutPage|ContactPage|CollectionPage), primary_image (absolute URL or path), about (extra WebPage `about`
+ * subjects, e.g. [['@id' => …#service]], P22).
  * Derived: path, indexable (bool), warnings (string[], added by Seo::prepare).
  */
 final class Page
@@ -39,6 +40,7 @@ final class Page
             'status'         => self::DRAFT,
             'breadcrumbs'    => [],
             'schema'         => [],
+            'about'          => [],
             'published'      => null,
             'modified'       => null,
             'body_class'     => '',

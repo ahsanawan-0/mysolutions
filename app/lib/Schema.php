@@ -113,6 +113,10 @@ final class Schema
             'about'       => ['@id' => self::organizationId()],
             'inLanguage'  => config('locale'),
         ];
+        // Extra `about` subjects (P22 sector pages: the relevant services, as @id references)
+        if (!empty($page['about'])) {
+            $node['about'] = array_merge([['@id' => self::organizationId()]], array_values($page['about']));
+        }
         if (!empty($page['primary_image'])) {
             $node['primaryImageOfPage'] = ['@type' => 'ImageObject', 'url' => $page['primary_image']];
         }

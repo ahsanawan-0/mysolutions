@@ -263,6 +263,44 @@ function sectors(): array
     return $sectors ??= require base_path('app/data/sectors.php');
 }
 
+/** One sector from app/data/sectors.php by slug, or null. */
+function sector(string $slug): ?array
+{
+    foreach (sectors() as $sector) {
+        if ($sector['slug'] === $slug) {
+            return $sector;
+        }
+    }
+    return null;
+}
+
+/**
+ * Sector page copy (app/data/sector-pages/<slug>.php, PROMPTS P22): sector_page('transport'), sector_page('_hub').
+ * Returns [] when the file does not exist or the slug is not a plain slug.
+ */
+function sector_page(string $slug): array
+{
+    static $pages = [];
+    if (!array_key_exists($slug, $pages)) {
+        $file = base_path('app/data/sector-pages/' . $slug . '.php');
+        $pages[$slug] = preg_match('#^_?[a-z0-9-]+$#', $slug) === 1 && is_file($file) ? require $file : [];
+    }
+    return $pages[$slug];
+}
+
+/** A sub-service by its slug in any category (slugs are unique across categories): ['sub' => …, 'category' => …] or null. */
+function service_sub_find(string $subSlug): ?array
+{
+    foreach (services() as $category) {
+        foreach ($category['subs'] as $sub) {
+            if ($sub['slug'] === $subSlug) {
+                return ['sub' => $sub, 'category' => $category];
+            }
+        }
+    }
+    return null;
+}
+
 /**
  * FAQ items (app/data/faqs.php): faqs() → all, faqs('home') → items tagged with that page, faqs(null, 'basics') → one
  * group, faqs('bid-proposal-management', 'services') → both. Each item: id, q, a, group, pages.

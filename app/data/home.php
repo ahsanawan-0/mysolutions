@@ -100,25 +100,7 @@ return [
         // Client-approved copy (about-us-content.md §2 Our Story, verbatim)
         'text'    => 'Each sector presents different challenges, from regulatory compliance and workforce planning to service delivery, contract mobilisation and performance management. Understanding these differences is central to how we approach our work.',
         'link'    => ['label' => 'All sectors', 'url' => '/sectors/'],
-        // AI-generated illustrative photography; source files and prompts live in assets-src/images/.
-        'image_keys' => [
-            'healthcare-social-care' => 'sectors/healthcare-social-care-consultation',
-            'transport' => 'sectors/transport-passenger-minibus',
-            'cleaning' => 'sectors/commercial-office-cleaning',
-            'education-training' => 'sectors/education-adult-training-workshop',
-            'security' => 'sectors/security-office-reception',
-            'facilities-management' => 'sectors/facilities-manager-plant-room',
-            'building-maintenance' => 'sectors/building-maintenance-engineer',
-        ],
-        'images'  => [
-            'healthcare-social-care' => 'Care coordinator reviewing a folder with an older resident in a care home lounge',
-            'transport'              => 'Driver beside an accessible passenger minibus outside a healthcare building',
-            'cleaning'               => 'Commercial cleaner at work in an office corridor',
-            'education-training'     => 'Trainer leading a workshop for adult learners',
-            'security'               => 'Security officer monitoring a building entrance',
-            'facilities-management'  => 'Facilities manager checking plant-room equipment with a tablet',
-            'building-maintenance'   => 'Maintenance engineer checking a ventilation unit with a diagnostic device',
-        ],
+        // The cards (photo, alt text, icon, summary, URL) come from app/data/sectors.php
     ],
 
     // P11 — "Our Services": three stacking category cards (docs/08 §4 H2 🔒 first section after the hero).

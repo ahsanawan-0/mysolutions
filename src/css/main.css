@@ -18,6 +18,7 @@
 @import '/src/css/components/select.css';
 @import '/src/css/components/testimonials.css';
 @import '/src/css/components/card-blog.css';
+@import '/src/css/components/sector-card.css';
 @import '/src/css/components/draft-ribbon.css';
 @import '/src/css/components/logo.css';
 @import '/src/css/components/splash.css';
@@ -52,5 +53,6 @@
 @import '/src/css/pages/about.css';
 @import '/src/css/pages/service.css';
 @import '/src/css/pages/services-hub.css';
+@import '/src/css/pages/sector.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

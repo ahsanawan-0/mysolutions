@@ -1,0 +1,76 @@
+/* C36 Sector card (templates/components/sector-card.php): the P12 home card, shared with the /sectors/ hub (P22).
+   Photo + bottom shade, hex icon, title link covering the card, summary, arrow tile in a bottom-right true-mask cut-out. */
+.sector-card {
+  --nw: 68px;                       /* arrow-tile cut-out at the bottom-right */
+  --nh: 68px;
+  --gap: 12px;
+  --nr: calc(28px + var(--gap));    /* the 56 px pill tile's radius + the gap */
+  --nf: 20px;
+  position: relative;
+  display: grid;                    /* media and body share one cell, so the body is not positioned and the
+                                       link's stretched ::after covers the whole card */
+  border-radius: var(--r-lg);
+  color: var(--ms-white);
+  transition: transform var(--dur-hover) var(--ease-apple);
+}
+.sector-card__media, .sector-card__body { grid-area: 1 / 1; }
+.sector-card__media {
+  aspect-ratio: 3 / 4;
+  border-radius: var(--r-lg);
+  background: var(--navy-900);
+}
+.sector-card__media picture, .sector-card__media img, .sector-card__media .img-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-reveal) var(--ease-apple);
+}
+.sector-card__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(var(--navy-900-rgb) / 0) 35%, rgb(var(--navy-900-rgb) / .55) 65%, rgb(var(--navy-900-rgb) / .92) 100%);
+  pointer-events: none;
+}
+.sector-card__body {
+  position: relative;               /* above the media; not the link's containing block (no inset) */
+  z-index: 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5) calc(var(--nw) + var(--space-3)) var(--space-5) var(--space-5);
+  pointer-events: none;
+}
+.sector-card__body .hex-tile { margin-bottom: var(--space-1); }
+.sector-card__title { margin: 0; font-size: var(--fs-h4); line-height: var(--lh-h4); text-wrap: balance; }
+.sector-card__link { color: inherit; text-decoration: none; pointer-events: auto; }
+.sector-card__link::after { content: ""; position: absolute; inset: 0; border-radius: var(--r-lg); }   /* the whole card is the link */
+.sector-card__link:focus-visible { outline: none; }
+.sector-card:has(.sector-card__link:focus-visible) { outline: 2px solid var(--sky-300); outline-offset: 3px; }
+.sector-card__summary { margin: 0; font-size: var(--fs-body); line-height: var(--lh-small); color: var(--navy-200); }
+.sector-card__arrow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: inline-grid;
+  place-items: center;
+  width: calc(var(--nw) - var(--gap));
+  height: calc(var(--nh) - var(--gap));
+  border-radius: var(--r-pill);
+  background: var(--azure-650);
+  color: var(--ms-white);
+  transition: background-color var(--dur-hover) var(--ease-apple), transform var(--dur-hover) var(--ease-apple);
+}
+.sector-card__arrow .icon { width: 22px; height: 22px; transition: transform var(--dur-hover) var(--ease-apple); }
+@media (hover: hover) {
+  .sector-card:hover { transform: translateY(-4px); }
+  .sector-card:hover .sector-card__media img, .sector-card:hover .sector-card__media .img-placeholder { transform: scale(1.04); }
+  .sector-card:hover .sector-card__arrow { background: var(--azure-500); }
+  .sector-card:hover .sector-card__arrow .icon { transform: translate(2px, -2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sector-card, .sector-card__media img, .sector-card__media .img-placeholder, .sector-card__arrow .icon { transition: none; }
+}

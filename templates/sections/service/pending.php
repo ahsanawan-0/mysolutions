@@ -7,7 +7,7 @@ declare(strict_types=1);
  * @var array  $block  The block data (type, heading?, accent?)
  * @var string $note   The marker's note (pending_note())
  */
-$labels = ['intro' => 'Introduction', 'text' => 'Text section', 'steps' => 'Process steps', 'list' => 'Icon list', 'why' => 'Why choose us', 'subs' => 'Sub-service cards'];
+$labels = ['intro' => 'Introduction', 'text' => 'Text section', 'steps' => 'Process steps', 'list' => 'Icon list', 'why' => 'Why choose us', 'subs' => 'Sub-service cards', 'challenges' => 'Sector challenges', 'buyers' => 'Typical buyers and contract types'];
 $title = trim(($block['heading'] ?? '') . ' ' . ($block['accent'] ?? ''));
 ?>
 <section class="svc-pending" aria-label="Content pending" data-header-theme="light">

@@ -26,18 +26,7 @@ $t = ui('related_services');
     <ul class="svc-subs__grid svc-subs__grid--<?= count($items) ?>" role="list" data-anim="stagger">
       <?php foreach ($items as ['sub' => $sub, 'category' => $category, 'cross' => $cross]): ?>
       <li class="svc-subs__item">
-        <article class="svc-card svc-card--<?= e($category['colour']) ?>" data-anim="tilt" data-tilt="4">
-          <div class="svc-card__surface notch notch--br">
-            <?= component('hex-tile', ['icon' => $sub['icon'], 'category' => $category['colour'], 'size' => 'lg', 'class' => 'svc-card__tile']) ?>
-            <?php if ($cross): ?>
-            <?= component('chip', ['label' => str_replace('{category}', $category['name'], $t['part_of']), 'variant' => $category['colour'], 'class' => 'svc-card__chip']) ?>
-            <?php endif; ?>
-            <h3 class="svc-card__title"><a class="svc-card__link" href="<?= e(url($sub['url'])) ?>"><?= e($sub['name']) ?></a></h3>
-            <p class="svc-card__text"><?= e($sub['summary']) ?></p>
-            <span class="svc-card__more" aria-hidden="true"><?= e(str_replace('{name}', $sub['name'], $t['explore'])) ?></span>
-          </div>
-          <span class="svc-card__arrow" aria-hidden="true"><?= icon('arrow-right', 'regular') ?></span>
-        </article>
+        <?= component('service-card', ['sub' => $sub, 'category' => $category, 'cross' => $cross]) ?>
       </li>
       <?php endforeach; ?>
     </ul>

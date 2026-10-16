@@ -10,7 +10,8 @@
     "calendar-check", "briefcase", "rocket-launch", "lightning", "magnifying-glass",
     "strategy", "paper-plane-tilt", "trend-up", "squares-four", "fingerprint", "target", "hand-heart",
     "sliders-horizontal", "compass", "eye", "clock", "quotes", "hexagon",
-    "list-numbers", "shield-warning", "folder-open"
+    "list-numbers", "shield-warning", "folder-open", "file-magnifying-glass", "presentation-chart", "map-trifold",
+    "currency-gbp", "ranking", "funnel", "scales", "article", "crosshair", "chat-centered-text", "hourglass"
   ],
   "regular": [
     "caret-down", "caret-right", "caret-left", "list", "x", "arrow-right", "arrow-left", "arrow-up-right", "arrow-up",

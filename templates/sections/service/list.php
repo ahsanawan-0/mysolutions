@@ -3,8 +3,8 @@ declare(strict_types=1);
 /**
  * Service block `list` (PROMPTS P20 for P21, e.g. "Our Tender & Bid Writing Services", "What Does Our Review Cover?"):
  * two-voice H2, "Sub" line, intro paragraphs, the icon cards (hex tile + H3 + text; 3 × 2 grid ≥ 1024), closing
- * paragraph. Motion: `stagger` on the grid, `tilt` on each card. Not used by the category pages; shown on
- * /styleguide/service-blocks/.
+ * paragraph (5 items: a 2 + 3 bento ≥ 1024). Motion: `stagger` on the grid, `tilt` on each card. Used by the
+ * sub-service pages (P21); demo on /styleguide/service-blocks/.
  * @var array      $block  ['type' => 'list', 'id', 'heading', 'accent'?, 'sub'?, 'paras'? => string[],
  *                         'items' => [['icon', 'title', 'text'], …], 'outro'?, 'variant'? => 'default'|'mist']
  * @var array|null $ctx    The service category: colour for the hex tiles
@@ -26,7 +26,7 @@ $mist = ($block['variant'] ?? 'default') === 'mist';
       <?php endforeach; ?>
     </header>
 
-    <ul class="svc-list__grid" role="list" data-anim="stagger">
+    <ul class="svc-list__grid svc-list__grid--<?= count($block['items'] ?? []) ?>" role="list" data-anim="stagger">
       <?php foreach ($block['items'] ?? [] as $item): ?>
       <li class="svc-list__item">
         <div class="svc-list__card" data-anim="tilt" data-tilt="4">

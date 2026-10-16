@@ -431,15 +431,16 @@ function about(string $key, mixed $default = null): mixed
 }
 
 /**
- * Service page copy (app/data/service-pages/<slug>.php, PROMPTS P20/P21): service_page('bid-proposal-management'),
- * service_page('_hub'). Returns [] when the file does not exist.
+ * Service page copy (app/data/service-pages/, PROMPTS P20/P21): service_page('bid-proposal-management') (category),
+ * service_page('_hub'), service_page('bid-proposal-management/expert-review') (sub-service, P21).
+ * Returns [] when the file does not exist or the slug is not a plain `slug` / `category/sub` path.
  */
 function service_page(string $slug): array
 {
     static $pages = [];
     if (!array_key_exists($slug, $pages)) {
-        $file = base_path('app/data/service-pages/' . basename($slug) . '.php');
-        $pages[$slug] = is_file($file) ? require $file : [];
+        $file = base_path('app/data/service-pages/' . $slug . '.php');
+        $pages[$slug] = preg_match('#^_?[a-z0-9-]+(/[a-z0-9-]+)?$#', $slug) === 1 && is_file($file) ? require $file : [];
     }
     return $pages[$slug];
 }

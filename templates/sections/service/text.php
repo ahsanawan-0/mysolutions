@@ -8,7 +8,9 @@ declare(strict_types=1);
  *  - band            the category's "current standards / regulation" band: Navy 900, paragraphs in two columns
  *                    ≥ 1024, a visible "Last updated <date>" (`updated`, Y-m-d), `read-along` on the first paragraph.
  * @var array      $block  ['type' => 'text', 'id', 'heading', 'accent'?, 'sub'?, 'paras' => string[], 'image'? =>
- *                         ['key', 'alt'], 'variant'? => 'default'|'mist'|'band', 'updated'?, 'button'? => ['label', 'url']]
+ *                         ['key', 'alt'], 'variant'? => 'default'|'mist'|'band', 'updated'?, 'button'? => ['label', 'url'],
+ *                         'read_along'? => paragraph index with `read-along`, 'pull'? => paragraph index set as a pull line
+ *                         (larger, ink, `read-along`; e.g. the client's closing bold sentence, P21)]
  * @var array|null $ctx    The service category (services.php): colour + icon for the hex tile in the notch
  */
 $variant = in_array($block['variant'] ?? 'default', ['default', 'mist', 'band'], true) ? ($block['variant'] ?? 'default') : 'default';
@@ -18,6 +20,8 @@ $titleId = $id . '-title';
 $image = !$band ? ($block['image'] ?? null) : null;
 $paras = $block['paras'] ?? [];
 $updated = !empty($block['updated']) ? new DateTimeImmutable((string) $block['updated']) : null;
+$pull = isset($block['pull']) ? (int) $block['pull'] : null;
+$readAlong = isset($block['read_along']) ? (int) $block['read_along'] : null;
 $classes = 'svc-text svc-text--' . $variant . ($image ? ' svc-text--with-image' : '') . ($band ? ' on-dark' : '');
 ?>
 <section class="<?= e($classes) ?>" id="<?= e($id) ?>" aria-labelledby="<?= e($titleId) ?>" data-header-theme="<?= $band ? 'dark' : 'light' ?>">
@@ -35,7 +39,13 @@ $classes = 'svc-text svc-text--' . $variant . ($image ? ' svc-text--with-image' 
 
       <div class="svc-text__copy">
         <?php foreach ($paras as $i => $para): ?>
-        <p<?= $band && $i === 0 ? ' class="svc-text__lead" data-anim="read-along"' : ' data-anim="fade-up"' ?>><?= rich($para) ?></p>
+        <?php if ($band && $i === 0): ?>
+        <p class="svc-text__lead" data-anim="read-along"><?= rich($para) ?></p>
+        <?php elseif ($i === $pull): ?>
+        <p class="svc-text__pull" data-anim="read-along"><?= rich($para) ?></p>
+        <?php else: ?>
+        <p data-anim="<?= $i === $readAlong ? 'read-along' : 'fade-up' ?>"><?= rich($para) ?></p>
+        <?php endif; ?>
         <?php endforeach; ?>
       </div>
 

@@ -14,6 +14,7 @@ declare(strict_types=1);
  * @var string|null $accent    Italic accent words
  * @var string|null $id        id for the H2 (the section's aria-labelledby)
  * @var array<int, array{title: string, icon: string, text: string, detail?: string[], image?: string, image_alt?: string, detail_image?: string, detail_alt?: string}> $steps
+ *            text/detail go through rich() (the client's **bold** and [internal links], P21)
  * @var string|null $variant   'compact' (default, one line per step) | 'full' (adds the detail paragraphs)
  * @var array|null  $cta       ['label' => …, 'url' => …] link under the list
  * @var string|null $class     Extra classes on the root (e.g. 'on-dark')
@@ -44,10 +45,10 @@ $pinLength = $pin_length ?? 0.6;
           <span class="process-steps__n" aria-hidden="true"><?= sprintf('%02d', $i + 1) ?></span>
           <div class="process-steps__body">
             <h3 class="process-steps__step-title"><?= e($step['title']) ?></h3>
-            <p class="process-steps__text"><?= e($step['text']) ?></p>
+            <p class="process-steps__text"><?= rich($step['text']) ?></p>
             <?php if ($variant === 'full' && !empty($step['detail'])): ?>
             <?php foreach ((array) $step['detail'] as $para): ?>
-            <p class="process-steps__detail"><?= e($para) ?></p>
+            <p class="process-steps__detail"><?= rich($para) ?></p>
             <?php endforeach; ?>
             <?php endif; ?>
           </div>

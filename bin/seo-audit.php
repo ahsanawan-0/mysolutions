@@ -8,7 +8,8 @@ declare(strict_types=1);
  *   php bin/seo-audit.php --base=https://staging.example --all   (--all also audits draft pages)
  *
  * Checks: exactly one <h1>; title, description, canonical, og:image, og:image:alt, twitter:card present;
- * JSON-LD parses; every <img> has alt, width and height; no href="#" dummy links.
+ * JSON-LD parses; every <img> has alt, width and height; no href="#" dummy links. Then the 6 legacy
+ * /service/<slug>/ URLs: each must 301 in one hop to its new sub-service page, which answers 200 (P21).
  */
 
 $_SERVER['REQUEST_URI'] = '/';
@@ -117,5 +118,26 @@ foreach ($urls as $path) {
     }
 }
 
-printf("\n%d page(s) audited, %d failing.\n", count($urls), $failures);
+// ---------- Legacy service URLs (P21): the 6 old /service/<slug>/ pages → one-hop 301 to the new pages ----------
+$redirects = require base_path('app/redirects.php');
+$legacy = array_filter($redirects['exact'], static fn (string $from): bool => preg_match('#^/service/[a-z0-9-]+/$#', $from) === 1, ARRAY_FILTER_USE_KEY);
+$fetch = static function (string $url): array {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_TIMEOUT => 20, CURLOPT_USERAGENT => 'MySolutionz-SEO-Audit/1.0']);
+    curl_exec($ch);
+    return [(int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE), (string) curl_getinfo($ch, CURLINFO_REDIRECT_URL)];
+};
+echo "\nLegacy service redirects:\n";
+foreach ($legacy as $from => $to) {
+    [$status, $location] = $fetch($base . $from);
+    $targetPath = (string) parse_url($location, PHP_URL_PATH);
+    [$targetStatus] = $targetPath !== '' ? $fetch($base . $targetPath) : [0];   // one hop: the target answers 200 itself
+    $ok = $status === 301 && $targetPath === $to && $targetStatus === 200;
+    printf("%s  %-36s → %s (%d, target %d)\n", $ok ? 'PASS' : 'FAIL', $from, $targetPath !== '' ? $targetPath : '(none)', $status, $targetStatus);
+    if (!$ok) {
+        $failures++;
+    }
+}
+
+printf("\n%d page(s) audited + %d legacy redirect(s), %d failing.\n", count($urls), count($legacy), $failures);
 exit($failures > 0 ? 1 : 0);

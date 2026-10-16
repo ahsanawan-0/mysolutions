@@ -8,7 +8,8 @@ declare(strict_types=1);
  * @var string|null $heading        Line 1 of the two-voice heading
  * @var string|null $accent         Accent words (line 2, brand blue)
  * @var string|null $sub            Line under the heading (the client's closing sub-heading, P20)
- * @var string|array|null $text     One paragraph, or a list of paragraphs (P20: the client's closing copy)
+ * @var string|array|null $text     One paragraph, or a list of paragraphs (P20: the client's closing copy; rich():
+ *                                   **bold** and [internal links])
  * @var string|null $strong         Bold closing line under the paragraphs (P20)
  * @var array|null  $primary        [label, url]
  * @var array|null  $secondary      [label, url]; default = phone link. Pass false to hide
@@ -41,7 +42,7 @@ $href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u
       <p class="cta-band__sub"><?= e($sub) ?></p>
       <?php endif; ?>
       <?php foreach ($paras as $para): ?>
-      <p class="cta-band__text"><?= e($para) ?></p>
+      <p class="cta-band__text"><?= rich($para) ?></p>
       <?php endforeach; ?>
       <?php if (!empty($strong)): ?>
       <p class="cta-band__strong"><strong><?= e($strong) ?></strong></p>

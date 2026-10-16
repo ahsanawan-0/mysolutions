@@ -872,3 +872,44 @@
 **Follow-ups**
 - Client (docs/15 Q06c): approve or replace the 6 step descriptions, the cards heading + intro and the 8 FAQs; copy for Categories 2–3 in the same shape (then their blocks fill in and `status` → published).
 - P21: the sub-service template reuses these blocks (+ related services); the 3 Bid & Proposal sub-pages publish with the client copy. P22: sector pages (linked from the band). Real photos for the hero columns / "What is" image when available (Q19).
+
+---
+
+## P21 — Sub-service landing template + 12 sub-service pages
+**Date:** 16 October 2026
+**Commit:** `P21: sub-service template and 12 sub-service pages`
+
+**Files created**
+- `templates/pages/services/single.php` (the template `app/routes.php` already named): hero-inner `category` ("Part of <Category>" chip, the sub-service icon in the glowing frame, the client's tagline as the sub line, breadcrumbs Home › Services › Category › Sub-service) → the data's `sections[]` through the P20 block partials (pending blocks dashed off production, omitted on production) → related services → FAQ by `faq_tag` (omitted when nothing is tagged) → CTA band with the page's closing copy and `?service=<sub>#quote`. Schema: WebPage + BreadcrumbList + `service()` (serviceType, description = the meta description, provider, areaServed, BusinessAudience, `isRelatedTo` the category `@id`).
+- `templates/sections/service/related.php`: the siblings + 1 cross-category service as the P20 glass cards (a cross-category card names its category); `related` = 'category/sub' paths in the data, default the siblings + the next category's first service; the page itself is never listed and drafts are skipped on production. Copy `ui('related_services')`.
+- **Final, published (absorbs C03a):** `app/data/service-pages/bid-proposal-management/{tender-bid-writing,opportunity-identification,expert-review}.php`: all copy from `01a` / `01b` / `01c` verbatim, block by block in the docs' order (hero lead = the client's first paragraph, intro = the following paragraphs; Opportunity Identification's "Understanding Your Business Comes First" and "Tender Compatibility Analysis" need no template change), icons as listed, steps `full` (Opportunity Identification's steps 02–05 carry `detail` paragraphs), CTA labels "Find My Next Tender Opportunity" / "Get Your Tender Expertly Reviewed" (client) and the site default "Get a Free Quote" for Tender & Bid Writing, SEO packs as given, `faq_tag` = the sub slug, cross-category links as the docs suggest (Policy Management / Carbon Reduction Plan / Policy Management). `services.php`: the three are `published`.
+- **Provisional, draft:** `compliance-virtual-assistance/cqc-registration.php`, `digital-presence/{website-development,social-media-management}.php`: the current site's copy (scrape §4.4–§4.6) mapped into intro / steps / why / CTA as `// PROVISIONAL` raw material, unsupported claims removed ("ensure compliance", "smooth and successful registration", CQC "renewal", "Proven Results", "visually stunning", "flawlessly", "we've got you covered", "Engagement that Converts"); the "What is" and list blocks are `[[PENDING]]`. `compliance-virtual-assistance/{policy-management,carbon-reduction-plan,data-entry-management,care-plans}.php`, `digital-presence/{email-marketing,seo-analytics}.php`: hero from `services.php`, every block a `[[PENDING: …]]` marker in the client's shape (intro → text → list → steps → why). Titles `<Name> Services UK | My Solutionz` (36–50 chars; CQC = "CQC Registration Support | My Solutionz"), descriptions `[[PENDING]]`.
+
+**Files changed**
+- `app/lib/helpers.php`: `service_page()` also loads `category/sub` paths (slug pattern checked).
+- `templates/sections/service/text.php`: `pull` (a paragraph index set as a pull line: larger, ink, Azure rule, `read-along`; Opportunity Identification's closing bold sentence) and `read_along` (Expert Review's paragraph 4). `list.php`: count class (`svc-list__grid--5` = a 2 + 3 bento, `--4` = 2 × 2).
+- `templates/components/process-steps.php`: step `text` / `detail` through `rich()` (Expert Review step 05 links to Tender & Bid Writing). `templates/components/cta-band.php`: paragraphs through `rich()` (Expert Review's closing **My Solutionz**).
+- `src/css/pages/service.css`: pull line, bento grids, `full` steps rule (≥ 1024 + motion: while pinned only the active step shows its paragraphs; mobile / reduced motion / no JS show them all), the related cards' category chip, the client's `<strong>` stays bold inside medium-weight outros. `cta-band.css`: bold in the closing paragraphs.
+- `bin/seo-audit.php`: after the page audit, each legacy `/service/<slug>/` URL from `app/redirects.php` must answer 301 to its new page, which must answer 200 itself (one hop).
+- `scripts/og.mjs`: `PHOTO_OG` + `tender-bid-writing.jpg`, `opportunity-identification.jpg`, `expert-review.jpg`. `src/icons.json` (+ sprite, 105 symbols): light `file-magnifying-glass`, `presentation-chart`, `map-trifold`, `currency-gbp`, `ranking`, `funnel`, `scales`, `article`, `crosshair`, `chat-centered-text`, `hourglass`. `app/data/ui.php`: `related_services`. `docs/03` C35, CLAUDE.md.
+
+**Decisions**
+- Photos: the docs' suggested new photos (`tender-writer-drafting-response`, `tender-opportunity-shortlist`, `bid-reviewer-marking-draft`) do not exist, so the editorial set is reused and the OG crops use the closest photo; their alt texts describe what each photo shows ("Tender writer talking a client team through a response plan", "Consultant reviewing opportunities on a laptop and a phone", "Bid reviewer going through a draft tender response with a client team") instead of the SEO packs' wording for photos we do not have.
+- Sector names in "The Advantage of Experienced Tender Writers" stay inline links (as P20's band), not a duplicate chip row.
+- Hero image columns are used on every published sub-page (the framed tile floats over the wide column), none on the drafts.
+- The three `services.php` one-liners for the published sub-services stay `// PROVISIONAL`: they are our condensed versions of the client's taglines for the menu / slider / cards (docs/15 Q06c), not page copy.
+
+**Deviations**
+- Acceptance "check-content no longer lists the 3 final ones, apart from FAQ items": it also still lists the three `services.php` one-liners (above) and each final page's FAQ intro line (FAQ-related).
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean; `npm run icons` + `npm run og` ran.
+- Client copy: a script extracts every heading, sub line, paragraph, list item, step title/text/detail, bold-led benefit sentence and closing CTA line from `01a` / `01b` / `01c` and finds all of them in the rendered pages (59 / 60 / 59 items, 0 missing); "over 10 years" present, "16 years" absent.
+- All 12 routes HTTP 200 without PHP notices; the 3 final pages have no pending blocks, the 3 provisional ones 2 each, the other 6 five each; FAQ present on Tender & Bid Writing and Expert Review, omitted elsewhere (nothing tagged).
+- `seo-audit --all` PASS on 22 pages + the 6 legacy redirects (301 in one hop, targets 200). Production mode: `/sitemap-services.xml` = hub, Bid & Proposal Management and its 3 sub-services; a draft sub-page shows no pending blocks or markers and stays `noindex`; related cards on a published page skip the draft cross-category service.
+- `check-content` 234: the 9 drafts' `[[PENDING]]` / `// PROVISIONAL` items and pending descriptions (9 route issues), plus the exceptions above.
+- Playwright, motion on, wheel-scrolled to the end at 360 / 768 / 1024 / 1440 on all 12 pages: no horizontal scroll, no console errors or 4xx, nothing left hidden (only the inactive pinned steps dimmed). Pinned `full` process on Opportunity Identification at 1024 × 800 and 1440 × 900: the block equals the viewport, the active step shows its paragraphs (step 04: three), the others their titles. Reduced motion at 360 / 1440: everything visible. Keyboard on Expert Review: breadcrumbs, "Part of" chip, CTAs, the inline step link, related cards, FAQ summaries, CTA band, all with a visible ring, in order.
+
+**Follow-ups**
+- Client: approve or replace the Q06c items (one-liners, FAQs); copy for the 9 other sub-services (C03b Compliance & VA, C03c Digital Presence) in the same shape; real photos for the sub-service heroes / "What is" images and OG crops (Q19).
+- P22: sector pages (linked from the service copy).

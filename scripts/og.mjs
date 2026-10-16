@@ -65,6 +65,10 @@ console.log(`[og] wrote ${path.relative(root, out)} (${W}×${H})`);
 const PHOTO_OG = [
   { out: 'home.jpg', src: 'home/hero-building' },
   { out: 'bid-proposal-management.jpg', src: 'home/tender-consultancy-meeting' },
+  // P21 sub-services (the SEO packs' suggested photos do not exist yet; the alt text in each data file describes these)
+  { out: 'tender-bid-writing.jpg', src: 'sectors/education-adult-training-workshop' },
+  { out: 'opportunity-identification.jpg', src: 'services/digital-presence-web-designer' },
+  { out: 'expert-review.jpg', src: 'home/tender-consultancy-meeting' },
 ];
 for (const { out: name, src } of PHOTO_OG) {
   const dir = path.join(root, 'assets-src/images', path.dirname(src));

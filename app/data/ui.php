@@ -17,6 +17,15 @@ return [
         'whatsapp'  => ['Chat on WhatsApp', config('whatsapp')],
     ],
 
+    // Related services on the sub-service pages (templates/sections/service/related.php, P21)
+    'related_services' => [
+        'eyebrow' => 'Keep exploring',
+        'heading' => 'Related',
+        'accent'  => 'Services',
+        'part_of' => 'Part of {category}',
+        'explore' => 'Explore {name}',
+    ],
+
     // Office Hours card (templates/components/hours-card.php); the hours themselves come from config('hours')
     'hours_card' => [
         'title'      => 'Office Hours',

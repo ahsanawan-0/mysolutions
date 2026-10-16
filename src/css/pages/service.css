@@ -46,6 +46,18 @@
 .svc-text:not(.svc-text--band) .svc-text__copy p:first-child { color: var(--ms-ink); font-weight: var(--fw-medium); }   /* the quotable answer first */
 .svc-text__copy strong { color: var(--ms-ink); font-weight: var(--fw-bold); }
 .svc-text__actions { margin-top: var(--space-8); }
+/* A paragraph set as a pull line (`pull`, P21): the client's closing bold sentence, larger, with read-along */
+.svc-text .svc-text__copy .svc-text__pull {
+  margin-top: var(--space-4);
+  padding-left: var(--space-5);
+  border-left: 3px solid var(--azure-500);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-h4);
+  font-weight: var(--fw-medium);
+  color: var(--ms-ink);
+  text-wrap: balance;
+}
+.svc-text__pull strong { font-weight: inherit; }
 
 .svc-text__figure { position: relative; max-width: 520px; }
 .svc-text__image { border-radius: var(--r-xl); aspect-ratio: 4 / 5; }
@@ -130,6 +142,11 @@
 @media (min-width: 1024px) {
   .svc-steps__head { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
+/* `full` steps (P21: one or more paragraphs per step): while pinned only the active step shows its paragraphs, so five
+   full steps fit one viewport (as on the About page). Mobile, reduced motion and no JS keep every paragraph visible. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html.js .svc-steps .process-steps--full.is-anim .process-steps__step:not(.is-active) :is(.process-steps__text, .process-steps__detail) { display: none; }
+}
 
 /* ---------- subs: large glass cards with a corner-notch arrow ---------- */
 .svc-subs { position: relative; isolation: isolate; overflow: hidden; padding-block: var(--section-y); background: var(--ms-canvas); }
@@ -176,6 +193,7 @@
   box-shadow: inset 0 0 0 1px rgb(var(--white-rgb) / .95), inset 0 -24px 48px rgb(var(--azure-500-rgb) / .05);
 }
 .svc-card__tile { margin-bottom: var(--space-2); }
+.svc-card__chip { margin-bottom: calc(-1 * var(--space-2)); }
 .svc-card__title { margin: 0; font-size: var(--fs-h3); line-height: var(--lh-h3); }
 .svc-card__link { color: var(--ms-ink); text-decoration: none; }
 .svc-card__link::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: var(--r-lg); }   /* the whole card is the link */
@@ -239,11 +257,19 @@
 .svc-list__item-title { margin: 0; font-size: var(--fs-h4); line-height: var(--lh-h4); }
 .svc-list__text { margin: 0; line-height: var(--lh-lead); color: var(--text-2); }
 .svc-list__outro { margin: var(--space-10) 0 0; max-width: 68ch; line-height: var(--lh-lead); color: var(--ms-ink); font-weight: var(--fw-medium); }
+/* the client's **bold** inside a medium-weight closing line still has to read as bold */
+.svc-list__outro strong, .svc-why__outro strong, .svc-list__text strong, .svc-why__intro strong, .svc-list__intro strong { font-weight: var(--fw-bold); }
 @media (min-width: 768px) {
   .svc-list__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (min-width: 1024px) {
   .svc-list__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  /* 5 items: a 2 + 3 bento (the first two wider) */
+  .svc-list__grid--5 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .svc-list__grid--5 > :nth-child(-n + 2) { grid-column: span 3; }
+  .svc-list__grid--5 > :nth-child(n + 3) { grid-column: span 2; }
+  /* 4 items: 2 × 2 */
+  .svc-list__grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ---------- why: benefit rows (icon + bold-led sentence) (P21) ---------- */

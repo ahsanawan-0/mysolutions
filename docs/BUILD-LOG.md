@@ -1005,3 +1005,30 @@
 **Notes**
 - Applies to every page that closes with the CTA band (home, About, services, sectors, contact). The `grid-wave` component and `grid-wave.svg` stay available (styleguide) but are no longer used by the band.
 - Checked at 1440 (home) and 360 (contact): no console errors, no horizontal scroll.
+
+---
+
+## Deployment: GitHub + Vercel preview (16 October 2026)
+
+**Request:** push the code to https://github.com/ahsanawan-0/mysolutions and deploy it on Vercel with the CLI for a live URL.
+
+**Result**
+- GitHub: `main` pushed to `origin` (public repo `ahsanawan-0/mysolutions`).
+- Vercel: project `mysolutions` (scope `urksrkurksrk-6447s-projects`), live at **https://mysolutions-nu.vercel.app**. Deployed with `vercel deploy --prod --yes`; the Git integration could not be connected (the Vercel GitHub app has no access to `ahsanawan-0`), so pushes do not deploy.
+
+**Files created / changed**
+- `vercel.json`: `npm ci` + `npm run build`, static output `public/`, `api/index.php` on `vercel-php@0.9.0` (PHP 8.5; `symfony/yaml` 8.1 in the lock needs PHP 8.4+), `excludeFiles` keeps docs/design/source images out of the function, routes: `/` → PHP (otherwise Vercel served `public/index.php` as a static file), `/index(.php)` → 301 `/`, `/.htaccess` → 404, long cache on `/assets/build|fonts/`, filesystem, then everything else → PHP.
+- `api/index.php`: requires `public/index.php`.
+- `composer.json`: `scripts.vercel` (run by vercel-php after `composer install`) builds the Vite manifest inside the function too, so `vite()` finds `public/assets/build/manifest.json`; Vite's hashes are deterministic, so they match the static build.
+- `.vercelignore`: mirrors `.gitignore` (`.env`, `vendor`, `node_modules`, build output, BIOMEE…); `.gitignore` gains `.vercel` (added by `vercel link`).
+- `app/lib/helpers.php`: `storage_path()` (`STORAGE_PATH` env, default `storage/`); `app/bootstrap.php`, `app/lib/Mailer.php`, `app/lib/RateLimit.php` write through it, because the Vercel function's filesystem is read-only except `/tmp`.
+- `CLAUDE.md`: "Preview deploy" row in Commands.
+
+**Vercel environment (production):** `APP_ENV=staging` (noindex header + draft ribbon), `SITE_URL=https://mysolutions-nu.vercel.app`, `STORAGE_PATH=/tmp/storage`, `MAIL_DRIVER=log`, `VITE_DEV=false`.
+
+**Checks:** `/`, About, services hub + category, sectors, contact, sitemap, robots, llms.txt → 200; unknown path → 404; `/about-us` → 301 with slash; canonical and internal links use the Vercel domain; home in the browser: no console errors, every asset 200.
+
+**Deviations / follow-ups**
+- docs/11 §8 asks for a password-protected staging; this preview is public (noindex only). Turn on Vercel Deployment Protection for production if the client wants it private.
+- The contact form is not delivering mail here: `MAIL_DRIVER=log` writes `.eml` files to `/tmp`, which Vercel discards. Set `MAIL_DRIVER=smtp` + `SMTP_*` in Vercel once the client sends SMTP details. The form was not submitted during the checks.
+- `/faq/`, `/insights/`, `/thank-you/` return 404 until their prompts (P24+) are built.

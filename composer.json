@@ -19,6 +19,12 @@
             "app/lib/helpers.php"
         ]
     },
+    "scripts": {
+        "vercel": [
+            "test -d node_modules || npm ci --no-audit --no-fund",
+            "npm run build"
+        ]
+    },
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true,

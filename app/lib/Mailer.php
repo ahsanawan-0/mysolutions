@@ -57,7 +57,7 @@ final class Mailer
 
     private static function writeEml(string $kind, string $mime): bool
     {
-        $dir = base_path('storage/mail');
+        $dir = storage_path('mail');
         if (!is_dir($dir) && !mkdir($dir, 0775, true)) {
             self::log($kind, '', 'storage/mail is not writable');
             return false;
@@ -75,6 +75,6 @@ final class Mailer
     {
         $domain = str_contains($to, '@') ? substr($to, (int) strrpos($to, '@') + 1) : '-';
         $line = sprintf("[%s] %s to *@%s failed: %s\n", date('c'), $kind, $domain, preg_replace('/\s+/', ' ', $error));
-        @file_put_contents(base_path('storage/logs/mail.log'), $line, FILE_APPEND | LOCK_EX);
+        @file_put_contents(storage_path('logs/mail.log'), $line, FILE_APPEND | LOCK_EX);
     }
 }

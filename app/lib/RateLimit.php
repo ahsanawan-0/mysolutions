@@ -52,7 +52,7 @@ final class RateLimit
 
     private static function file(string $bucket, string $key): string
     {
-        $dir = base_path('storage/cache/ratelimit');
+        $dir = storage_path('cache/ratelimit');
         if (!is_dir($dir)) {
             mkdir($dir, 0775, true);
         }

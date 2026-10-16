@@ -28,7 +28,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', APP_ENV === 'local' ? '1' : '0');
 ini_set('display_startup_errors', APP_ENV === 'local' ? '1' : '0');
 ini_set('log_errors', '1');
-ini_set('error_log', BASE_PATH . '/storage/logs/app.log');
+ini_set('error_log', storage_path('logs/app.log'));
 
 set_exception_handler(static function (Throwable $e): void {
     error_log(sprintf('[%s] %s in %s:%d', $e::class, $e->getMessage(), $e->getFile(), $e->getLine()));

@@ -1,0 +1,13 @@
+# Files the Vercel CLI must not upload (mirrors .gitignore; the build installs vendor/ and node_modules/ itself)
+.env
+.git
+.venv
+.claude
+BIOMEE
+node_modules
+vendor
+public/assets/build
+storage/logs/*
+storage/cache/*
+storage/mail/*
+design/logo-motion/outputs

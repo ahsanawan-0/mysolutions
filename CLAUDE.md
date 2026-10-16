@@ -74,6 +74,7 @@ The client is still delivering content, so structure and content are separated:
 | Logo + favicons | `npm run logo` → `scripts/logo.mjs` measures the client JPEGs in `logos/`, fits the wordmark (Khand, build-time only) and writes `public/assets/brand/*.svg` + `logo-512.png`, `public/favicon.ico`, `icon-*.png`, `apple-touch-icon.png`, `icon.svg`, `site.webmanifest`, the splash input `design/logo-motion/logo.svg` and the wipe geometry in `design/logo-motion/outputs/fit_work/geometry.json` |
 | OG image | `npm run og` → `scripts/og.mjs` renders `public/assets/og/default.jpg` (1200×630) from the tokens + the white lockup |
 | Lint | `php -l <file>` on every changed PHP file (Standard check 1) |
+| Preview deploy | `vercel deploy --prod --yes` → https://mysolutions-nu.vercel.app (Vercel project `mysolutions`, CLI only, no Git integration). `vercel.json` runs `npm run build` for the static `public/` output and `api/index.php` on `vercel-php@0.9.0` (PHP 8.5, whose composer `vercel` script rebuilds the same Vite manifest); env `APP_ENV=staging`, `SITE_URL`, `STORAGE_PATH=/tmp/storage`, `MAIL_DRIVER=log` |
 
 Request flow: `public/index.php` → `app/bootstrap.php` → `App\Router::dispatch()` (normalise → `app/redirects.php` → `app/routes.php` → 404). Page templates set `$page` and print their body; `templates/layouts/base.php` wraps it. On `local`, a planned route without a template shows `templates/pages/_stub.php`.
 

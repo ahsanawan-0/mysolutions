@@ -18,6 +18,16 @@ function public_path(string $path = ''): string
     return base_path('public' . ($path === '' ? '' : '/' . ltrim($path, '/')));
 }
 
+/**
+ * Absolute path inside the writable storage folder: storage/ by default, or STORAGE_PATH where the project
+ * root is read-only (Vercel: /tmp/storage).
+ */
+function storage_path(string $path = ''): string
+{
+    $root = rtrim((string) env('STORAGE_PATH', base_path('storage')), '/');
+    return $root . ($path === '' ? '' : '/' . ltrim($path, '/'));
+}
+
 /** Absolute path to a template file: templates_path('pages/home') → …/templates/pages/home.php */
 function templates_path(string $template): string
 {

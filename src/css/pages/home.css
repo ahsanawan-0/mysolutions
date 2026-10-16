@@ -279,7 +279,21 @@ html.no-js .hero__controls { display: none; }
 .hero__ctrl--pause .icon--play { display: none; }
 .hero__ctrl--pause[aria-pressed="true"] .icon--pause { display: none; }
 .hero__ctrl--pause[aria-pressed="true"] .icon--play { display: block; }
-.hero__ctrl--pause { margin-left: var(--space-1); }
+/* Pause: hidden until needed (client, 16 October 2026). Out of the flow so prev · dots · next stay centred; it shows
+   at the row's right end while the pointer is over the slider, on keyboard focus and while paused (WCAG 2.2.2). */
+.hero__ctrl--pause {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-hover) var(--ease-apple), background-color var(--dur-hover) var(--ease-apple);
+}
+@media (hover: hover) {
+  .hero__stage:hover .hero__ctrl--pause { opacity: 1; pointer-events: auto; }
+}
+.hero__ctrl--pause:focus-visible, .hero__ctrl--pause[aria-pressed="true"] { opacity: 1; pointer-events: auto; }
 .hero__dots { display: flex; align-items: center; gap: 2px; margin: 0 var(--space-1); padding: 0; list-style: none; }
 .hero__dot {
   display: block;
@@ -303,11 +317,11 @@ html.no-js .hero__controls { display: none; }
 .hero__dot:hover::before { background: rgb(var(--white-rgb) / .7); }
 .hero__dot[aria-current="true"]::before { background: var(--sky-300); transform: scale(1.5); }
 .hero__dot:focus-visible { outline: var(--focus-ring); outline-color: var(--sky-300); outline-offset: -8px; border-radius: var(--r-pill); }
-/* One row needs 3 × 44 + 12 dots + gaps ≈ 466px. Narrower sliders (phones, the 1024–1100 two-column hero) fold the
-   dots into two rows between prev and next (--dot-cols = half the cards, set by the template), DOM order kept. */
-@container (max-width: 465.98px) {
+/* One centred row (2 × 44 + 12 dots + gaps ≈ 392px) plus room for the pause at its right end needs ≈ 488px. Narrower
+   sliders (phones, the 1024–1100 two-column hero) fold the dots into two rows between prev and next (--dot-cols = half
+   the cards, set by the template), DOM order kept. */
+@container (max-width: 487.98px) {
   .hero__dots { display: grid; grid-template-columns: repeat(var(--dot-cols, 6), 24px); gap: 0; margin: 0; }
-  .hero__ctrl--pause { margin-left: 0; }
 }
 
 /* ---------- Entrance pre-states (P09, docs/05 §6): applied from first paint under html.js so the intro causes no

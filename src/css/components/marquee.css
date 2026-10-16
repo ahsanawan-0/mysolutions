@@ -63,9 +63,16 @@
   border: 1px solid var(--ms-line);
   box-shadow: var(--shadow-1);
   cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+  transition: opacity var(--dur-hover) var(--ease-apple), background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
 }
 .marquee__pause:hover { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+/* Hidden until needed (client, 16 October 2026): the button shows while the pointer is over its moving row, on
+   keyboard focus and while paused, so the row stays clean and WCAG 2.2.2 is still met. Invisible = click-through. */
+.marquee__pause { opacity: 0; pointer-events: none; }
+@media (hover: hover) {
+  [data-anim~="marquee"]:hover > .marquee__pause, .marquee__pause:hover { opacity: 1; pointer-events: auto; }
+}
+.marquee__pause:focus-visible, .marquee__pause[aria-pressed="true"] { opacity: 1; pointer-events: auto; }
 .marquee__pause .icon--play { display: none; }
 .is-paused > .marquee__pause .icon--pause, .marquee__pause[aria-pressed="true"] .icon--pause { display: none; }
 .is-paused > .marquee__pause .icon--play, .marquee__pause[aria-pressed="true"] .icon--play { display: block; }

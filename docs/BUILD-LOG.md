@@ -1032,3 +1032,19 @@
 - docs/11 §8 asks for a password-protected staging; this preview is public (noindex only). Turn on Vercel Deployment Protection for production if the client wants it private.
 - The contact form is not delivering mail here: `MAIL_DRIVER=log` writes `.eml` files to `/tmp`, which Vercel discards. Set `MAIL_DRIVER=smtp` + `SMTP_*` in Vercel once the client sends SMTP details. The form was not submitted during the checks.
 - `/faq/`, `/insights/`, `/thank-you/` return 404 until their prompts (P24+) are built.
+
+---
+
+## Client change: no draft ribbon on the preview, pause buttons hidden until needed (16 October 2026)
+
+**Request:** remove the "Draft · noindex · not in sitemap" ribbon and the play/pause buttons from the live preview.
+
+**Files changed**
+- `templates/layouts/base.php`: the draft ribbon also needs `DRAFT_RIBBON` (default `true`); Vercel has `DRAFT_RIBBON=false`. Local still shows it. The preview keeps its `X-Robots-Tag: noindex` header (staging).
+- `src/css/components/marquee.css`: every `.marquee__pause` (hero chips, services hub sectors, testimonials, marquee component) is invisible and click-through until the pointer is over its moving row (`[data-anim~="marquee"]:hover`, `hover: hover` devices only), it has keyboard focus, or it is pressed.
+- `src/css/components/footer.css`: the footer strip's button sits beside the strip, so `.site-footer__strip:hover ~` reveals it.
+- `src/css/pages/home.css`: the hero slider's pause leaves the flow (absolute at the controls' right end) so prev · dots · next stay centred, and follows the same reveal rules. The two-row dots threshold moves from 466px to 488px so the revealed pause never overlaps "next" in the one-row layout.
+
+**Decision:** L30 (WCAG 2.2 AA) is locked, so the buttons were not deleted. The client chose "hide until needed": 2.2.2 still has a pause mechanism (keyboard focus, pointer hover), and `prefers-reduced-motion` still stops all auto-motion. On touch screens the buttons stay hidden.
+
+**Checks:** local 1440: the slider pause and the footer pause are hidden (opacity 0, `pointer-events: none`) and appear on hover; prev · dots · next centred. 360: no horizontal scroll, pause hidden. No console errors; `npm run build` clean.

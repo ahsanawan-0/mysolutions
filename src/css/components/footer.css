@@ -225,6 +225,10 @@
 }
 .site-footer__strip-pause:hover { background: var(--azure-650); }
 .site-footer__strip-pause:focus-visible { outline-color: var(--sky-300); }
+/* The button sits beside the aria-hidden strip, so the strip's hover reveals it here (rule in components/marquee.css) */
+@media (hover: hover) {
+  .site-footer__strip:hover ~ .site-footer__strip-pause { opacity: 1; pointer-events: auto; }
+}
 
 /* ---------- Bottom bar: disclosure + legal links (on the canvas) ---------- */
 .site-footer__bottom {

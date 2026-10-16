@@ -12,7 +12,9 @@ $headerVariant = $page['header'] ?? 'default';
 $headerTheme = $page['header_theme'] ?? 'light';
 $overlay = (bool) ($page['header_overlay'] ?? false);
 $bodyClass = trim(($page['body_class'] ?? '') . ($overlay ? ' has-overlay-header' : ''));
-$showDraftRibbon = !is_production() && ($page['status'] ?? 'draft') !== App\Page::PUBLISHED && ($page['canonical'] ?? false) !== false;
+// DRAFT_RIBBON=false hides it on a client-facing preview (Vercel); the pages stay noindex there either way
+$showDraftRibbon = !is_production() && filter_var(env('DRAFT_RIBBON', 'true'), FILTER_VALIDATE_BOOLEAN)
+    && ($page['status'] ?? 'draft') !== App\Page::PUBLISHED && ($page['canonical'] ?? false) !== false;
 ?>
 <!doctype html>
 <html lang="en-GB" class="no-js">

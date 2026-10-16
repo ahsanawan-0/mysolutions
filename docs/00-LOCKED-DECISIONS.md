@@ -38,7 +38,7 @@
 | L13 🔒 | **Apple design principles** (clarity, deference, depth, hierarchy, harmony, consistency, simplicity) applied to the web, with concrete tokens | 03 |
 | L14 🔒 | **Super UI/UX**: premium, unique sections, glass effects, parallax | 03, 04, 06 |
 | L15 🔒 | **Innovax** is the primary UI reference: glass nav pill, two-voice headings, notched cards, image-filled numbers, team cards, blog cards. *15 October 2026: the two-voice accent words are the same upright Figtree, set apart by the brand blue only (no italic serif).* | 04 |
-| L16 🔒 | All images in `inspirations/` are references for section layouts and backgrounds (Sun Over, Alternate Futures hex tiles, Vencap bento, glass skyscraper, node network, ribbon, swirl lines, grid-wave) | 04 |
+| L16 🔒 | All images in `inspirations/` are references for section layouts and backgrounds (Sun Over, Alternate Futures hex tiles, Vencap bento, glass skyscraper, node network, ribbon, swirl lines, grid-wave). *16 October 2026: the client removed the grid-wave lines from the CTA band; keep that band clean (gradient + soft glows + faded logo mark).* | 04 |
 | L17 🔒 | **About page order:** About Us → Our Story → Our Approach → Why Work With Us? → Our Mission & Vision | 08 |
 
 ## E. Hero (non-negotiable)

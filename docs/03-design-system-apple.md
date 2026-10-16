@@ -126,7 +126,7 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 | C18 | **Tabs** | Sector/service switcher, ARIA tabs pattern, sliding indicator |
 | C19 | **Form fields** | 52px inputs, floating labels, inline validation messages, success state with check-draw animation |
 | C20 | **Quick-Start bar** | Hero bar (sector + service selects + button) |
-| C21 | **CTA band** | Full-width navy/azure grid-wave background, two-voice heading, primary + phone CTA |
+| C21 | **CTA band** | Full-width navy → azure gradient with two soft glows and the faded logo mark (no line art: the client removed the grid-wave on 16 October 2026), two-voice heading, primary + phone CTA |
 | C22 | **Breadcrumbs** | Small, ink-2, chevrons; schema-backed |
 | C23 | **Footer** | see `08` §Footer |
 | C24 | **Cookie banner** | Bottom glass sheet; Accept all / Reject all / Manage, all **equal prominence** |

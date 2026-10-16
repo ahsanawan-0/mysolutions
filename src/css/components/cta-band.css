@@ -1,4 +1,5 @@
-/* C21 CTA band: Navy 900 → Azure 800 gradient (120° brand angle), animated grid-wave layer, faded logo mark right. */
+/* C21 CTA band: Navy 900 → Azure 800 gradient (120° brand angle), two soft glows, faded logo mark right.
+   Clean on purpose: the client removed the grid-wave line art on 16 October 2026. */
 .cta-band {
   position: relative;
   isolation: isolate;
@@ -7,11 +8,14 @@
   color: var(--ms-white);
   padding-block: var(--section-y);
 }
-.cta-band__bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-.cta-band__wave {
-  opacity: .5;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 55%);
-  mask-image: linear-gradient(to right, transparent 0%, black 55%);
+.cta-band__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 90% at 88% 10%, rgb(var(--azure-500-rgb) / .22), transparent 70%),
+    radial-gradient(45% 70% at 6% 100%, rgb(var(--sky-300-rgb) / .10), transparent 70%);
 }
 /* The logo mark, faded into the gradient. P06 scrubs its rise + rotation (docs/06 §6 S10). */
 .cta-band__mark {
@@ -48,9 +52,6 @@
   .cta-band__actions { justify-content: flex-end; }
   .cta-band__copy { max-width: 40ch; }
   .cta-band--long .cta-band__copy { max-width: 60ch; }
-}
-@media (prefers-reduced-transparency: reduce) {
-  .cta-band__wave { display: none; }
 }
 @media print {
   .cta-band { background: var(--ms-white); color: var(--ms-ink); }

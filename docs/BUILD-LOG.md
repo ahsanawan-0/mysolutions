@@ -990,3 +990,18 @@
 **Follow-ups**
 - P24: pre-fill, inline validation, loading state, thank-you page.
 - Client: response time (FAQ + auto-reply), approval of the hero lead, form intro, call strip and auto-reply copy; SMTP credentials for production (`MAIL_DRIVER=smtp`); generate the static office map image (`contact/office-map`).
+
+---
+
+## Client change: clean CTA band background (16 October 2026)
+
+**Request:** remove the wave lines behind the "Ready to Win Your Next Contract?" band and use a clean background.
+
+**Files changed**
+- `templates/components/cta-band.php`: the animated `grid-wave` layer is no longer printed (the faded logo mark stays).
+- `src/css/components/cta-band.css`: `.cta-band__bg` now paints two soft radial glows (azure top-right, sky bottom-left) over the navy → azure gradient; the `.cta-band__wave` rules are removed.
+- `templates/sections/home/cta.php` (docblock), `docs/03` C21, `docs/00` L16 note.
+
+**Notes**
+- Applies to every page that closes with the CTA band (home, About, services, sectors, contact). The `grid-wave` component and `grid-wave.svg` stay available (styleguide) but are no longer used by the band.
+- Checked at 1440 (home) and 360 (contact): no console errors, no horizontal scroll.

@@ -1,0 +1,201 @@
+/* ==========================================================================
+   Contact (PROMPTS P23, docs/08 §11): contact cards, the quote form section #quote, the static map + socials and
+   the call strip. The hero is C32 `simple` (components/hero-inner.css), the fields C38 (components/form.css), the
+   FAQ the service FAQ block (pages/service.css).
+   ========================================================================== */
+
+/* ---------- Contact cards: white cards, icon tile, corner-notch arrow ---------- */
+.contact-cards { padding-block: var(--space-12) var(--space-16); background: var(--ms-canvas); }
+.contact-cards .contact-cards__grid {   /* two classes: base.css resets ul[class] */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contact-cards__item { display: flex; min-width: 0; }
+@media (min-width: 640px) {
+  .contact-cards .contact-cards__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .contact-cards__item:last-child { grid-column: 1 / -1; }
+}
+@media (min-width: 1024px) {
+  /* 3 + 2: Call · WhatsApp · Email, then Office · Hours (wider, for the address) */
+  .contact-cards .contact-cards__grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-6); }
+  .contact-cards__item { grid-column: span 2; }
+  .contact-cards__item:nth-child(4), .contact-cards__item:last-child { grid-column: span 3; }
+}
+
+.contact-card {
+  --arrow: 44px;
+  --agap: 6px;
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+.contact-card__surface {
+  --nw: calc(var(--arrow) + var(--agap));
+  --nh: calc(var(--arrow) + var(--agap));
+  --nr: calc(var(--arrow) / 2 + var(--agap));
+  --nf: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-6);
+  border-radius: var(--r-lg);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  transition: background-color var(--dur-hover) var(--ease-apple);
+}
+.contact-card__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-4);
+  border-radius: var(--r-sm);
+  background: var(--azure-50);
+  box-shadow: inset 0 0 0 1px var(--azure-100);
+  color: var(--azure-650);
+}
+.contact-card__label {
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: var(--lh-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.contact-card__value {
+  font-family: var(--font-display);
+  font-size: var(--fs-ui-lg);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+  color: var(--ms-ink);
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+.contact-card--link .contact-card__value { padding-right: calc(var(--nw) - var(--space-4)); }
+.contact-card__link { text-decoration: none; }
+.contact-card__link::after { content: ""; position: absolute; inset: 0; z-index: 3; border-radius: var(--r-lg); }   /* the whole card is the link */
+.contact-card__link:focus-visible { outline: none; }
+.contact-card:has(.contact-card__link:focus-visible) .contact-card__surface { outline: var(--focus-ring); outline-offset: 3px; }
+.contact-card__note { font-size: var(--fs-small); color: var(--text-2); }
+
+.contact-card__arrow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--arrow);
+  height: var(--arrow);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ms-line);
+  background: var(--ms-white);
+  color: var(--navy-900);
+  box-shadow: var(--shadow-1);
+  pointer-events: none;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.contact-card__arrow .icon { transition: translate var(--dur-hover) var(--ease-apple); }
+@media (hover: hover) {
+  .contact-card--link:hover .contact-card__surface { background: var(--azure-50); }
+  .contact-card--link:hover .contact-card__link { color: var(--azure-700); }
+  .contact-card--link:hover .contact-card__arrow { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+  .contact-card--link:hover .contact-card__arrow .icon { translate: 2px 0; }
+  .contact-card--office:hover .contact-card__arrow .icon,
+  .contact-card--whatsapp:hover .contact-card__arrow .icon { translate: 2px -2px; }
+}
+.contact-card:has(.contact-card__link:focus-visible) .contact-card__arrow { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+
+/* ---------- Quote form #quote ---------- */
+.contact-form { padding-block: var(--section-y); background: var(--ms-mist); }
+.contact-form__inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-10); }
+.contact-form__aside { display: grid; align-content: start; gap: var(--space-4); }
+.contact-form__aside .eyebrow { margin: 0; }
+.contact-form__title { margin: 0; text-wrap: balance; }
+.contact-form__intro, .contact-form__direct { margin: 0; max-width: 46ch; line-height: var(--lh-lead); color: var(--text-2); }
+.contact-form__direct a { color: var(--link); font-weight: var(--fw-medium); white-space: nowrap; }
+.contact-form__panel {
+  min-width: 0;
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  box-shadow: var(--shadow-2), inset 0 0 0 1px var(--ms-line);
+}
+@media (min-width: 640px) {
+  .contact-form__panel { padding: var(--space-10); }
+}
+@media (min-width: 1024px) {
+  .contact-form__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-16); }
+  .contact-form__aside { position: sticky; top: calc(var(--header-h-initial) + var(--space-8)); }
+}
+
+/* ---------- Map + socials ---------- */
+.contact-map { padding-block: var(--section-y); background: var(--ms-canvas); }
+.contact-map__inner { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-10); align-items: center; }
+.contact-map__text { display: grid; justify-items: start; gap: var(--space-5); }
+.contact-map__title { margin: 0; }
+.contact-map__address { font-style: normal; font-size: var(--fs-lead); line-height: var(--lh-lead); color: var(--ms-ink); }
+.contact-map__socials { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+.contact-map__socials-label { margin: 0; font-size: var(--fs-eyebrow); font-weight: var(--fw-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--text-2); }
+.contact-map .contact-map__socials-list { display: flex; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.contact-map__social {
+  display: grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ms-line);
+  background: var(--ms-white);
+  color: var(--navy-900);
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.contact-map__social:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (hover: hover) {
+  .contact-map__social:hover { background: var(--azure-650); color: var(--ms-white); border-color: transparent; }
+}
+.contact-map__media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-2);
+}
+.contact-map__media:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
+.contact-map__pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  translate: -50% -50%;
+  border-radius: var(--r-pill);
+  background: var(--azure-650);
+  color: var(--ms-white);
+  box-shadow: var(--shadow-glow);
+  transition: scale var(--dur-hover) var(--ease-spring);
+}
+/* until the static map is generated, keep the pin clear of the placeholder's label */
+.contact-map__media:has(.img-placeholder) .contact-map__pin { top: 34%; }
+@media (hover: hover) {
+  .contact-map__media:hover .contact-map__pin { scale: 1.08; }
+}
+@media (min-width: 1024px) {
+  .contact-map__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-16); }
+}
+
+/* ---------- Call strip ---------- */
+.contact-strip { padding-block: var(--space-12) var(--space-16); }
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-card__surface, .contact-card__arrow, .contact-card__arrow .icon, .contact-map__social, .contact-map__pin { transition: none; }
+}

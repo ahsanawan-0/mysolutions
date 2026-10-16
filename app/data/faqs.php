@@ -79,5 +79,12 @@ return [
             'group' => 'services',
             'pages' => ['home', 'faq', 'bid-proposal-management', 'tender-bid-writing', 'expert-review'],
         ],
+        [ // PROVISIONAL (P23: the contact page's mini FAQ; the response time is for the client to confirm)
+            'id'    => 'response-time',
+            'q'     => 'How quickly will you respond?',
+            'a'     => '[[PENDING: response time]]',
+            'group' => 'basics',
+            'pages' => ['contact', 'faq'],
+        ],
     ],
 ];

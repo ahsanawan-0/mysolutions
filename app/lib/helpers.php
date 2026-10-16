@@ -516,6 +516,33 @@ function rich(string $text): string
         '<a href="' . e(url(html_entity_decode($m[2], ENT_QUOTES | ENT_HTML5))) . '">' . $m[1] . '</a>', $html) ?? $html;
 }
 
+/** Contact page copy (app/data/contact.php, P23): contact('form.labels.name'). */
+function contact(string $key, mixed $default = null): mixed
+{
+    static $contact = null;
+    $contact ??= require base_path('app/data/contact.php');
+    return data_get($contact, $key, $default);
+}
+
+/**
+ * A colour token from src/css/tokens.css (`--navy-900: #…`) for places CSS cannot reach, e.g. the inline styles of
+ * the HTML emails (P23), so no hex value is typed outside tokens.css. Returns '' for an unknown token.
+ */
+function token(string $name): string
+{
+    static $tokens = null;
+    if ($tokens === null) {
+        $tokens = [];
+        $css = (string) @file_get_contents(base_path('src/css/tokens.css'));
+        if (preg_match_all('/--([a-z0-9-]+):\s*(#[0-9A-Fa-f]{3,8})(?![0-9A-Fa-f])/', $css, $m, PREG_SET_ORDER)) {
+            foreach ($m as [, $key, $hex]) {
+                $tokens[$key] ??= $hex;
+            }
+        }
+    }
+    return $tokens[$name] ?? '';
+}
+
 /** Dot-path lookup in a nested array: data_get($arr, 'a.b.c'). */
 function data_get(array $data, string $key, mixed $default = null): mixed
 {

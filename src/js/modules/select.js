@@ -57,6 +57,10 @@ export default function initSelect(root) {
   else if (select.getAttribute('aria-label')) combo.setAttribute('aria-label', select.getAttribute('aria-label'));
   if (select.disabled) combo.setAttribute('aria-disabled', 'true');
   if (select.required) combo.setAttribute('aria-required', 'true');
+  // server-side errors and hints (P23 forms) belong to the control people actually use
+  ['aria-invalid', 'aria-describedby'].forEach((attr) => {
+    if (select.hasAttribute(attr)) combo.setAttribute(attr, select.getAttribute(attr));
+  });
   const valueEl = document.createElement('span');
   valueEl.className = 'select__value';
   combo.append(valueEl);

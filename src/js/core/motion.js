@@ -94,6 +94,8 @@ const scrollPadding = () => parseFloat(getComputedStyle(document.documentElement
 
 function focusTarget(target) {
   if (target === document.body) return;
+  // focus already inside the target (e.g. a form's error summary after #quote) stays where it is
+  if (document.activeElement !== document.body && target.contains(document.activeElement)) return;
   if (!target.hasAttribute('tabindex')) {
     target.setAttribute('tabindex', '-1');
     target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });

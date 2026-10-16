@@ -948,3 +948,45 @@
 
 **Follow-ups**
 - C04: per-sector copy (challenges, buyers, sector-specific "how we help", FAQs) until the doorway check is clean; approval of the hub copy, then `status` → published.
+
+---
+
+## P23: Contact page + form backend (16 October 2026)
+
+**Commit:** `P23: contact page and form backend`
+
+**Files created**
+- `app/data/contact.php`: SEO (title "Contact My Solutionz | Get a Free Quote", the prompt's description), hero (H1 "Let's Talk About" + *Your Next Contract*, lead `// PROVISIONAL`), card labels, the form copy (labels, hints, options, privacy line, submit "Send Enquiry", counter, every error message, rate-limit / send-failure notices), map, socials, FAQ heading, call strip, and both emails (enquiry subject `New enquiry: {service} – {name}`; auto-reply paragraphs `// PROVISIONAL`).
+- `templates/pages/contact.php` (ContactPage, published, breadcrumbs Home › Contact Us) + `templates/sections/contact/cards.php` (Call `tel:`, WhatsApp, Email `mailto:`, Office → Google Maps search in a new tab with `rel="noopener"` and a visually-hidden "(opens in a new tab)", Office hours from `config('hours')` + "Email us any time"; whole-card links with a corner-notch arrow), `form.php` (`#quote`), `map.php` (static map image placeholder `contact/office-map` linking to Google Maps, address, socials). Mini FAQ = the service FAQ block with `faqs('contact')`; call strip = `micro-cta` with `tel:`.
+- `templates/pages/400.php`: "Your form session has expired" (noindex, no canonical), links back to the form, phone and email.
+- `app/controllers/ContactController.php`: `submit()` = CSRF (400) → honeypot `website` / signed `ts` younger than 3 s or forged (silent 303 to `/thank-you/`, nothing sent, counted by the rate limit) → validation → rate limit 5 / hour / IP (429 + friendly notice) → optional Turnstile → enquiry mail (503 + notice on failure) → auto-reply → PRG 303 to `/thank-you/`. Validation: name required ≤ 100, company ≤ 150, email required + `FILTER_VALIDATE_EMAIL` ≤ 254, phone optional (digits, spaces, + ( ) -, 7–20 digits), sector / service / call-back whitelisted (sector slugs + other; sub-service slugs, plus category slugs for P24), deadline a real date not in the past, message 10–2,000, marketing only `1`. Errors re-render the page with values kept (422).
+- `app/lib/Csrf.php` (session started only by form pages: `ms_session`, HttpOnly, SameSite=Lax, Secure on HTTPS, strict mode; token + HMAC-signed render time), `RateLimit.php` (JSON file per bucket + hashed IP in `storage/cache/ratelimit/`, `flock`), `Validator.php` (control characters stripped, single-line fields collapsed, so no header injection), `Mailer.php` (PHPMailer SMTP from `.env`, or `MAIL_DRIVER=log` → `.eml` files in `storage/mail/`; failures to `storage/logs/mail.log` with the recipient's domain only, no bodies).
+- `templates/emails/enquiry.php` + `enquiry-text.php` (all fields, Reply-To the sender), `autoreply.php` + `autoreply-text.php` (thanks, what happens next, the chosen service/sector, contact details, privacy link, legal name + company number). Table layout, inline styles, colours from `tokens.css` via `token()`.
+- `src/css/components/form.css` (C38 form fields), `src/css/pages/contact.css`, `src/js/modules/form.js` (character counter, focus on the error summary, summary links focus their field or the custom select's combobox).
+
+**Files changed**
+- `app/lib/Router.php`: a route may hand POSTs to a controller (`'post' => [Class, 'method']`); `render()` / `redirect()` are public (non-301 redirects send `Cache-Control: no-cache`). `app/routes.php`: `/contact-us/` → `pages/contact` + `ContactController::submit`.
+- `app/lib/helpers.php`: `contact()`, `token()` (a hex colour from `tokens.css`, for emails). `app/data/faqs.php`: "How quickly will you respond?" (`[[PENDING: response time]]`, tagged contact + faq; hidden on production while pending).
+- `src/js/modules/select.js`: copies `aria-invalid` / `aria-describedby` from the native select to the combobox. `src/js/core/motion.js`: `focusTarget()` leaves focus alone when it is already inside the hash target (the `#quote` re-alignment was stealing focus from the error summary).
+- `.env.example`: `TURNSTILE_ENABLED=false`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`. `src/css/main.css`, `docs/03` C38, CLAUDE.md.
+
+**Decisions**
+- Status codes on re-render: 422 (validation), 429 (rate limit), 503 (send failure). Chrome logs a "Failed to load resource" console line for a 4xx document; that line is expected on those responses only.
+- The session cookie is strictly necessary (CSRF) and starts only on pages that render or handle a form, never site-wide (docs/13 §2).
+- The time-trap stamp is signed with the session token, so a bot cannot post an old timestamp; a missing or forged stamp is treated like a fast submit.
+- The service select lists sub-services only (grouped per category, as in the hero Quick-Start); category slugs are accepted server-side for the P24 pre-fill.
+- Inputs use 16px text (iOS does not zoom on focus); labels, hints and errors keep the 14px scale.
+
+**Deviations**
+- None against the prompt. `/thank-you/` is still the local stub until P24.
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean; `/contact-us/` HTTP 200, no PHP notices.
+- Acceptance (curl with a cookie jar): valid submission after 3 s → 303 to `/thank-you/` + 2 `.eml` files (enquiry with Reply-To the sender, auto-reply); invalid → 422 with a 6-link error summary, 6 `aria-invalid` fields and values kept; honeypot filled and a < 3 s submit → silent 303, no mail; missing CSRF → 400 "Your form session has expired"; 6th successful submission within the hour → 429 with the rate-limit notice. Test mail and rate-limit files removed afterwards.
+- Browser (Playwright, 360): keyboard order name → company → email → phone → sector / service comboboxes → date → call-back; a sector chosen with the keyboard is posted and kept after an error; focus lands on the error summary; summary links focus the field; counter "2 of 2,000 characters".
+- Widths 360 / 768 / 1024 / 1440 with motion and 360 / 1440 reduced: no horizontal scroll, no console errors, no hidden text.
+- `seo-audit --all`: 31 pages + 6 legacy redirects, 0 failing. `check-content`: the new PROVISIONAL lines and `[[PENDING: response time]]` are listed.
+
+**Follow-ups**
+- P24: pre-fill, inline validation, loading state, thank-you page.
+- Client: response time (FAQ + auto-reply), approval of the hero lead, form intro, call strip and auto-reply copy; SMTP credentials for production (`MAIL_DRIVER=smtp`); generate the static office map image (`contact/office-map`).

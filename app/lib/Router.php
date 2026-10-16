@@ -7,7 +7,7 @@ namespace App;
  * Request dispatcher, applied in this order:
  *  1. Normalise the path (lowercase, trailing slash for pages) — one 301 at most.
  *  2. app/redirects.php: old-site URLs → one-hop 301 or 410.
- *  3. app/routes.php: exact paths and {param} patterns → template or controller.
+ *  3. app/routes.php: exact paths and {param} patterns → template or controller (`post` → controller for POST).
  *  4. Real 404.
  */
 final class Router
@@ -45,6 +45,13 @@ final class Router
 
             if (!empty($route['local_only']) && !is_local()) {
                 self::render('pages/404', [], 404);
+            }
+
+            // A route may hand POST requests to a controller (P23: 'post' => [ContactController::class, 'submit'])
+            if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($route['post'])) {
+                [$class, $method] = $route['post'];
+                (new $class())->$method($params, $route);
+                exit;
             }
 
             if (isset($route['controller'])) {
@@ -153,7 +160,7 @@ final class Router
         return true;
     }
 
-    private static function redirect(string $target, int $status): never
+    public static function redirect(string $target, int $status): never
     {
         $location = str_starts_with($target, 'http') ? $target : url($target);
         http_response_code($status);
@@ -166,8 +173,9 @@ final class Router
      * Render a page template inside the base layout.
      * The page template sets `$page` (title, description, canonical, robots, …) and prints its body;
      * Seo::prepare() normalises and validates it before the layout renders the <head>.
+     * Public so a controller can re-render its page (P23: the contact form with errors and the values kept).
      */
-    private static function render(string $__template, array $__vars, int $__status): never
+    public static function render(string $__template, array $__vars, int $__status): never
     {
         http_response_code($__status);
         header('Content-Type: text/html; charset=UTF-8');

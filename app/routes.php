@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Controllers\ContactController;
 use App\Controllers\LlmsController;
 use App\Controllers\RobotsController;
 use App\Controllers\SitemapController;
@@ -57,7 +58,7 @@ $routes += [
     '/insights/{slug}/'           => ['template' => 'pages/insights/single',   'built_by' => 'P26'],
 
     '/faq/'        => ['template' => 'pages/faq',       'built_by' => 'P27', 'sitemap' => 'pages'],
-    '/contact-us/' => ['template' => 'pages/contact',   'built_by' => 'P23', 'sitemap' => 'pages'],
+    '/contact-us/' => ['template' => 'pages/contact',   'built_by' => 'P23', 'sitemap' => 'pages', 'post' => [ContactController::class, 'submit']],
     '/thank-you/'  => ['template' => 'pages/thank-you', 'built_by' => 'P24'],   // noindex: never in the sitemap
 
     '/privacy-policy/'       => ['template' => 'pages/legal/privacy-policy',       'built_by' => 'P28', 'sitemap' => 'pages'],

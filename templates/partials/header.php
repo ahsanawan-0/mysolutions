@@ -14,6 +14,8 @@ declare(strict_types=1);
  *                            sticky header everywhere else (compact glass, hide on scroll down, theme from the
  *                            sections). Prints the <header> only (the mobile sheet and action bar come from the
  *                            hero's header) and namespaces its logo ids with `hf-`.
+ * @var array|null  $quote   P24: the page's pre-fill context (['service' => slug] | ['sector' => slug], from
+ *                            $page['quote']) for every "Get a Free Quote" link here (quote_url()).
  */
 $variant = $variant ?? 'default';
 $theme = $theme ?? 'light';
@@ -22,7 +24,7 @@ $services = services();
 $sectors = sectors();
 $current = current_path();
 $isCurrent = static fn (array $item): bool => !empty($item['exact']) ? $current === $item['url'] : is_active($item['url']);
-$quoteUrl = url('/contact-us/') . '#quote';
+$quoteUrl = url(quote_url($quote ?? []));
 $follow = !empty($follow) && $variant === 'default';
 $logoPrefix = $follow ? 'hf' : 'hl';
 $menuId = static fn (string $menu): string => ($follow ? 'hf-' : '') . 'menu-' . $menu;   // unique per header: both print on hero pages

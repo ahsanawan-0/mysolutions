@@ -53,6 +53,7 @@ $page = [
         ], $category['subs']),
     ])],
     'body_class'     => 'page-service page-service-category page-service--' . $category['colour'],
+    'quote'          => ['service' => $slug],
     'header_theme'   => 'dark',
     'header_overlay' => true,
 ];
@@ -93,6 +94,6 @@ $cta = $data['cta'] ?? [];
     'sub'           => $cta['sub'] ?? null,
     'text'          => $cta['paras'] ?? null,
     'strong'        => $cta['strong'] ?? null,
-    'primary'       => [$cta['label'] ?? ui('cta_band.primary.0'), '/contact-us/?service=' . $slug . '#quote'],
+    'primary'       => [$cta['label'] ?? ui('cta_band.primary.0'), quote_url($page['quote'])],
     'show_whatsapp' => true,
 ]) ?>

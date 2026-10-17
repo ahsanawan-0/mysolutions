@@ -34,6 +34,8 @@ declare(strict_types=1);
  * @var array|null  $chip         [label, url|null] article category chip
  * @var array|null  $meta         [['icon' => …, 'text' => …, 'datetime' => …?], …] article meta row
  * @var array|null  $image        ['key' => …, 'alt' => …] article featured image (priority, never clipped)
+ * @var string|null $slot         Trusted HTML printed above the H1, built by the page template (P24: the thank-you
+ *                                check mark); never pass user input
  * @var string|null $id           H1 id (default 'page-title')
  * @var int|null    $level        Heading level of the title (default 1; only the styleguide demo lowers it)
  * @var string|null $class
@@ -98,6 +100,10 @@ $columns = static function () use ($images, $speeds): string {
         <?= $variant === 'category'
             ? component('chip', ['label' => $eyebrow, 'variant' => $colour ?? 'bid', 'dot' => true, 'class' => 'hero-inner__eyebrow'])
             : component('eyebrow', ['text' => $eyebrow, 'class' => 'hero-inner__eyebrow']) ?>
+        <?php endif; ?>
+
+        <?php if (!empty($slot)): ?>
+        <div class="hero-inner__slot"><?= $slot ?></div>
         <?php endif; ?>
 
         <?= heading((int) ($level ?? 1), $title, $accent ?? null, 'hero-inner__title', $id) ?>

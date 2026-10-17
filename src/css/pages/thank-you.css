@@ -1,0 +1,143 @@
+/* ==========================================================================
+   Thank you (PROMPTS P24, docs/08 §12): the hex check mark in the C32 `simple` hero, the "What happens next"
+   3-step timeline and the two link cards (contact-card markup from pages/contact.css), then the call strip.
+   ========================================================================== */
+
+/* ---------- Hex check mark (drawn once by src/js/modules/success-check.js) ---------- */
+.hero-inner__slot { margin-block: var(--space-2) var(--space-5); }
+.ty-check { display: inline-flex; color: var(--azure-650); }
+.ty-check__svg { display: block; width: 88px; height: 88px; overflow: visible; }
+.ty-check__fill { fill: var(--azure-50); }
+.ty-check__ring { fill: none; stroke: currentColor; stroke-width: 4; stroke-linejoin: round; }
+.ty-check__tick { fill: none; stroke: currentColor; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Pre-state only with JS and motion allowed; the module claims it (.is-anim) at once, the 2.5 s safety restores
+   the finished mark if it never loads (same rule as components/motion.css). */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .ty-check:not(.is-anim) .ty-check__fill,
+  html.js .ty-check:not(.is-anim) .ty-check__ring,
+  html.js .ty-check:not(.is-anim) .ty-check__tick {
+    visibility: hidden;
+    animation: anim-safety-visible 0s linear 2.5s forwards;
+  }
+}
+
+/* ---------- What happens next ---------- */
+.ty-next { padding-block: var(--space-12) var(--space-16); background: var(--ms-canvas); }
+.ty-next__head, .ty-links__head { display: grid; justify-items: start; gap: var(--space-3); margin-bottom: var(--space-10); }
+.ty-next__title, .ty-links__title { margin: 0; }
+
+.ty-next .ty-steps {   /* two classes: base.css resets ol[class] */
+  --marker: 64px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The connecting line: from each marker down to the next on small screens, one line across them from 768px */
+.ty-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: var(--marker);
+  bottom: calc(-1 * var(--space-8));
+  left: calc(var(--marker) / 2 - 1px);
+  width: 2px;
+  background: linear-gradient(var(--azure-200), var(--sky-200));
+}
+.ty-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--marker) minmax(0, 1fr);
+  column-gap: var(--space-5);
+  row-gap: var(--space-2);
+  align-content: start;
+}
+.ty-step__marker {
+  grid-row: 1 / span 3;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--marker);
+  height: var(--marker);
+  border-radius: var(--r-md);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--azure-100), var(--shadow-1);
+  color: var(--azure-650);
+}
+.ty-step__num {
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: var(--lh-eyebrow);
+  color: var(--azure-650);
+  font-variant-numeric: tabular-nums;
+}
+.ty-step__title {
+  margin: 0;
+  font-size: var(--fs-h4);
+  font-weight: var(--fw-h4);
+  line-height: var(--lh-h4);
+  letter-spacing: var(--ls-h4);
+  color: var(--ms-ink);
+  text-wrap: balance;
+}
+.ty-step__text { margin: 0; color: var(--text-2); max-width: 46ch; }
+
+@media (min-width: 768px) {
+  .ty-next .ty-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .ty-next .ty-steps::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--marker) / 2 - 1px);
+    left: calc(var(--marker) / 2);
+    right: calc((100% - 2 * var(--space-6)) / 3 - var(--marker) / 2);
+    height: 2px;
+    background: linear-gradient(90deg, var(--azure-200), var(--sky-200));
+  }
+  .ty-step:not(:last-child)::after { content: none; }
+  .ty-step { grid-template-columns: minmax(0, 1fr); }
+  .ty-step__marker { grid-row: auto; margin-bottom: var(--space-4); }
+}
+
+.ty-next__pending,
+.ty-next__timing,
+.ty-next__urgent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-10) 0 0;
+  max-width: 72ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-lead);
+  color: var(--text-2);
+}
+.ty-next__pending + .ty-next__urgent, .ty-next__timing + .ty-next__urgent { margin-top: var(--space-3); }
+.ty-next__pending .icon, .ty-next__timing .icon, .ty-next__urgent .icon { flex: none; margin-top: 3px; color: var(--azure-650); }
+.ty-next__pending { padding: var(--space-3) var(--space-4); border: 1px dashed var(--ms-warning); border-radius: var(--r-sm); color: var(--ms-ink); }
+.ty-next__urgent a { color: var(--link); font-weight: var(--fw-medium); }
+.ty-next__urgent a:hover { color: var(--link-hover); }
+
+/* ---------- Keep exploring: two link cards ---------- */
+.ty-links { padding-block: var(--space-16) var(--space-4); }
+.ty-links .ty-links__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ty-links__item { display: flex; min-width: 0; }
+@media (min-width: 768px) {
+  .ty-links .ty-links__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+}
+
+@media (forced-colors: active) {
+  .ty-check__fill { fill: Canvas; }
+  .ty-check__ring, .ty-check__tick { stroke: CanvasText; }
+  .ty-next .ty-steps::before, .ty-step::after { background: CanvasText; }
+}

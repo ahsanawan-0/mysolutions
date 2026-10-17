@@ -20,7 +20,7 @@ $sub = service_sub($catSlug, $subSlug);
 $data = service_page($catSlug . '/' . $subSlug);
 $seo = $data['seo'] ?? [];
 $hero = $data['hero'] ?? [];
-$quoteUrl = '/contact-us/?service=' . $subSlug . '#quote';
+$quoteUrl = quote_url(['service' => $subSlug]);
 
 // Photographic OG crop when scripts/og.mjs has written it, else the default brand card
 $ogImage = !empty($seo['og_image']) && is_file(public_path(ltrim((string) $seo['og_image'], '/'))) ? $seo['og_image'] : null;
@@ -65,6 +65,7 @@ $page = [
         'category'    => ['name' => $category['name'], 'slug' => $category['slug']],
     ])],
     'body_class'     => 'page-service page-service-sub page-service--' . $category['colour'],
+    'quote'          => ['service' => $subSlug],
     'header_theme'   => 'dark',
     'header_overlay' => true,
 ];

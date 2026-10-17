@@ -15,7 +15,9 @@ $short = static fn (string $day): string => substr($day, 0, 3);
 $legalLinks = ui('footer.legal_links');
 $companyLinks = ui('footer.company_links');
 $marquee = ui('footer.marquee');
-$href = static fn (string $u): string => str_starts_with($u, '/') ? url($u) : $u;
+// P24: the quote link carries the page's pre-fill context ($page['quote'] on service / sector pages, quote_url())
+$quoteContext = $page['quote'] ?? [];
+$href = static fn (string $u): string => $u === '/contact-us/#quote' ? url(quote_url($quoteContext)) : (str_starts_with($u, '/') ? url($u) : $u);
 ?>
 <footer class="site-footer">
   <div class="site-footer__panel on-dark" data-header-theme="dark">

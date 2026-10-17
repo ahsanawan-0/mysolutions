@@ -4,7 +4,8 @@ declare(strict_types=1);
  * Base layout. Expects $page (normalised by App\Seo::prepare) and $content (string) from the Router.
  * Page keys used here: body_class, header ('default' | 'hero' | 'none'; 'hero' means the hero template renders the
  * header itself via render('partials/header', ['variant' => 'hero'])), header_theme ('light' | 'dark': what sits
- * under the header at the top of the page), header_overlay (true when a hero sits under the fixed header).
+ * under the header at the top of the page), header_overlay (true when a hero sits under the fixed header), quote
+ * (P24: ['service' => slug] or ['sector' => slug], the pre-fill context of the header's "Get a Free Quote" links).
  * @var array<string,mixed> $page
  * @var string $content
  */
@@ -25,9 +26,9 @@ $showDraftRibbon = !is_production() && filter_var(env('DRAFT_RIBBON', 'true'), F
 <a class="skip-link" href="#main">Skip to main content</a>
 <?php include templates_path('partials/splash'); ?>
 <?php if ($headerVariant === 'default'): ?>
-<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme]) ?>
+<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme, 'quote' => $page['quote'] ?? []]) ?>
 <?php elseif ($headerVariant === 'hero'): ?>
-<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme, 'follow' => true]) ?>
+<?= render('partials/header', ['variant' => 'default', 'theme' => $headerTheme, 'follow' => true, 'quote' => $page['quote'] ?? []]) ?>
 <?php endif; ?>
 <main id="main" tabindex="-1">
 <?= $content ?>

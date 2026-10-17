@@ -34,6 +34,22 @@ final class Csrf
         session_start();
     }
 
+    /**
+     * Resume the form session only when the visitor already has one (P24: the thank-you page reads its one-time
+     * `enquiry_sent` flag). Never starts a cookie for someone who has not used a form.
+     */
+    public static function resume(): bool
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            return true;
+        }
+        if (!is_string($_COOKIE['ms_session'] ?? null) || PHP_SAPI === 'cli') {
+            return false;
+        }
+        self::startSession();
+        return true;
+    }
+
     public static function token(): string
     {
         self::startSession();

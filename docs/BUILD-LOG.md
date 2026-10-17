@@ -1048,3 +1048,51 @@
 **Decision:** L30 (WCAG 2.2 AA) is locked, so the buttons were not deleted. The client chose "hide until needed": 2.2.2 still has a pause mechanism (keyboard focus, pointer hover), and `prefers-reduced-motion` still stops all auto-motion. On touch screens the buttons stay hidden.
 
 **Checks:** local 1440: the slider pause and the footer pause are hidden (opacity 0, `pointer-events: none`) and appear on hover; prev · dots · next centred. 360: no horizontal scroll, pause hidden. No console errors; `npm run build` clean.
+
+---
+
+## P24: Quote pre-fill, thank-you page, form polish (18 October 2026)
+
+**Commit:** `P24: quote pre-fill, thank-you page, form polish`
+
+**Files created**
+- `templates/pages/thank-you.php`: `/thank-you/` (`noindex, follow`, canonical `/thank-you/`, breadcrumbs Home › Contact Us › Thank You; still not in any sitemap because its route has no `sitemap` group, and robots.txt already disallows it). Hero-inner `simple` with H1 "Thank" + *You* and "Your enquiry has been received." under a hex check mark (the logo's flat-top hexagon); "What happens next" 3-step timeline (review → contact you → no-obligation quote; connecting line down the markers on mobile, across from 768px); the timing `[[PENDING: response time]]` is a dashed note off production and omitted on production; "Deadline close? Call us on …"; two link cards (Insights, Services) in the contact-card markup; call strip. Direct visits show the same page and never start a session.
+- `src/css/pages/thank-you.css` (check mark, timeline, link grid; the check's pre-state exists only under `html.js` with motion allowed and has the 2.5 s safety restore).
+- `src/js/modules/success-check.js`: after `splash:done`, the pale hex pops in, then DrawSVG draws the ring and the tick (once). Reduced motion: nothing.
+- `src/js/core/track.js`: `window.msTrack(name, props)`, a no-op until P28's consent module sets `window.msAnalytics = { send }`. Fires `[data-track-event]` once on load and tracks clicks on `tel:` / `mailto:` / WhatsApp links (`click_phone` / `click_email` / `click_whatsapp`, props `{ page }`). Imported first by `src/js/main.js`.
+
+**Files changed**
+- `app/lib/helpers.php`: `quote_url(['sector' => …, 'service' => …])` → `/contact-us/?sector=…&service=…#quote`.
+- `app/controllers/ContactController.php`: `prefill($_GET)` (whitelisted sector + sub-service or category slugs; a category selects its first sub-service and the chip reads "Interested in: <category>"; anything else is ignored). The success flag is now `['at', 'service', 'sector']` (slugs only) for the thank-you page's `form_submit` event.
+- `app/lib/Csrf.php`: `resume()` starts the session only when the `ms_session` cookie already exists (never in the CLI).
+- `app/data/contact.php`: `form.sending`, `form.sending_status`, `form.prefill` (chip copy) and the whole `thank_you` block (SEO, hero, steps, timing, links; provisional copy marked `// PROVISIONAL`).
+- `templates/pages/contact.php` + `templates/sections/contact/form.php`: on a plain GET the pre-fill selects the options server-side and prints the "You selected: …" chip above the form; its × is a link to `/contact-us/#quote` (works without JS). The submit button carries the inlined white logo mark for the loading state; `<template>`s hold the server's inline-error and error-summary markup for form.js; the message gets `minlength="10"` (mirrors the server rule; the form stays `novalidate`).
+- `src/js/modules/form.js`: inline validation on blur mirroring `ContactController::validate()` (only once a field has been edited or already shows an error; the error clears as soon as the value is fixed; hint + error ids kept in `aria-describedby`); on submit the same checks build the error summary (focused, links focus the field or its C31 combobox) and nothing is sent; a valid submit sets `.is-loading` (the mark breathes and its bars re-draw on a loop, label "Sending…", `aria-disabled`, `aria-busy`, a polite status message) and blocks a second submit (reset on bfcache `pageshow`); arriving on `#quote` focuses the first empty required field after the splash, without scrolling; the chip's × clears the sector/service in place, announces it, cleans the URL and focuses the sector combobox.
+- `src/css/components/form.css` (loading state; the button keeps full strength instead of the faded disabled look), `src/css/pages/contact.css` (`.prefill` chip, 44px clear button), `src/css/main.css` (imports thank-you.css).
+- Context on every quote CTA: `$page['quote']` on the category (`['service' => category]`), sub-service (`['service' => sub]`) and sector (`['sector' => slug]`) pages; `templates/layouts/base.php` passes it to the header, so the header CTA, mega-menu CTA, mobile sheet and mobile action bar use `quote_url()`; `templates/partials/footer.php` does the same for its "Get a Free Quote" link; the service/sector templates use `quote_url()` instead of hand-built strings.
+- `templates/components/hero-inner.php`: optional `slot` (trusted HTML above the H1) for the check mark.
+- `src/js/core/motion.js`: `alignHash()` drops a `#hash` with no target from the address bar. Browsers carry the form action's `#quote` through the 303, so the thank-you URL showed `/thank-you/#quote`.
+- `CLAUDE.md`, `docs/03` C38.
+
+**Decisions**
+- The chip lists items in the form's order (sector, then service). For a category: "Interested in: Digital Presence · Security".
+- Clearing the chip means clearing the pre-selection (like a filter chip), not only hiding the chip.
+- Client-side errors use the server's exact markup and messages (`data-messages` = `contact('form.errors')`), so JS and no-JS errors look and read the same. The server stays the authority (the e-mail check is an approximation of `FILTER_VALIDATE_EMAIL`).
+- The `form_submit` props carry slugs only (form, service, sector), never personal data. The `data-track-event` attribute stays in the HTML so P28 can replay it if the visitor consents on that page.
+- Loading-state motion: the docs/07 §6 breathing loop (1 ↔ 1.02) is invisible at button size on its own, so the button also loops the header-hover bar re-draw (same vocabulary). Reduced motion: no animation, the label and the status message carry the state.
+
+**Deviations**
+- None against the prompt.
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean.
+- curl: pre-fill for a sub-service + sector, a category, category + sector, and junk values (`sector=evil`, `service=<script>`, `sector[]=x`) are ignored; canonical stays `/contact-us/`. `/thank-you/` 200, `noindex, follow`, no `Set-Cookie` on a direct visit, not in `sitemap-pages.xml`. End-to-end POST → 303 → thank-you with the `form_submit` hook once; a reload has none. Category, sub-service and sector pages: every quote link (hero, CTA band, header, mega menu, mobile sheet, action bar, footer) carries the page's context.
+- Playwright (42/42 + extras): chip text and pre-selected comboboxes; focus on Name after `#quote`; the chip's × (mouse and keyboard) clears the selects, cleans the URL, announces and focuses the sector combobox; inline errors appear on blur only after editing and clear on fix; past deadline and bad phone caught; the client summary lists name/email/message, is focused, its links focus the field, and no POST is sent; a triple click sends one POST; the loading state shows "Sending…" with the mark; thank-you URL clean, check mark drawn; hero Quick-Start → `/contact-us/?sector=healthcare-social-care&service=cqc-registration#quote` with both selected; no console errors, no 4xx/5xx.
+- Widths 360 / 768 / 1024 / 1440 (contact with a pre-fill + thank-you): no horizontal scroll; reduced motion at 360: the check mark and steps are visible.
+- `seo-audit --all`: 32 pages + 6 legacy redirects, 0 failing. `check-content`: `/thank-you/` ok (title 41, description 134); the new PROVISIONAL lines and `[[PENDING: response time]]` are listed. Test `.eml` and rate-limit files removed afterwards.
+
+**Follow-ups**
+- Client: response time (thank-you timing, contact FAQ, auto-reply), approval of the thank-you copy. The mega menu's featured card (P04) says "come back within one working day": an unconfirmed response-time promise; align it once the client confirms the time.
+- P25: `/insights/` (linked from the thank-you page) is still a stub / 404 on the preview until the blog engine lands.
+- P28: the consent module sets `window.msAnalytics` and replays `[data-track-event]`.
+- The Vercel preview runs PHP sessions in `/tmp` per function instance; check the form + thank-you flag there after the next deploy.

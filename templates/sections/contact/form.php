@@ -6,14 +6,20 @@ declare(strict_types=1);
  * messages (`aria-invalid` + `aria-describedby`), or a notice (rate limit, send failure). Works fully without JS: the
  * selects are native (C31 enhances them), the counter and focus handling are src/js/modules/form.js.
  * Hidden fields: honeypot `website` (people never see it), `ts` (signed render time, ≥ 3 s), `_token` (CSRF).
+ * P24: `$prefill` (ContactController::prefill(), plain GETs only) pre-selects the sector / service and prints the
+ * dismissible "You selected: …" chip (its × is a link to the bare form, so clearing works without JS too). The
+ * <template>s feed form.js, which mirrors the server rules inline (on blur) and in an error summary on submit, shows
+ * the logo-mark breathing loop on the submit button (.is-loading, P07) and blocks a second submit.
  * Copy: contact('form'). Styles: src/css/components/form.css + src/css/pages/contact.css.
- * @var array $form  ['values' => [field => value], 'errors' => [field => message], 'notice' => ?string]
+ * @var array      $form     ['values' => [field => value], 'errors' => [field => message], 'notice' => ?string]
+ * @var array|null $prefill  ['values' => [sector, service], 'chip' => ['label' => …, 'items' => [names]]]
  */
 use App\Controllers\ContactController;
 use App\Csrf;
 
 $t = contact('form');
-$values = $form['values'] ?? [];
+$values = $form['values'] ?? ($prefill['values'] ?? []);
+$chip = $prefill['chip'] ?? null;
 $errors = $form['errors'] ?? [];
 $notice = $form['notice'] ?? null;
 $value = static fn (string $key): string => (string) ($values[$key] ?? '');
@@ -59,11 +65,20 @@ $direct = strtr(e($t['direct']), [
     </div>
 
     <div class="contact-form__panel">
-      <form class="form" action="<?= e(url('/contact-us/')) ?>#quote" method="post" novalidate data-module="form" data-counter="<?= e($t['counter']) ?>">
+      <?php if ($chip !== null): ?>
+      <div class="prefill" data-prefill>
+        <p class="prefill__text"><?= icon('check-circle', 'regular', ['size' => 18, 'class' => 'prefill__icon']) ?><span><span class="prefill__label"><?= e($chip['label']) ?></span> <strong class="prefill__items"><?= e(implode(' · ', $chip['items'])) ?></strong></span></p>
+        <a class="prefill__clear" href="<?= e(url('/contact-us/')) ?>#quote" aria-label="<?= e($t['prefill']['clear']) ?>" data-prefill-clear><?= icon('x', 'regular', ['size' => 16]) ?></a>
+      </div>
+      <?php endif; ?>
+      <p class="visually-hidden" role="status" data-form-status></p>
+      <form class="form" action="<?= e(url('/contact-us/')) ?>#quote" method="post" novalidate data-module="form"
+        data-counter="<?= e($t['counter']) ?>" data-sending="<?= e($t['sending']) ?>" data-sending-status="<?= e($t['sending_status']) ?>"
+        data-cleared="<?= e($t['prefill']['cleared']) ?>" data-messages="<?= e((string) json_encode($t['errors'], JSON_UNESCAPED_UNICODE)) ?>">
         <?php if ($errors): ?>
         <div class="form__summary" role="alert" tabindex="-1" aria-labelledby="form-summary-title" data-error-summary>
           <h3 class="form__summary-title" id="form-summary-title"><?= icon('warning-circle', 'regular', ['size' => 20]) ?><?= e($t['errors']['summary']) ?></h3>
-          <ul class="form__summary-list" role="list">
+          <ul class="form__summary-list" role="list" data-summary-list>
             <?php foreach ($errors as $key => $message): ?>
             <li><a href="#f-<?= e($key === 'turnstile' ? 'message' : $key) ?>"><?= e($message) ?></a></li>
             <?php endforeach; ?>
@@ -157,7 +172,7 @@ $direct = strtr(e($t['direct']), [
 
           <div class="<?= $cls('message', 'field--full') ?>">
             <?= $label('message', true) ?>
-            <textarea class="field__input field__textarea" <?= $attrs('message') ?> rows="6" maxlength="2000" required data-char-counter><?= e($value('message')) ?></textarea>
+            <textarea class="field__input field__textarea" <?= $attrs('message') ?> rows="6" minlength="10" maxlength="2000" required data-char-counter><?= e($value('message')) ?></textarea>
             <?= $help('message') ?>
             <p class="field__counter" aria-live="polite" hidden data-char-count></p>
           </div>
@@ -183,8 +198,22 @@ $direct = strtr(e($t['direct']), [
 
         <div class="form__footer">
           <p class="form__privacy"><?= rich($t['privacy']) ?></p>
-          <?= component('button', ['label' => $t['submit'], 'type' => 'submit', 'icon' => 'arrow-right', 'size' => 'lg', 'class' => 'form__submit']) ?>
+          <button class="btn btn--lg form__submit" type="submit" data-submit>
+            <span class="form__submit-mark" aria-hidden="true"><?= inline_svg('brand/logo-mark-white.svg', ['prefix' => 'fsm', 'title' => false]) ?></span>
+            <span data-submit-label><?= e($t['submit']) ?></span><?= icon('arrow-right', 'regular', ['class' => 'form__submit-icon']) ?>
+          </button>
         </div>
+
+        <!-- form.js builds client-side errors from these, so they match the server's markup exactly -->
+        <template data-error-template>
+          <p class="field__error"><?= icon('warning-circle', 'regular', ['size' => 16]) ?><span><span class="visually-hidden">Error: </span><span data-error-text></span></span></p>
+        </template>
+        <template data-summary-template>
+          <div class="form__summary" role="alert" tabindex="-1" aria-labelledby="form-summary-title" data-error-summary>
+            <h3 class="form__summary-title" id="form-summary-title"><?= icon('warning-circle', 'regular', ['size' => 20]) ?><?= e($t['errors']['summary']) ?></h3>
+            <ul class="form__summary-list" role="list" data-summary-list></ul>
+          </div>
+        </template>
       </form>
     </div>
   </div>

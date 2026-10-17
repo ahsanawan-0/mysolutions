@@ -62,7 +62,8 @@ final class ContactController
         Mailer::send(self::autoReply($values));   // a failed auto-reply is logged; the enquiry itself was delivered
 
         RateLimit::hit('contact', $ip, 3600);
-        $_SESSION['enquiry_sent'] = time();         // P24: the thank-you page's one-time form_submit event
+        // P24: the thank-you page's one-time `form_submit` event (slugs only, never personal data)
+        $_SESSION['enquiry_sent'] = ['at' => time(), 'service' => (string) $values['service'], 'sector' => (string) $values['sector']];
         unset($_SESSION['_csrf']);                  // a fresh token for the next form
         Router::redirect('/thank-you/', 303);
     }
@@ -125,6 +126,45 @@ final class ContactController
             $e['message'] = $msg['message_long'];
         }
         return [$v, $e];
+    }
+
+    /**
+     * Pre-fill from the query string (P24): /contact-us/?sector=<slug>&service=<slug>#quote, sent by the hero
+     * Quick-Start, the header CTA and every service / sector CTA (quote_url()). Whitelisted values only; anything else
+     * is ignored. A category slug selects that category's first sub-service, and the chip says "Interested in: …".
+     * @return array{values: array<string, string>, chip: array{label: string, items: string[]}}|null  null: nothing to pre-fill
+     */
+    public static function prefill(array $query): ?array
+    {
+        $sector = is_string($query['sector'] ?? null) ? $query['sector'] : '';
+        $service = is_string($query['service'] ?? null) ? $query['service'] : '';
+        $values = [];
+        $items = [];         // in the form's order: sector, then service
+        $interested = null;
+
+        if ($sector !== '' && Validator::oneOf($sector, self::sectorValues())) {
+            $values['sector'] = $sector;
+            $items[] = self::label('sector', $sector);
+        }
+        if ($service !== '' && ($category = service_category($service)) !== null && !empty($category['subs'])) {
+            $values['service'] = (string) $category['subs'][0]['slug'];
+            $interested = (string) $category['name'];
+        } elseif ($service !== '' && service_sub_find($service) !== null) {
+            $values['service'] = $service;
+            $items[] = self::label('service', $service);
+        }
+        if ($values === []) {
+            return null;
+        }
+
+        $t = contact('form.prefill');
+        return [
+            'values' => $values,
+            'chip'   => [
+                'label' => $interested !== null ? $t['interested'] : $t['selected'],
+                'items' => $interested !== null ? [$interested, ...$items] : $items,   // "Interested in: <category> · <sector>"
+            ],
+        ];
     }
 
     /** @return string[] sector slugs + 'other' */

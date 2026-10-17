@@ -76,7 +76,11 @@ function initLenis() {
 function alignHash() {
   const id = decodeURIComponent(location.hash.slice(1));
   const target = id && document.getElementById(id);
-  if (!target) return;
+  if (!target) {
+    // a #hash with nothing to land on (e.g. #quote carried through the form's 303 redirect to /thank-you/) is dropped
+    if (id) history.replaceState(history.state, '', location.pathname + location.search);
+    return;
+  }
   let reader = false;
   const stop = () => { reader = true; };
   ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((type) => window.addEventListener(type, stop, { once: true, passive: true }));

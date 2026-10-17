@@ -44,6 +44,7 @@ $page = [
     'breadcrumbs'    => [['Home', '/'], ['Sectors', '/sectors/'], [$sector['name'], null]],
     'about'          => array_map(static fn (array $s): array => ['@id' => url($s['sub']['url']) . '#service'], $services),
     'body_class'     => 'page-sector page-sector--' . $slug,
+    'quote'          => ['sector' => $slug],
     'header_theme'   => 'dark',
     'header_overlay' => true,
 ];
@@ -72,7 +73,7 @@ $cta = $data['cta'] ?? [];
     'title'       => $hero['title'] ?? $sector['name'],
     'accent'      => $hero['accent'] ?? null,
     'lead'        => $hero['lead'] ?? $sector['summary'],
-    'ctas'        => $hero['ctas'] ?? [[ui('cta_band.primary.0'), '/contact-us/?sector=' . $slug . '#quote'], ['Call ' . config('phone_display'), 'tel:' . config('phone_e164'), 'glass', 'phone']],
+    'ctas'        => $hero['ctas'] ?? [[ui('cta_band.primary.0'), quote_url($page['quote'])], ['Call ' . config('phone_display'), 'tel:' . config('phone_e164'), 'glass', 'phone']],
     'images'      => $images,
     'labels'      => $hero['labels'] ?? [],
 ]) ?>
@@ -105,6 +106,6 @@ $cta = $data['cta'] ?? [];
     'sub'           => $cta['sub'] ?? null,
     'text'          => $cta['paras'] ?? null,
     'strong'        => $cta['strong'] ?? null,
-    'primary'       => [$cta['label'] ?? ui('cta_band.primary.0'), '/contact-us/?sector=' . $slug . '#quote'],
+    'primary'       => [$cta['label'] ?? ui('cta_band.primary.0'), quote_url($page['quote'])],
     'show_whatsapp' => true,
 ]) ?>

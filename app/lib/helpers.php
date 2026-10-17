@@ -535,6 +535,21 @@ function contact(string $key, mixed $default = null): mixed
 }
 
 /**
+ * Path of the quote form with its pre-fill context (P24): quote_url(['service' => 'expert-review']) →
+ * '/contact-us/?service=expert-review#quote'. Keys: `sector` (a sector slug) and `service` (a sub-service or category
+ * slug); the contact page accepts whitelisted values only (ContactController::prefill()) and its canonical ignores
+ * the query. Never put personal data in this URL (docs/05 §2).
+ */
+function quote_url(array $context = []): string
+{
+    $query = array_filter([
+        'sector'  => (string) ($context['sector'] ?? ''),
+        'service' => (string) ($context['service'] ?? ''),
+    ], 'strlen');
+    return '/contact-us/' . ($query !== [] ? '?' . http_build_query($query) : '') . '#quote';
+}
+
+/**
  * A colour token from src/css/tokens.css (`--navy-900: #…`) for places CSS cannot reach, e.g. the inline styles of
  * the HTML emails (P23), so no hex value is typed outside tokens.css. Returns '' for an unknown token.
  */

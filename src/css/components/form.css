@@ -140,6 +140,19 @@
   .form__submit { width: auto; }
 }
 
+/* Loading state (P24, docs/07 §6): the white logo mark breathes (.is-loading .logo__mark, components/logo.css) and its
+   two bars re-draw on a loop while the enquiry is on its way; the label reads "Sending…". Stays full strength (not
+   the faded disabled look) and keeps the pointer as `progress`; form.js blocks a second submit. */
+.form__submit-mark { display: none; }
+.form__submit-mark .logo { display: block; width: 28px; height: auto; }
+.form__submit.is-loading .form__submit-mark { display: block; }
+.form__submit.is-loading .form__submit-icon { display: none; }
+.btn.form__submit.is-loading[aria-disabled="true"] { opacity: 1; cursor: progress; pointer-events: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .form__submit.is-loading .logo__bar--azure { animation: logo-redraw 900ms cubic-bezier(0, 0, 0.2, 1) infinite both; }
+  .form__submit.is-loading .logo__bar--navy { animation: logo-redraw 900ms cubic-bezier(0, 0, 0.2, 1) 120ms infinite both; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .field__input, .field__caret { transition: none; }
 }

@@ -8,8 +8,12 @@ declare(strict_types=1);
  * with `$form` = values + errors + notice) → static map image linking to Google Maps (no embed before consent,
  * docs/13 §2) → socials → mini FAQ (faqs.php tag `contact`) → call strip.
  * The page starts the form session (App\Csrf, strictly necessary cookie) for the CSRF token and the time-trap stamp.
+ * P24: on a plain GET, ?sector=<slug>&service=<slug> (quote_url(), whitelisted by ContactController::prefill())
+ * pre-selects the two selects and shows the "You selected: …" chip; the canonical stays /contact-us/.
  * @var array|null $form  ['values' => …, 'errors' => [field => message], 'notice' => ?string] (set by the controller)
  */
+use App\Controllers\ContactController;
+
 $seo = contact('seo');
 $hero = contact('hero');
 $page = [
@@ -39,7 +43,7 @@ $strip = contact('call_strip');
 
 <?= render('sections/contact/cards') ?>
 
-<?= render('sections/contact/form', ['form' => $form ?? []]) ?>
+<?= render('sections/contact/form', ['form' => $form ?? [], 'prefill' => isset($form) ? null : ContactController::prefill($_GET)]) ?>
 
 <?= render('sections/contact/map') ?>
 

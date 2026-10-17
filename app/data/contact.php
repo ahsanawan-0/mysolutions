@@ -65,7 +65,17 @@ return [
         ],
         'privacy'  => "We'll use your details to respond to your enquiry. See our [Privacy Policy](/privacy-policy/).",
         'submit'   => 'Send Enquiry',
+        'sending'  => 'Sending…',                        // P24: the submit button while the enquiry is on its way
+        'sending_status' => 'Sending your enquiry, please wait.',
         'counter'  => '{n} of {max} characters',
+
+        // P24: the dismissible chip above the form when a CTA pre-selected the sector / service
+        'prefill' => [
+            'selected'   => 'You selected:',
+            'interested' => 'Interested in:',
+            'clear'      => 'Clear this selection',
+            'cleared'    => 'Selection cleared. Choose a sector and the support you need below.',
+        ],
 
         'errors' => [
             'summary'          => 'There is a problem with your enquiry',
@@ -110,6 +120,41 @@ return [
     'call_strip' => [
         'text'  => 'Prefer to talk it through?', // PROVISIONAL
         'label' => 'Call {phone}',
+    ],
+
+    // P24: /thank-you/ (templates/pages/thank-you.php), where a successful enquiry lands (PRG); noindex
+    'thank_you' => [
+        'seo' => [
+            'title'       => 'Thank You for Your Enquiry | My Solutionz',
+            'description' => 'Thank you for contacting My Solutionz. Your enquiry has been received: here is what happens next, and how to reach us in the meantime.',
+        ],
+        'hero' => [
+            'title'  => 'Thank',
+            'accent' => 'You',
+            'lead'   => 'Your enquiry has been received.',
+            'check'  => 'Enquiry received',   // accessible name of the check-mark graphic
+        ],
+        'next' => [
+            'eyebrow' => 'What happens next',
+            'heading' => 'What Happens',
+            'accent'  => 'Next',
+            'steps'   => [
+                ['icon' => 'file-magnifying-glass', 'title' => 'We review your enquiry', 'text' => 'We read your details carefully and look at the opportunity, the deadline and the support you need.'], // PROVISIONAL
+                ['icon' => 'chats-circle', 'title' => 'We contact you to discuss your requirements', 'text' => 'We get in touch by phone or email to talk through the detail and answer any questions you have.'], // PROVISIONAL
+                ['icon' => 'seal-check', 'title' => 'You receive a clear, no-obligation quote', 'text' => 'We send you a clear quote for the work, so you can decide with no obligation to go ahead.'], // PROVISIONAL
+            ],
+            'timing'  => '[[PENDING: response time]]',   // e.g. "We aim to reply within …" (client to confirm, docs/15)
+            'urgent'  => 'Deadline close? Call us on {phone} so we can prioritise your request.', // PROVISIONAL
+        ],
+        'links' => [
+            'eyebrow' => 'While you wait',
+            'heading' => 'Keep',
+            'accent'  => 'Exploring',
+            'items'   => [
+                ['icon' => 'article', 'label' => 'Insights', 'title' => 'Read our insights', 'text' => 'Practical guidance on tenders, compliance and growing your business.', 'url' => '/insights/'], // PROVISIONAL
+                ['icon' => 'squares-four', 'label' => 'Services', 'title' => 'Explore our services', 'text' => 'Bid and proposal management, compliance and virtual assistance, and digital presence.', 'url' => '/services/'], // PROVISIONAL
+            ],
+        ],
     ],
 
     // The two emails sent on a successful submission (templates/emails/*.php)

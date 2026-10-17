@@ -132,6 +132,38 @@
 @media (min-width: 640px) {
   .contact-form__panel { padding: var(--space-10); }
 }
+
+/* P24: "You selected: …" chip above the form when a CTA pre-selected the sector / service; × clears it */
+.prefill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: var(--space-6);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+  border-radius: var(--r-pill);
+  background: var(--azure-50);
+  box-shadow: inset 0 0 0 1px var(--azure-100);
+}
+.prefill__text { display: flex; align-items: center; gap: var(--space-2); margin: 0; min-width: 0; font-size: var(--fs-small); line-height: 1.4; color: var(--ms-ink); }
+.prefill__icon { flex: none; color: var(--azure-650); }
+.prefill__label { color: var(--text-2); }
+.prefill__items { font-weight: var(--fw-medium); overflow-wrap: anywhere; }
+.prefill__clear {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: var(--r-pill);
+  color: var(--navy-900);
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple);
+}
+.prefill__clear:focus-visible { outline: var(--focus-ring); outline-offset: 0; }
+@media (hover: hover) {
+  .prefill__clear:hover { background: var(--azure-100); color: var(--azure-700); }
+}
 @media (min-width: 1024px) {
   .contact-form__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-16); }
   .contact-form__aside { position: sticky; top: calc(var(--header-h-initial) + var(--space-8)); }
@@ -197,5 +229,5 @@
 .contact-strip { padding-block: var(--space-12) var(--space-16); }
 
 @media (prefers-reduced-motion: reduce) {
-  .contact-card__surface, .contact-card__arrow, .contact-card__arrow .icon, .contact-map__social, .contact-map__pin { transition: none; }
+  .contact-card__surface, .contact-card__arrow, .contact-card__arrow .icon, .contact-map__social, .contact-map__pin, .prefill__clear { transition: none; }
 }

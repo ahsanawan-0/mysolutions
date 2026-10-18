@@ -95,9 +95,18 @@ final class Page
         return (bool) ($page['indexable'] ?? false);
     }
 
+    private static int $probing = 0;
+
+    /** True while probe() renders a template; side effects such as starting the form session are skipped (P29). */
+    public static function isProbing(): bool
+    {
+        return self::$probing > 0;
+    }
+
     /**
-     * Load a template only to read its `$page` (output discarded). Used by the sitemaps and the
-     * CLI checkers. Returns null when the template doesn't exist or fails.
+     * Load a template only to read its `$page` (output discarded). Used by the sitemaps (XML and HTML) and the
+     * CLI checkers. Returns null when the template doesn't exist or fails. While probing, App\Csrf hands out a
+     * dummy token instead of starting a session, so a sitemap never sets the form cookie.
      */
     public static function probe(string $template, array $params = [], ?string $path = null): ?array
     {
@@ -107,6 +116,7 @@ final class Page
         }
         $route = ['template' => $template];
         $page = [];
+        self::$probing++;
         try {
             ob_start();
             (static function () use ($file, $params, $route, &$page): void {
@@ -115,6 +125,8 @@ final class Page
         } catch (Throwable) {
             ob_end_clean();
             return null;
+        } finally {
+            self::$probing--;
         }
         ob_end_clean();
         if ($page === []) {

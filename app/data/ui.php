@@ -73,6 +73,51 @@ return [
         'cookie_settings' => 'Cookie settings',
     ],
 
+    // Error pages (P29): 404 (templates/pages/404.php) and 410 (pages/410.php) share the helpful links
+    // (templates/sections/error/links.php)
+    'errors' => [
+        'not_found' => [
+            'seo_title'   => 'Sorry, that page was not found | My Solutionz',
+            'description' => 'The page you were looking for could not be found. Find our services, the sectors we work in or how to get in touch.',
+            'crumb'       => 'Page not found',
+            'title'       => 'Page',
+            'accent'      => 'Not Found',
+            'lead'        => "The page you're looking for may have moved. These links might help:",
+            'path'        => "We couldn't find {path} on this website.",
+            'knock'       => 'Knock the logo over',
+            'rebuild'     => 'Put the logo back together',
+        ],
+        'gone' => [
+            'seo_title'   => 'This page has been removed | My Solutionz',
+            'description' => 'The page you were looking for has been removed. Find our services, the sectors we work in or how to get in touch.',
+            'crumb'       => 'Page removed',
+            'title'       => 'This Page Has',
+            'accent'      => 'Been Removed',
+            'lead'        => 'The content that used to be here is no longer available. These links might help:',
+        ],
+        'links_title' => 'Helpful links',
+        'links' => [
+            'home'     => ['label' => 'Start again',   'title' => 'Home',        'text' => 'Back to the home page.', 'icon' => 'house'],
+            'services' => ['label' => 'What we do',    'title' => 'Services',    'text' => 'All our services in one place.', 'icon' => 'squares-four'],
+            'category' => ['label' => 'Service area'],   // + each category's name, summary and icon from services()
+            'sectors'  => ['label' => 'Who we help',   'title' => 'Sectors',     'text' => 'The sectors we work in.', 'icon' => 'buildings'],
+            'contact'  => ['label' => 'Get in touch',  'title' => 'Contact us',  'text' => 'Ask a question or get a free quote.', 'icon' => 'chats-circle'],
+        ],
+        'phone' => 'Prefer to talk? Call us on {phone}.',
+    ],
+
+    // HTML sitemap /sitemap/ (P29, templates/pages/sitemap.php)
+    'sitemap' => [
+        'seo_title'   => 'Website Sitemap and Page Directory | My Solutionz',
+        'description' => 'Every page on the My Solutionz website in one place: our services, the sectors we work in, insights, contact details and legal information.',
+        'title'       => 'Website',
+        'accent'      => 'Sitemap',
+        'lead'        => 'Every page on this website, grouped by topic.',
+        'groups'      => ['main' => 'Main pages', 'services' => 'Services', 'sectors' => 'Sectors', 'insights' => 'Insights', 'legal' => 'Legal'],
+        'draft'       => 'Draft',
+        'draft_note'  => 'Pages marked "Draft" are listed here for review only: they are hidden on the live website until they are published.',
+    ],
+
     // C24 consent banner + preferences dialog (templates/partials/cookie-banner.php, P28). Technologies and category
     // descriptions come from app/config/cookies.php.
     'consent' => [

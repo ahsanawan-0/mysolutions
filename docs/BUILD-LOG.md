@@ -1285,3 +1285,43 @@
 - Client / C06: legal review of all four pages; ICO registration number (data protection fee); hosting and email/SMTP providers; retention periods; the accessibility response time; service terms (separate client agreement); VAT number in the footer if registered.
 - Client decision (docs/13 §2): analytics provider. Recommended: Plausible with `ANALYTICS_EXEMPT=true`; GA4 works consent-first. Set `ANALYTICS_PROVIDER` / `ANALYTICS_ID` on Vercel and production, and name the provider in the privacy policy.
 - P30: an assistive-technology pass (screen reader) to clear the accessibility statement's known limitation.
+
+---
+
+## P29: 404, HTML sitemap, utility pages (18 October 2026)
+
+**Commit:** `P29: 404, 410 and HTML sitemap`
+
+Before this prompt, P24–P28 were pushed to GitHub (`origin/main` at `159a3f0`). The Vercel deploy (`vercel deploy --prod --yes`) was blocked by the session's permission check and is still to do.
+
+**Files created**
+- `templates/sections/error/links.php`: the helpful links shared by the 404 and 410: Home, Services, the 3 service categories (name, summary and icon from `services()`), Sectors, Contact as contact-card link tiles (the thank-you page's markup), then "Prefer to talk? Call us on …". 1 / 2 / 4 columns.
+- `src/js/modules/nf-mark.js` (docs/07 §6): after the splash the mark assembles (hexagon rises, bars slide up), then the navy bar wobbles and falls over to the right, landing flat on the ground line (rotation 120° about its foot `587 366`, lifted 91 units, `bounce.out`). The mark becomes a button (role, tabindex, label "Put the logo back together" / "Knock the logo over"): click, Enter or Space rebuilds it with a spring, and the next press knocks it over again. Under reduced motion nothing runs and the mark stays a decorative picture.
+- `templates/pages/sitemap.php` (`/sitemap/`): groups Main pages / Services (hub, then each category with its sub-services) / Sectors / Insights (listing, categories with visible posts, posts) / Legal, built from the routes with a `sitemap` group (the same set as `sitemap.xml`) and `App\Blog`; labels are each page's own last breadcrumb. Production: indexable pages only. Elsewhere: drafts too, with a "Draft" chip and a note. `/thank-you/`, `/styleguide/*` and the page itself are never listed. `published`, title 49, description 139.
+- `src/css/pages/error.css`, `src/css/pages/sitemap.css`.
+
+**Files changed**
+- `templates/pages/404.php`: the designed page: hero-inner `simple` (breadcrumbs, the mark in the slot, H1 "Page *Not Found*", the prompt's lead), "We couldn't find `<path>` on this website", the links. Real 404 (Router), `noindex`, no canonical, no JSON-LD.
+- `templates/pages/410.php`: the same layout, H1 "This Page Has *Been Removed*", the mark with its bar already lying down (static CSS, the same pivot), the links.
+- `app/lib/Page.php` + `app/lib/Csrf.php`: **fix** for a bug from P03 + P23. `Page::probe()` renders templates to read their `$page`, and the contact form's `Csrf::token()` started a session while doing so, so `/sitemap.xml` and `/sitemap-pages.xml` sent `Set-Cookie: ms_session` to every crawler (and the new HTML sitemap would have sent it to visitors). That contradicted the cookie policy ("set only when you open the contact form"). `probe()` now sets `Page::isProbing()`, during which `Csrf::token()` returns a dummy token without a session. The contact page still sets its cookie.
+- `app/data/ui.php`: `errors` (404 / 410 copy, link tiles, phone line) and `sitemap` copy. `src/icons.json`: `house`, `tree-structure` (light).
+- `src/css/main.css`, `CLAUDE.md`.
+
+**Decisions**
+- The 404 shows the requested path (escaped, truncated to 80 characters) so a mistyped URL is easy to spot.
+- The mark is decorative markup that the script turns into a button only when it can animate, so reduced-motion and no-JS visitors never meet a control that does nothing.
+- `logo.css` gives the bars `transform-box: fill-box` (header hover); error.css resets it to `view-box` / `0 0` inside the 404/410 mark so GSAP's `svgOrigin` pivot lands where intended.
+- The HTML sitemap reuses the XML sitemap's rule (route `sitemap` group + `Page::isIndexable()`), so the two can never disagree; the Insights categories follow the listing's own publish rule.
+
+**Deviations**
+- None.
+
+**Checks**
+- `php -l` clean; `npm run build` clean.
+- curl: `/no-such-page-here/` and `/services/foo/` → 404, `/wp-login.php` → 410, both `noindex` with no canonical; `/sitemap/` 200; `Set-Cookie` gone from `/sitemap.xml`, `/sitemap-pages.xml` and `/sitemap/`, still present on `/contact-us/`.
+- Production mode (`APP_ENV=production`, temporary server): `sitemap.xml` lists only `pages` + `services`; `sitemap-pages.xml` = `/about-us/`, `/contact-us/`, `/sitemap/`; `sitemap-services.xml` = the hub, Bid & Proposal Management and its 3 sub-services; sectors and insights empty (all draft); `/styleguide/` 404; `/thank-you/` noindex and in neither sitemap. The HTML sitemap shows the same pages, with no Draft chips, thank-you or styleguide.
+- Playwright 37/37: 404 status, H1 with `<em>Not Found</em>` in the server HTML, lead, path, 7 link tiles (all 200), phone link, no canonical; the navy bar falls, the mark is a labelled button, Enter rebuilds it upright, Space knocks it over, a click rebuilds; 410 status, H1, static non-button mark, links; sitemap groups in order, 3 categories + 12 sub-services, sectors hub + 7, 4 legal pages, Draft chips locally, no thank-you / styleguide / self link, all 35 links answer 200; no horizontal scroll at 360 / 768 / 1024 / 1440 on both pages; reduced motion keeps the mark static and visible; no console errors or failed assets.
+- `seo-audit --all`: 40 pages + 7 legacy redirects, 0 failing. `check-content`: `/sitemap/` published, title 49, description 139.
+
+**Follow-ups**
+- Deploy P24–P29 to the Vercel preview (needs the user's go-ahead in a session that allows it, or run `vercel deploy --prod --yes` yourself).

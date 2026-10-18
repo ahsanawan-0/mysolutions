@@ -68,5 +68,7 @@
 @import '/src/css/pages/article.css';
 @import '/src/css/pages/faq.css';
 @import '/src/css/pages/legal.css';
+@import '/src/css/pages/error.css';
+@import '/src/css/pages/sitemap.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

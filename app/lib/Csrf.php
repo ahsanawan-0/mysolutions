@@ -55,6 +55,10 @@ final class Csrf
 
     public static function token(): string
     {
+        // P29: Page::probe() renders templates only to read their $page (sitemaps, checkers): no session, no cookie
+        if (Page::isProbing()) {
+            return str_repeat('0', 64);
+        }
         self::startSession();
         if (empty($_SESSION['_csrf']) || !is_string($_SESSION['_csrf'])) {
             $_SESSION['_csrf'] = bin2hex(random_bytes(32));

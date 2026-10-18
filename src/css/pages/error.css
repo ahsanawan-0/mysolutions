@@ -1,0 +1,49 @@
+/* ==========================================================================
+   404 + 410 (PROMPTS P29): templates/pages/404.php, 410.php, sections/error/links.php. hero-inner `simple` with the
+   logo mark in its slot (nf-mark.js animates it on the 404; on the 410 its navy bar lies down, static), the requested
+   path, then the helpful links as contact-card tiles (components/contact.css) and the phone line.
+   ========================================================================== */
+.nf-mark {
+  display: inline-block;
+  width: 132px;
+  margin-bottom: var(--space-6);
+  padding: var(--space-2);
+  border-radius: var(--r-md);
+  -webkit-tap-highlight-color: transparent;
+}
+.nf-mark__svg { display: block; width: 100%; height: auto; overflow: visible; }
+/* GSAP pivots in the logo's own coordinates (svgOrigin): undo logo.css's fill-box so the pivot is not shifted */
+.nf-mark [data-piece] { transform-box: view-box; transform-origin: 0 0; }
+.nf-mark[role="button"] { cursor: pointer; }
+.nf-mark[role="button"]:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
+/* 410: the navy bar already lies on the ground (the same pivot as the 404 animation) */
+.nf-mark--fallen [data-piece="bar-navy"] { transform-box: view-box; transform-origin: 587px 366px; transform: translateY(-91px) rotate(120deg); }
+/* 404 pre-state: hidden until the script assembles it (JS + motion only; a 0s animation at 3s restores it) */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .nf-mark[data-module]:not(.is-live) [data-piece] { opacity: 0; animation: nf-safety 0s 3s both; }
+}
+@keyframes nf-safety { to { opacity: 1; } }
+
+.nf-path { padding-top: var(--space-8); }
+.nf-path p { margin: 0; color: var(--text-2); font-size: var(--fs-small); }
+.nf-path code { padding: 0.15em 0.4em; border-radius: var(--r-xs); background: var(--ms-mist); color: var(--ms-ink); overflow-wrap: anywhere; }
+
+.nf-links { padding-block: var(--space-8) var(--section-y); }
+.nf-links .nf-links__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nf-links__item { display: flex; min-width: 0; }
+@media (min-width: 640px) {
+  .nf-links .nf-links__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-5); }
+}
+@media (min-width: 1024px) {
+  .nf-links .nf-links__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.nf-links__phone { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-8) 0 0; color: var(--text-2); }
+.nf-links__phone .icon { flex: none; color: var(--azure-600); }
+.nf-links__phone a { color: var(--link); font-weight: var(--fw-medium); }

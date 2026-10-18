@@ -1096,3 +1096,51 @@
 - P25: `/insights/` (linked from the thank-you page) is still a stub / 404 on the preview until the blog engine lands.
 - P28: the consent module sets `window.msAnalytics` and replays `[data-track-event]`.
 - The Vercel preview runs PHP sessions in `/tmp` per function instance; check the form + thank-you flag there after the next deploy.
+
+---
+
+## P25: Insights (blog) engine (18 October 2026)
+
+**Commit:** `P25: Insights blog engine`
+
+**Files created**
+- `app/lib/Markdown.php`: league/commonmark (CommonMark + GFM; tables wrapped in `.prose-table`). Raw HTML in a post is escaped (it stays visible, so nothing is silently lost) and unsafe link schemes are dropped. A `DocumentParsedEvent` listener gives H2/H3 unique ids from their text and returns them as `toc` (P26). External links get `rel="noopener"` (no forced new tab). `render()` returns `html`, `toc` and `words`.
+- `app/lib/MarkdownImageRenderer.php`: `![alt](image-key)` → `img()` (responsive, lazy, width/height; branded placeholder while the key is missing). An absolute URL or path renders a visible `[[PENDING IMAGE: unsupported-image-url]]`, because it would have no dimensions.
+- `content/authors.php`: `team` (My Solutionz Team, Organization, `/about-us/`, provisional bio using the approved "over 10 years of business development experience" claim) plus a commented Person example. `content/categories.php`: the 5 categories, each with name, the two-voice H1 (title + accent), `seo_title` and a unique description (all provisional).
+- `app/data/insights.php` (+ `insights()` helper): listing SEO (the prompt's title and description), hero, the publish threshold (3), chip / status / pagination / empty-state / feed copy.
+- `templates/pages/insights/index.php` (`/insights/`, `/insights/page/<n>/`), `templates/pages/insights/category.php` (`/insights/category/<slug>/` + `/page/<n>/`), shared body `templates/sections/insights/listing.php`: hero-inner `simple`, category chips, featured card (page 1), grid of C10 cards, pagination, empty state (LinkedIn follow; on a category also "View all insights"), CTA band. `/page/1/` 301s to page 1; a page past the end or an unknown category is a 404. Every page is self-canonical, and pages 2+ get "(Page n)" titles and "Page n:" descriptions.
+- `templates/components/pagination.php` + `src/css/components/pagination.css` (C39).
+- `app/controllers/FeedController.php`: `/insights/feed.xml`, RSS 2.0 with the last 20 published posts (never drafts), full description, category, `dc:creator`, `lastBuildDate`, `<atom:link rel="self">`. The `<head>` already links it (P03).
+- `src/js/modules/insights-filter.js`: chip click → fetch the chip's URL → swap `[data-insights-results]`, hero breadcrumbs/H1/lead, chips, `<title>`, meta description and canonical → `pushState`. GSAP Flip: leaving cards fade out, shared cards glide, new cards fade up. Back / forward replay it (listing paths only, hash-only entries ignored). Focus stays on the chip and the result count is announced (`role="status"`). Modified clicks and any fetch failure fall back to normal navigation; reduced motion swaps without animating.
+- `src/css/pages/insights.css` (C40 chips, results grid 1/2/3 columns, empty state).
+
+**Files changed**
+- `app/lib/Blog.php`: rewritten around a cached index (`storage/cache/blog.php`, atomic write, keyed on post mtimes, authors/categories files, the image manifest, the site URL and the renderer files). API: `all()`, `published()`, `latest()`, `find()`, `byCategory()`, `paginate()` (page 1 = featured + 9, later pages 9), `related()` (same category, then shared tags, then newest), `categories()` (with url and count), `category()`, `author()`, `readingTime()` (220 wpm), `displayDate()`. Posts gain `author_key`, `category_slug` / `category_url` (slug or name accepted), `tags`, `takeaways`, `html`, `toc`, `words`, `reading_time`; `author` / `category` stay the display names, so the home section and the hero mini card are unchanged.
+- `app/lib/Schema.php`: `Schema::blog($posts)` (Blog node with short BlogPosting entries for the published posts listed); `webPage()` honours `$page['main_entity']` (`app/lib/Page.php` documents it). Listings are CollectionPage → mainEntity `#blog`.
+- `app/controllers/SitemapController.php`: the insights group adds, while `/insights/` is indexable, its pages 2+ and every category with published posts (+ their pages). It also lists published posts once `pages/insights/single` exists (P26). lastmod = the newest `updated` on each URL; published posts only.
+- `app/routes.php`: category slugs constrained to `content/categories.php`; new `/insights/category/{slug}/page/{n}/`; the feed is a controller route.
+- `templates/components/card-blog.php` + `src/css/components/card-blog.css`: `variant => 'featured'` (16:10 image beside the text from 900px, description, reading time) and `data-flip-id` on every post card.
+- `content/blog/2026-01-18-…md`: `author: team`, `category: health-social-care` (the new keys; still a draft, body for P26).
+- `src/css/main.css`, `CLAUDE.md`, `docs/03` (C10, C39, C40).
+
+**Decisions**
+- Category H1s read as the category name in two voices: "Tender Writing *Tips*", "Procurement *Updates*". The names that would leave a single word get *Insights*: "Health & Social Care *Insights*", "Compliance *Insights*", "Digital *Insights*".
+- Chips show only categories with visible posts (plus the current one), so a chip never leads to an empty page. Counts are read out as ", 4 insights".
+- A category page is `published` only when the listing is (3+ published posts) and it has a published post of its own; otherwise it is a noindex draft.
+- `html_input: escape` rather than `strip`: a stray HTML tag in a post shows up visibly instead of disappearing. Heading ids come from our own listener rather than HeadingPermalinkExtension, so no permalink anchors are injected into the headings.
+- The feed and sitemap always use published posts only, in every environment; the listing on local/staging also shows drafts (flagged) like the home section.
+
+**Deviations**
+- Heading ids use a small custom listener instead of the HeadingPermalink extension (same ids, no injected anchor markup). Otherwise none.
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean.
+- Smoke test of `App\Markdown`: ids (`whats-in-a-tender`, `-2` for a duplicate), TOC, wrapped table, `rel="noopener"` on external links only, the manifest image as `<picture>`, raw `<script>` escaped, a `javascript:` link dropped.
+- curl with 14 temporary fixture posts (13 published, 1 draft; removed afterwards): `/insights/` 200 and `/page/2/` 200, `/page/3/` 404, `/page/1/` 301; categories 200, unknown category 404; feed 13 items, newest first, no draft; `sitemap-insights.xml` = `/insights/`, `/page/2/` and the 5 categories with correct lastmods.
+- Playwright 32/32: featured + 9 cards + pagination; the Compliance chip by keyboard swaps in place (no reload), pushes the URL and updates H1, title, canonical, breadcrumbs and chip state, keeps focus, announces the count, and shows only Compliance cards, all visible after the Flip; Back restores `/insights/`; Next goes to page 2 (self-canonical, "(Page 2)" title, no featured card); no horizontal scroll at 360 / 768 / 1024 / 1440; reduced motion filters without animation; with JS off the chips and pagination are plain links. No console errors, no 4xx/5xx (apart from the P26 article stubs).
+- After removing the fixtures: the empty category state and the single-draft listing render, and the home Latest Insights section is unchanged.
+- `seo-audit --all`: 33 pages + 6 legacy redirects, 0 failing. `check-content`: `/insights/` ok (draft, title 44, description 132); the category titles are 40–53 characters and the descriptions 134–139; the new PROVISIONAL lines are listed. No SEO warnings in the draft ribbons.
+
+**Follow-ups**
+- P26: the article template (`pages/insights/single`), which also switches on the posts in the sitemap; `Schema::blogPosting()` should take the author's `type` (the `team` author is an Organization).
+- C07: 3+ real published posts flip the listing to `published` (indexable, in the sitemap); the client approves the category descriptions and the author bio.

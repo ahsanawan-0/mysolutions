@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Controllers\ContactController;
+use App\Controllers\FeedController;
 use App\Controllers\LlmsController;
 use App\Controllers\RobotsController;
 use App\Controllers\SitemapController;
@@ -50,12 +51,17 @@ foreach ($sectors as $sector) {
     ];
 }
 
+// Insights (P25): the category slugs come from content/categories.php; pages 2+ of each listing, plus the RSS feed.
+// Posts, the paginated pages and the categories reach sitemap-insights.xml through App\Blog (SitemapController).
+$blogCategories = array_keys((array) require base_path('content/categories.php'));
+$pageNumber = '/^[1-9][0-9]*$/';
 $routes += [
-    '/insights/'                  => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'sitemap' => 'insights'],
-    '/insights/page/{n}/'         => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'where' => ['n' => '/^[1-9][0-9]*$/']],
-    '/insights/category/{slug}/'  => ['template' => 'pages/insights/category', 'built_by' => 'P25'],
-    '/insights/feed.xml'          => ['template' => 'feeds/rss',               'built_by' => 'P25'],
-    '/insights/{slug}/'           => ['template' => 'pages/insights/single',   'built_by' => 'P26'],
+    '/insights/'                         => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'sitemap' => 'insights'],
+    '/insights/page/{n}/'                => ['template' => 'pages/insights/index',    'built_by' => 'P25', 'where' => ['n' => $pageNumber]],
+    '/insights/category/{slug}/'         => ['template' => 'pages/insights/category', 'built_by' => 'P25', 'where' => ['slug' => $blogCategories]],
+    '/insights/category/{slug}/page/{n}/' => ['template' => 'pages/insights/category', 'built_by' => 'P25', 'where' => ['slug' => $blogCategories, 'n' => $pageNumber]],
+    '/insights/feed.xml'                 => ['controller' => [FeedController::class, 'rss'], 'built_by' => 'P25'],
+    '/insights/{slug}/'                  => ['template' => 'pages/insights/single',   'built_by' => 'P26'],
 
     '/faq/'        => ['template' => 'pages/faq',       'built_by' => 'P27', 'sitemap' => 'pages'],
     '/contact-us/' => ['template' => 'pages/contact',   'built_by' => 'P23', 'sitemap' => 'pages', 'post' => [ContactController::class, 'submit']],

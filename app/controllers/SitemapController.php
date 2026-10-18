@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Blog;
 use App\Page;
 
 /**
@@ -76,7 +77,55 @@ final class SitemapController
                 'image'   => $page['primary_image'],
             ];
         }
-        // P25 adds blog posts and categories from content/blog to the "insights" group via App\Blog.
+        if ($group === 'insights') {
+            $entries = [...$entries, ...$this->insightEntries($entries !== [])];
+        }
+        return $entries;
+    }
+
+    /**
+     * P25: the published posts (once the article template exists, P26), and, while the Insights listing itself is
+     * indexable, its pages 2+, the categories with published posts and their pages 2+. lastmod = the newest
+     * `updated` (or `date`) among the posts each URL lists. Always the production view: published posts only.
+     * @return array<int, array{loc:string,lastmod:?int,image:?string}>
+     */
+    private function insightEntries(bool $listingIndexable): array
+    {
+        $published = Blog::published();
+        $newest = static fn (array $posts): ?int => $posts !== [] ? max(array_map(static fn (array $p): int => (int) strtotime($p['updated']), $posts)) : null;
+        $entries = [];
+
+        if ($listingIndexable) {
+            $listings = [['/insights/', $published, false]];
+            foreach (Blog::categories() as $slug => $category) {
+                $listings[] = [$category['url'], Blog::byCategory($slug, $published), true];
+            }
+            foreach ($listings as [$base, $posts, $isCategory]) {
+                if ($posts === []) {
+                    continue;
+                }
+                $pages = Blog::paginate(Blog::PER_PAGE, 1, $posts)['pages'];
+                for ($n = $isCategory ? 1 : 2; $n <= $pages; $n++) {   // /insights/ itself comes from its route
+                    $list = Blog::paginate(Blog::PER_PAGE, $n, $posts);
+                    $entries[] = [
+                        'loc'     => url($n === 1 ? $base : $base . 'page/' . $n . '/'),
+                        'lastmod' => $newest(array_values(array_filter([$list['featured'], ...$list['items']]))),
+                        'image'   => null,
+                    ];
+                }
+            }
+        }
+
+        if (is_file(templates_path('pages/insights/single'))) {
+            foreach ($published as $post) {
+                $image = $post['image'] !== '' ? \App\Image::src($post['image']) : null;
+                $entries[] = [
+                    'loc'     => url($post['url']),
+                    'lastmod' => (int) strtotime($post['updated']),
+                    'image'   => $image !== null ? Page::absolute($image) : null,
+                ];
+            }
+        }
         return $entries;
     }
 

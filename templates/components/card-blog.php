@@ -7,8 +7,12 @@ declare(strict_types=1);
  * concave cut-out at the surface's bottom-right (`.notch--br` on the surface; the button is a sibling outside the
  * mask so it stays visible). Hover: image zoom 1.06, arrow −45° → 0° and fills Azure. The whole card is one link.
  * Pass `soon` instead of `post` for the "More insights coming soon" card.
- * @var array|null  $post    App\Blog post: title, url, date, author, category, image, image_alt, draft
+ * P25: `variant => 'featured'` is the Insights listing's large card (image beside the text from 900px, the
+ * description and the reading time); every post card carries `data-flip-id` for the category filter's GSAP Flip.
+ * @var array|null  $post    App\Blog post: title, url, date, author, category, image, image_alt, draft, description,
+ *                           reading_time
  * @var array|null  $soon    ['title' => …, 'text' => …, 'label' => …, 'url' => …] (external URLs get rel="noopener")
+ * @var string|null $variant 'default' | 'featured'
  * @var int|null    $level   Heading level (default 3)
  * @var string|null $sizes   <img> sizes (default '(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw')
  * @var bool|null   $priority  Above the fold: no lazy loading
@@ -16,14 +20,15 @@ declare(strict_types=1);
  */
 $level = max(2, min(6, $level ?? 3));
 $tag = 'h' . $level;
-$sizes = $sizes ?? '(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw';
 $isSoon = isset($soon);
+$featured = !$isSoon && ($variant ?? '') === 'featured';
+$sizes = $sizes ?? ($featured ? '(min-width: 1360px) 760px, (min-width: 900px) 56vw, 100vw' : '(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw');
 $url = $isSoon ? ($soon['url'] ?? config('socials.linkedin')) : $post['url'];
 $external = !str_starts_with($url, '/');
 $href = $external ? $url : url($url);
-$classes = 'card-blog' . ($isSoon ? ' card-blog--soon' : '') . (isset($class) ? ' ' . $class : '');
+$classes = 'card-blog' . ($isSoon ? ' card-blog--soon' : '') . ($featured ? ' card-blog--featured' : '') . (isset($class) ? ' ' . $class : '');
 ?>
-<article class="<?= e($classes) ?>">
+<article class="<?= e($classes) ?>"<?= $isSoon ? '' : ' data-flip-id="post-' . e($post['slug']) . '"' ?>>
   <div class="card-blog__surface notch notch--br">
     <?php if ($isSoon): ?>
     <div class="card-blog__soon">
@@ -41,8 +46,12 @@ $classes = 'card-blog' . ($isSoon ? ' card-blog--soon' : '') . (isset($class) ? 
     </div>
     <div class="card-blog__body">
       <<?= $tag ?> class="card-blog__title"><a class="card-blog__link" href="<?= e($href) ?>"><?= e($post['title']) ?></a></<?= $tag ?>>
+      <?php if ($featured && ($post['description'] ?? '') !== ''): ?>
+      <p class="card-blog__text"><?= e($post['description']) ?></p>
+      <?php endif; ?>
       <div class="card-blog__meta">
         <span class="card-blog__author"><?= e($post['author']) ?></span>
+        <?php if ($featured && !empty($post['reading_time'])): ?><span class="card-blog__read"><?= icon('clock', 'regular', ['size' => 16]) ?><?= e(str_replace('{n}', (string) $post['reading_time'], (string) insights('read'))) ?></span><?php endif; ?>
         <?php if ($post['category'] !== ''): ?><?= component('chip', ['label' => $post['category'], 'variant' => 'outline']) ?><?php endif; ?>
         <?php if (!empty($post['draft']) && !is_production()): ?><?= component('chip', ['label' => 'Draft', 'variant' => 'solid-bid', 'class' => 'card-blog__draft']) ?><?php endif; ?>
       </div>

@@ -131,6 +131,20 @@
 .card-blog__soon .card-blog__title { -webkit-line-clamp: 3; }
 .card-blog__soon .card-blog__meta { padding-top: var(--space-2); }
 
+/* ---------- Featured (Insights listing, P25): image beside the text from 900px, description + reading time ---------- */
+.card-blog--featured { --cb-arrow: 64px; }
+.card-blog--featured .card-blog__body { gap: var(--space-5); padding: var(--space-6) var(--space-6) var(--space-6); }
+.card-blog--featured .card-blog__title { font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); -webkit-line-clamp: 3; }
+.card-blog--featured .card-blog__text { font-size: var(--fs-lead); line-height: var(--lh-lead); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+.card-blog__read { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-small); color: var(--text-2); }
+.card-blog__read .icon { color: var(--azure-650); }
+@media (min-width: 900px) {
+  .card-blog--featured .card-blog__surface { flex-direction: row; align-items: center; }
+  .card-blog--featured .card-blog__media { flex: 0 0 56%; align-self: flex-start; }   /* the image keeps 16:10 */
+  .card-blog--featured .card-blog__body { align-self: stretch; justify-content: center; padding: var(--space-8) var(--space-10); }
+  .card-blog--featured .card-blog__meta { margin-top: var(--space-2); }
+}
+
 /* ---------- Hover ---------- */
 @media (hover: hover) {
   .card-blog:hover { transform: translateY(-4px); }

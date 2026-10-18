@@ -534,6 +534,14 @@ function contact(string $key, mixed $default = null): mixed
     return data_get($contact, $key, $default);
 }
 
+/** Insights listing copy (app/data/insights.php, P25): insights('hero.title'). */
+function insights(string $key, mixed $default = null): mixed
+{
+    static $insights = null;
+    $insights ??= require base_path('app/data/insights.php');
+    return data_get($insights, $key, $default);
+}
+
 /**
  * Path of the quote form with its pre-fill context (P24): quote_url(['service' => 'expert-review']) →
  * '/contact-us/?service=expert-review#quote'. Keys: `sector` (a sector slug) and `service` (a sub-service or category

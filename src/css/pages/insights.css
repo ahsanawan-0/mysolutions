@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Insights listing (PROMPTS P25, docs/08 §9): /insights/, its pages and the category pages. The hero is C32
+   `simple` (components/hero-inner.css), the cards C10 (components/card-blog.css), the pagination
+   components/pagination.css. Category chips → featured card → 3-column grid → pagination, or the empty state.
+   ========================================================================== */
+.insights-list { padding-block: var(--space-10) var(--section-y); background: var(--ms-canvas); }
+
+/* ---------- Category chips (real links; insights-filter.js filters in place) ---------- */
+.insights-filter { margin-bottom: var(--space-10); }
+.insights-filter .insights-filter__list {   /* two classes: base.css resets ul[class] */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.insights-filter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: 0 var(--space-4);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ms-line);
+  background: var(--ms-white);
+  color: var(--ms-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.insights-filter__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 6px;
+  border-radius: var(--r-pill);
+  background: var(--ms-mist);
+  color: var(--text-2);
+  font-size: var(--fs-eyebrow);
+  font-variant-numeric: tabular-nums;
+}
+.insights-filter__chip[aria-current] { background: var(--navy-900); border-color: transparent; color: var(--ms-white); }
+.insights-filter__chip[aria-current] .insights-filter__count { background: rgb(var(--white-rgb) / .16); color: var(--ms-white); }
+.insights-filter__chip:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (hover: hover) {
+  .insights-filter__chip:not([aria-current]):hover { border-color: var(--azure-600); background: var(--azure-50); color: var(--azure-800); }
+}
+.insights-filter.is-busy .insights-filter__chip { cursor: progress; }
+
+/* ---------- Results ---------- */
+.insights-results { display: grid; gap: var(--space-12); }
+.insights-results__featured { display: flex; }
+.insights-results .insights-results__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.insights-results__item { display: flex; min-width: 0; }
+@media (min-width: 640px) {
+  .insights-results .insights-results__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .insights-results .insights-results__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.insights-results__pages { margin-top: var(--space-4); }
+
+/* ---------- Empty state ---------- */
+.insights-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: 640px;
+  margin-inline: auto;
+  padding: var(--space-12) var(--space-6);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  text-align: center;
+}
+.insights-empty__title { margin: 0; }
+.insights-empty__text { margin: 0; max-width: 52ch; color: var(--text-2); }
+.insights-empty__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .insights-filter__chip { transition: none; }
+}
+@media (forced-colors: active) {
+  .insights-filter__chip[aria-current] { border-color: Highlight; outline: 2px solid Highlight; }
+}

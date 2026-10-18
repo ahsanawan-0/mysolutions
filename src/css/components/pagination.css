@@ -1,0 +1,52 @@
+/* Pagination (templates/components/pagination.php, PROMPTS P25): real links, 44px targets, the current page filled
+   Azure, Previous / Next as pills (icon only below 480px; their aria-labels carry the name). */
+.pagination { display: flex; justify-content: center; }
+.pagination .pagination__list {   /* two classes: base.css resets ul[class] */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pagination__item { display: flex; }
+.pagination__num,
+.pagination__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding-inline: var(--space-3);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--ms-line);
+  background: var(--ms-white);
+  color: var(--ms-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.pagination__step { padding-inline: var(--space-4); }
+.pagination__num[aria-current="page"] { background: var(--azure-650); border-color: transparent; color: var(--ms-white); }
+.pagination__step.is-disabled { color: var(--ms-ink-3); background: transparent; }
+.pagination__gap { display: inline-grid; place-items: center; min-width: 24px; min-height: var(--target-min); color: var(--text-2); }
+.pagination__num:focus-visible, .pagination__step:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (hover: hover) {
+  a.pagination__num:not([aria-current="page"]):hover, a.pagination__step:hover { border-color: var(--azure-600); color: var(--azure-700); background: var(--azure-50); }
+}
+@media (max-width: 479px) {
+  .pagination__step > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .pagination__step { padding-inline: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pagination__num, .pagination__step { transition: none; }
+}
+@media (forced-colors: active) {
+  .pagination__num[aria-current="page"] { border-color: Highlight; outline: 2px solid Highlight; }
+}

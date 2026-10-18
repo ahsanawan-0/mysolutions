@@ -117,6 +117,10 @@ final class Schema
         if (!empty($page['about'])) {
             $node['about'] = array_merge([['@id' => self::organizationId()]], array_values($page['about']));
         }
+        // The page's main subject (P25: the Insights listings → the #blog node)
+        if (!empty($page['main_entity'])) {
+            $node['mainEntity'] = ['@id' => (string) $page['main_entity']];
+        }
         if (!empty($page['primary_image'])) {
             $node['primaryImageOfPage'] = ['@type' => 'ImageObject', 'url' => $page['primary_image']];
         }
@@ -239,6 +243,42 @@ final class Schema
         }
         if (!empty($post['wordCount'])) {
             $node['wordCount'] = (int) $post['wordCount'];
+        }
+        return $node;
+    }
+
+    /**
+     * The Insights blog (P25, docs/10 §6 "Blog listing: CollectionPage (+ Blog)"). $posts = the published posts listed
+     * on the page, as short BlogPosting entries linked by @id to the full node on each article (P26).
+     */
+    public static function blog(array $posts): array
+    {
+        $url = Page::absolute('/insights/');
+        $node = [
+            '@type'      => 'Blog',
+            '@id'        => $url . '#blog',
+            'name'       => (string) insights('blog_name'),
+            'url'        => $url,
+            'publisher'  => ['@id' => self::organizationId()],
+            'inLanguage' => config('locale'),
+        ];
+        $entries = [];
+        foreach ($posts as $post) {
+            if (!empty($post['draft'])) {
+                continue;
+            }
+            $postUrl = Page::absolute((string) $post['url']);
+            $entries[] = [
+                '@type'         => 'BlogPosting',
+                '@id'           => $postUrl . '#article',
+                'headline'      => $post['title'],
+                'url'           => $postUrl,
+                'datePublished' => Page::date($post['date']),
+                'dateModified'  => Page::date($post['updated']),
+            ];
+        }
+        if ($entries !== []) {
+            $node['blogPost'] = $entries;
         }
         return $node;
     }

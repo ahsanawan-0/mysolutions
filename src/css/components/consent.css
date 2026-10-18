@@ -1,0 +1,186 @@
+/* ==========================================================================
+   C24 Consent banner + preferences dialog (templates/partials/cookie-banner.php, modules/consent.js; P28).
+   Banner: a non-blocking light glass sheet bottom-left (max 560px), clear of the hero content; on phones a full-width
+   sheet above the mobile action bar. Its three buttons are identical (Reject all is as prominent as Accept all).
+   Dialog: a native modal <dialog> on a dimmed, blurred backdrop; categories with switches and their technologies;
+   sticky actions. Under prefers-reduced-motion nothing slides; under prefers-reduced-transparency the sheet is solid.
+   ========================================================================== */
+.consent-banner {
+  position: fixed;
+  z-index: 950;   /* above the action bar (850) and the draft ribbon (900), below the splash (1000) */
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  max-width: 560px;
+  padding: var(--space-6);
+  border-radius: var(--r-xl);
+  background: rgb(var(--white-rgb) / .9);   /* stays near-white over the navy hero */
+  -webkit-backdrop-filter: var(--glass-regular-light-blur);
+  backdrop-filter: var(--glass-regular-light-blur);
+  box-shadow: inset 0 0 0 1px var(--glass-regular-light-line), var(--shadow-3);
+  color: var(--ms-ink);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--dur-ui) var(--ease-apple), transform var(--dur-reveal) var(--ease-apple), bottom var(--dur-ui) var(--ease-apple);
+}
+.consent-banner.is-in { opacity: 1; transform: none; }
+.consent-banner:focus { outline: none; }
+.consent-banner:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+html:has(.action-bar.is-visible) .consent-banner { bottom: calc(var(--action-bar-h) + env(safe-area-inset-bottom) + var(--space-3)); }
+@media (min-width: 768px) {
+  .consent-banner { left: var(--space-6); right: auto; bottom: var(--space-6); width: calc(100% - 2 * var(--space-6)); }
+}
+.consent-banner__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-h4);
+}
+.consent-banner__title .icon { color: var(--azure-600); }
+.consent-banner__text { margin: 0; font-size: var(--fs-small); line-height: var(--lh-body); color: var(--text); }
+.consent :is(.consent-banner__text, .consent-dialog__intro) a { color: var(--link); text-decoration: underline; text-underline-offset: .2em; }
+.consent-banner__actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2); margin-top: var(--space-5); }
+@media (min-width: 480px) {
+  .consent-banner__actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Every consent button looks the same: equal prominence (ICO) */
+.consent-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--navy-900);
+  border-radius: var(--r-pill);
+  background: var(--navy-900);
+  color: var(--ms-white);
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.consent-btn:hover { border-color: var(--azure-650); background: var(--azure-650); }
+.consent-btn:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+
+/* ---------- Preferences dialog ---------- */
+.consent-dialog {
+  margin: auto;   /* the reset removes the UA's centring margins */
+  width: min(640px, calc(100% - 2 * var(--space-4)));
+  max-height: min(86vh, 780px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-2xl);
+  background: var(--ms-white);
+  box-shadow: var(--shadow-3);
+  color: var(--ms-ink);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.consent-dialog::backdrop { background: rgb(var(--navy-900-rgb) / .48); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.consent-dialog__inner { padding: var(--space-6) var(--space-6) 0; }
+.consent-dialog__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.consent-dialog__title { margin: 0; font-size: var(--fs-h3); line-height: var(--lh-h3); }
+.consent-dialog__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border: 0;
+  border-radius: 50%;
+  background: var(--ms-mist);
+  color: var(--ms-ink);
+  cursor: pointer;
+}
+.consent-dialog__close:hover { background: var(--azure-100); }
+.consent-dialog__close:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.consent-dialog__intro { margin: var(--space-3) 0 var(--space-4); font-size: var(--fs-small); color: var(--text-2); }
+
+.consent-cat { padding-block: var(--space-5); border-top: 1px solid var(--ms-line); }
+.consent-cat__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.consent-cat__title { margin: 0; font-size: var(--fs-h4); line-height: var(--lh-h4); }
+.consent-cat__always { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-small); font-weight: var(--fw-medium); color: var(--text-2); }
+.consent-cat__always .icon { color: var(--azure-600); }
+.consent-cat__desc { margin: var(--space-2) 0 0; font-size: var(--fs-small); color: var(--text-2); }
+.consent-cat__details { margin-top: var(--space-1); }
+.consent-cat__details summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--target-min);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  color: var(--link);
+  cursor: pointer;
+  list-style: none;
+}
+.consent-cat__details summary::-webkit-details-marker { display: none; }
+.consent-cat__details summary:focus-visible { outline: var(--focus-ring); outline-offset: 2px; border-radius: var(--r-xs); }
+.consent-cat__caret { transition: transform var(--dur-ui) var(--ease-apple); }
+.consent-cat__details[open] .consent-cat__caret { transform: rotate(180deg); }
+.consent .consent-tech { display: grid; gap: var(--space-2); margin: var(--space-1) 0 0; padding: 0; list-style: none; }
+.consent-tech__item { padding: var(--space-3) var(--space-4); border-radius: var(--r-md); background: var(--ms-canvas); font-size: var(--fs-small); }
+.consent-tech__item p { margin: 0; }
+.consent-tech__name span { color: var(--text-2); }
+.consent-tech__purpose { margin-top: var(--space-1) !important; color: var(--text); }
+.consent-tech__duration { color: var(--text-2); }
+
+.consent-dialog__actions {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  margin-inline: calc(-1 * var(--space-6));
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  border-top: 1px solid var(--ms-line);
+  background: var(--ms-white);
+}
+@media (min-width: 560px) {
+  .consent-dialog__actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Switch: a real checkbox (role="switch") over a drawn track; 44px target */
+.consent-switch { position: relative; display: inline-grid; flex: none; place-items: center; min-width: var(--target-min); min-height: var(--target-min); cursor: pointer; }
+.consent-switch__input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.consent-switch__track {
+  display: block;
+  pointer-events: none;
+  width: 48px;
+  height: 28px;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--text-2);   /* ≥ 3:1 against white when off (non-text contrast) */
+  transition: background-color var(--dur-ui) var(--ease-apple);
+}
+.consent-switch__thumb {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ms-white);
+  box-shadow: 0 1px 3px rgb(var(--ink-rgb) / .3);
+  transition: transform var(--dur-ui) var(--ease-apple);
+}
+.consent-switch__input:checked + .consent-switch__track { background: var(--azure-650); }
+.consent-switch__input:checked + .consent-switch__track .consent-switch__thumb { transform: translateX(20px); }
+.consent-switch__input:focus-visible + .consent-switch__track { outline: var(--focus-ring); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .consent-banner { transform: none; transition: opacity var(--dur-ui) linear; }
+  .consent-btn, .consent-switch__track, .consent-switch__thumb, .consent-cat__caret { transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .consent-banner { background: var(--ms-white); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (forced-colors: active) {
+  .consent-banner, .consent-dialog { border: 1px solid CanvasText; }
+  .consent-switch__track { border: 1px solid CanvasText; }
+  .consent-switch__input:checked + .consent-switch__track { background: Highlight; }
+}

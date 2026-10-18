@@ -35,6 +35,7 @@ $showDraftRibbon = !is_production() && filter_var(env('DRAFT_RIBBON', 'true'), F
 </main>
 <?php include templates_path('partials/footer'); ?>
 <?= component('back-to-top') ?>
+<?= render('partials/cookie-banner') /* P28: prints nothing unless non-essential technologies are configured */ ?>
 <?php if ($showDraftRibbon) include templates_path('partials/draft-ribbon'); ?>
 </body>
 </html>

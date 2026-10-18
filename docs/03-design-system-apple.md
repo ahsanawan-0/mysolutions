@@ -130,7 +130,7 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 | C21 | **CTA band** | Full-width navy → azure gradient with two soft glows and the faded logo mark (no line art: the client removed the grid-wave on 16 October 2026), two-voice heading, primary + phone CTA |
 | C22 | **Breadcrumbs** | Small, ink-2, chevrons; schema-backed |
 | C23 | **Footer** | see `08` §Footer |
-| C24 | **Cookie banner** | Bottom glass sheet; Accept all / Reject all / Manage, all **equal prominence** |
+| C24 | **Cookie banner** | Bottom glass sheet; Accept all / Reject all / Manage, all **equal prominence**. Built in P28: `templates/partials/cookie-banner.php` + `components/consent.css` + `modules/consent.js`; a near-white glass sheet bottom-left (max 560px, above the mobile action bar on phones) with three identical navy pill buttons, focus moved to it on arrival without a trap; a native modal `<dialog>` (centred, blurred navy backdrop) lists each category with a 44px switch (`role="switch"`) and its technologies, with sticky Reject all / Accept all / Save preferences; notice mode (exempt statistics only) shows OK / Opt out / Manage preferences. Printed only when something non-essential is configured |
 | C25 | **Back-to-top** | Square Azure button with circular scroll-progress ring |
 | C26 | **Marquee** | Infinite sector/keyword ticker, pauses on hover, reduced-motion = static list |
 | C27 | **Toast/alert** | Form feedback, `role="status"` |

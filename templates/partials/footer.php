@@ -128,7 +128,7 @@ $href = static fn (string $u): string => $u === '/contact-us/#quote' ? url(quote
       <?php foreach ($legalLinks as $i => [$label, $path]): ?>
       <li><a href="<?= e(url($path)) ?>"><?= e($label) ?></a></li>
       <?php if ($i === 1): ?>
-      <li><button type="button" data-cookie-settings>Cookie settings</button></li>
+      <li><a href="<?= e(url('/cookie-policy/#cookie-settings')) ?>" data-cookie-settings><?= e(ui('footer.cookie_settings')) ?></a></li>
       <?php endif; ?>
       <?php endforeach; ?>
     </ul>

@@ -1,0 +1,25 @@
+/* ==========================================================================
+   Legal pages (PROMPTS P28): sections/legal/document.php reuses the article layout (pages/article.css: contents
+   sticky beside the 720px `.prose` body) and adds the "Last updated" line and the cookie policy's table.
+   ========================================================================== */
+@media (min-width: 1100px) {
+  .legal.article--toc .article__grid > .article__toc { grid-row: 1; }   /* contents + body only: one row */
+}
+.prose .legal__updated {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-small);
+  color: var(--text-2);
+}
+.legal__updated .icon { color: var(--azure-600); }
+
+/* Cookie policy: the technologies table (sections/legal/cookie-table) */
+.prose .cookie-table table { min-width: 680px; }
+.prose .cookie-table tbody th { background: transparent; color: var(--ms-ink); font-weight: var(--fw-body); border-top: 1px solid var(--ms-line); }
+.prose .cookie-table tbody tr:nth-child(even) th { background: var(--ms-canvas); }
+.prose .cookie-table th:first-child { width: 28%; }
+.prose .cookie-table th:nth-child(4) { width: 13%; }
+.cookie-table__meta { display: block; margin-top: var(--space-1); font-size: var(--fs-eyebrow); line-height: 1.4; color: var(--text-2); }
+.prose .cookie-settings .btn { display: inline-flex; gap: var(--space-2); text-decoration: none; }

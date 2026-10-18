@@ -12,17 +12,24 @@ const LINKS = [
   ['a[href*="wa.me/"], a[href*="api.whatsapp.com/"]', 'click_whatsapp'],
 ];
 
-export function initTracking() {
-  window.msTrack ??= (name, props = {}) => {
-    const analytics = window.msAnalytics;
-    if (analytics && typeof analytics.send === 'function') analytics.send(name, props);
-  };
+const send = (name, props = {}) => {
+  const analytics = window.msAnalytics;
+  if (analytics && typeof analytics.send === 'function') analytics.send(name, props);
+};
 
+/** Fire the page's [data-track-event] events. On load (a no-op before consent) and again by the consent module
+ *  (P28) the moment analytics starts, so an event on the page where the visitor consents is not lost. */
+export function firePageEvents() {
   document.querySelectorAll('[data-track-event]').forEach((el) => {
     let props = {};
     try { props = JSON.parse(el.dataset.trackProps || '{}'); } catch { /* malformed props: send the event bare */ }
-    window.msTrack(el.dataset.trackEvent, props);
+    (window.msTrack ?? send)(el.dataset.trackEvent, props);
   });
+}
+
+export function initTracking() {
+  window.msTrack ??= send;
+  firePageEvents();
 
   document.addEventListener('click', (e) => {
     const link = e.target instanceof Element ? e.target.closest('a[href]') : null;

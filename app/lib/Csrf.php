@@ -31,6 +31,9 @@ final class Csrf
         ]);
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
+        // P28: keep the form session for 24 hours (PHP's default is 24 minutes), so a slow writer's token never expires
+        // mid-message: no time limit under WCAG 2.2.1 (its 20-hour exception)
+        ini_set('session.gc_maxlifetime', '86400');
         session_start();
     }
 

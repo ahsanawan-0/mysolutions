@@ -64,10 +64,41 @@ return [
         'legal_links' => [
             ['Privacy', '/privacy-policy/'],
             ['Cookies', '/cookie-policy/'],
-            // 'Cookie settings' is a <button data-cookie-settings> printed between these (P28 consent module)
+            // 'Cookie settings' (cookie_settings below) is printed between these: a link to /cookie-policy/#cookie-settings
+            // that opens the preferences dialog instead when the consent module runs (P28)
             ['Terms', '/terms-and-conditions/'],
             ['Accessibility', '/accessibility/'],
             ['Sitemap', '/sitemap/'],
         ],
+        'cookie_settings' => 'Cookie settings',
+    ],
+
+    // C24 consent banner + preferences dialog (templates/partials/cookie-banner.php, P28). Technologies and category
+    // descriptions come from app/config/cookies.php.
+    'consent' => [
+        'label'   => 'Cookie choices',
+        'title'   => 'Cookies on this website',
+        // mode 'consent': analytics or marketing need an opt-in
+        'text'    => "We use strictly necessary cookies to make this site work. With your permission, we'd also like to use analytics cookies to see how the site is used, so we can improve it. Nothing optional is set unless you accept.",
+        // mode 'notice': only exempt statistics (DUAA 2025), on unless you object
+        'notice'  => 'We count visits with privacy-friendly analytics that use no cookies and never identify you. You can opt out at any time.',
+        'policy'  => 'Read our [cookie policy](/cookie-policy/).',
+        'accept'  => 'Accept all',
+        'reject'  => 'Reject all',
+        'manage'  => 'Manage preferences',
+        'ok'      => 'OK',
+        'opt_out' => 'Opt out',
+        'dialog'  => [
+            'title'     => 'Cookie preferences',
+            'intro'     => 'Choose which optional technologies we can use. You can change your mind at any time from "Cookie settings" at the bottom of every page.',
+            'always'    => 'Always on',
+            'on'        => 'On',
+            'exempt'    => 'Privacy-friendly statistics: on unless you switch them off.',
+            'details'   => 'What we use',
+            'columns'   => ['Name', 'Provider', 'Purpose', 'Duration'],
+            'save'      => 'Save preferences',
+            'close'     => 'Close',
+        ],
+        'saved'   => 'Your cookie preferences have been saved.',
     ],
 ];

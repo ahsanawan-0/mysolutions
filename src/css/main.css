@@ -49,6 +49,7 @@
 @import '/src/css/components/author-box.css';
 @import '/src/css/components/share.css';
 @import '/src/css/components/reading-progress.css';
+@import '/src/css/components/consent.css';
 @import '/src/css/pages/home.css';
 @import '/src/css/pages/home-services.css';
 @import '/src/css/pages/home-approach.css';
@@ -66,5 +67,6 @@
 @import '/src/css/pages/insights.css';
 @import '/src/css/pages/article.css';
 @import '/src/css/pages/faq.css';
+@import '/src/css/pages/legal.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

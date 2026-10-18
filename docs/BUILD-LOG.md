@@ -1237,3 +1237,51 @@
 
 **Follow-ups**
 - C06: the client approves the answers (the 4 current-site FAQs were rewritten; the new ones state facts about the Procurement Act 2023, Find a Tender and Contracts Finder), confirms the response time, then sets `status` to `published` in `app/data/faq-page.php`.
+
+---
+
+## P28: Legal pages, cookie consent, analytics (18 October 2026)
+
+**Commit:** `P28: Legal pages, cookie consent and analytics`
+
+**Files created**
+- `app/config/cookies.php`: policy `version` (bump = re-ask), `ms_consent`, 6 months; `analytics_provider` from `.env` `ANALYTICS_PROVIDER` (none | plausible | ga4), `analytics_id`, `analytics_exempt` (default false), `plausible_src`; categories necessary (required) / analytics / marketing; every technology with name, type, provider, purpose, duration, category, exempt and `when` (ga4 | plausible | turnstile): `ms_consent`, `ms_session` (contact form only), `ms_splash` (session storage), Cloudflare Turnstile (when enabled), `_ga` + `_ga_<stream>` (GA4), Plausible (no cookies). Marketing is empty.
+- `app/lib/Consent.php`: `technologies()` (in use, `exempt` resolved), `categories()` (only those with items, plus necessary), `needsBanner()`, `mode()` ('consent' or 'notice' when every optional item is exempt), `client()` (the JSON for consent.js), `headScript()` (GA4 Consent Mode v2 default: all denied, `wait_for_update: 500`). A provider without `ANALYTICS_ID` counts as none.
+- `templates/partials/cookie-banner.php` (printed by the base layout via `render()`; nothing at all without optional technologies) + `src/css/components/consent.css` + `src/js/modules/consent.js` (C24): the banner (hidden in the HTML, shown by JS after the splash when there is no valid choice; focus moves to it without a trap; three identical buttons Accept all / Reject all / Manage preferences, or OK / Opt out / Manage preferences in notice mode), the native modal `<dialog>` (Esc, focus kept inside, focus returns; backdrop click closes; one section per category with a `role="switch"` checkbox, "Always on" for necessary, the technologies under "What we use"; Reject all / Accept all / Save preferences), and a polite status line ("Your cookie preferences have been saved.").
+- `app/lib/Legal.php` + `content/legal/{privacy-policy,cookie-policy,terms-and-conditions,accessibility}.md` + thin `templates/pages/legal/*.php` + `templates/sections/legal/{document,cookie-table,cookie-settings}.php` + `src/css/pages/legal.css`: hero-inner `simple`, a "Last updated" line, the article layout with the sticky C41 contents ("On this page") beside the `.prose` text. Company facts are tokens filled from `app/config/site.php`. Every page opens with a "Draft for legal review" callout holding `[[PENDING: client legal review]]` and is `status: draft`.
+  - Privacy (docs/13 §3): controller and company facts, ICO number `[[PENDING]]`, data collected (the form's actual fields, emails and calls, client work, server logs, the hashed IP kept one hour by the rate limiter), purposes + lawful bases table, processors (hosting and SMTP `[[PENDING]]`, analytics via the cookie policy), international transfers (UK adequacy incl. the UK–US data bridge, IDTA / Addendum), retention (enquiries 24 months `[[PENDING: confirm]]`, client records 6 years `[[PENDING: confirm]]`, server logs `[[PENDING]]`), rights, the DUAA complaints route (acknowledged within 30 days) + ICO, no automated decisions, cookies link.
+  - Cookie policy (§4): what cookies are, how we use them, the generated table (name + type + provider · purpose · category + consent status · duration · how to object or withdraw), "Cookie settings" (`#cookie-settings`: a button that opens the dialog, or a "nothing to switch off" line when there is no banner), third-party content (static map, self-hosted fonts).
+  - Terms (§5): website terms of use (acceptable use, IP, information not advice, no guarantee of contract award, links, liability with the non-excludable carve-outs, law of England and Wales with the Scotland / Northern Ireland consumer carve-out); service terms `[[PENDING]]` as a separate client agreement.
+  - Accessibility (§6): WCAG 2.2 AA target, what is in place, "meets most of" status, known limitations (no assistive-technology audit yet `[[PENDING]]`, external sites, client documents), contact route (reply within 5 working days `[[PENDING: confirm]]`), EASS, technical information, prepared 18 October 2026, review yearly.
+
+**Files changed**
+- `templates/partials/head-seo.php`: `Consent::headScript()` where the placeholder was (before any Google tag).
+- `templates/layouts/base.php`: prints the cookie banner partial.
+- `templates/partials/footer.php` + `app/data/ui.php`: "Cookie settings" is now a link to `/cookie-policy/#cookie-settings` with `data-cookie-settings` (works without JS; opens the dialog with JS); banner and dialog copy in `ui('consent')`.
+- `src/js/core/track.js`: `firePageEvents()` exported; consent.js replays the page's `[data-track-event]` events the moment analytics starts and sets `window.msAnalytics` (GA4 → `gtag('event')`, Plausible → `plausible(name, {props})`).
+- `app/lib/Csrf.php`: **fix** `session.gc_maxlifetime` 86400 for the form session. PHP's default 24 minutes could expire the CSRF token of someone writing a long message, a WCAG 2.2.1 time limit; 24 hours falls under its 20-hour exception, which the accessibility statement relies on ("no time limits").
+- `.env.example`: `ANALYTICS_PROVIDER=none`, `ANALYTICS_EXEMPT`, `PLAUSIBLE_SRC` (fathom dropped: not in the prompt's list).
+- `src/css/main.css`, `CLAUDE.md`, `docs/03` (C24).
+
+**Decisions**
+- The banner is hidden in the HTML and shown by the script: without JS no optional technology can run, so there is nothing to ask; returning visitors never see a flash of it.
+- With `ANALYTICS_PROVIDER=none` (the deployed default) nothing is printed (no banner, no consent script, no Consent Mode snippet); the footer link simply opens the cookie policy, whose table lists the 3 necessary items.
+- Withdrawal deletes `_ga`, `_ga_*`, `_gid`, `_gat*` on every domain level and reloads only if a script had already run on the page.
+- Marketing stays out of the dialog while the config has no marketing technologies.
+- The cookie table folds docs/13's seven columns into five (type + provider under the name, the consent status under the category) so it fits the 720px text column on desktop; it scrolls sideways (a focusable region) on phones.
+- Legal text lives in Markdown with tokens, so a lawyer's edits don't touch PHP and company facts can't drift from `site.php`.
+
+**Deviations**
+- `fathom` (in the old `.env.example`) is not supported; the prompt lists none | plausible | ga4.
+
+**Checks**
+- `php -l` clean; `npm run build` clean.
+- curl: the 4 legal pages 200, no notices, no unreplaced tokens; with `none` no banner markup and no `gtag` on the home page.
+- Playwright 51/51 against three servers (`:8020` GA4 `G-TEST123456`, `:8030` Plausible + exempt, `:8000` none; Google and Plausible scripts stubbed so loads and cookies are observable). GA4: banner after the splash with focus on it; **zero Google requests and zero cookies before consent** (only `ms_session` on the contact page); the Consent Mode default in `dataLayer`; three buttons identical in size and style; bottom-left, ≤ 560px; keyboard Tab → Reject all → Enter stores `analytics:false`, no Google requests; `ms_consent` SameSite=Lax, ~182 days; no banner after a choice; footer "Cookie settings" opens the dialog with focus inside, Tab stays inside, Esc closes and focus returns; switching analytics on by keyboard + Save loads gtag once, sends `consent update granted`, sets `_ga`; `msTrack` reaches gtag (`click_phone`); status announced; withdrawal reloads, deletes `_ga*`, no gtag afterwards; Accept all from scratch loads it; an outdated policy version asks again and loads nothing. Mobile 360: banner within the screen, no horizontal scroll, dialog fits. Reduced motion: banner visible. Plausible exempt: notice buttons, statistics run before a choice with no cookies and `data-domain`, the switch on by default, Opt out reloads and stops it. None: no banner or module, "Cookie settings" goes to `/cookie-policy/#cookie-settings`, the table lists the necessary items only. No console errors.
+- Legal pages at 1440 and 360: one H1 each, contents 12 / 7 / 12 / 7 links, no horizontal scroll, the policy's button opens the dialog, no console errors or 4xx.
+- `seo-audit --all`: 39 pages + 7 legacy redirects, 0 failing (also against the GA4 server). `check-content`: titles 38–43, descriptions 145–151, all draft; the new PENDING / DRAFT lines listed.
+
+**Follow-ups**
+- Client / C06: legal review of all four pages; ICO registration number (data protection fee); hosting and email/SMTP providers; retention periods; the accessibility response time; service terms (separate client agreement); VAT number in the footer if registered.
+- Client decision (docs/13 §2): analytics provider. Recommended: Plausible with `ANALYTICS_EXEMPT=true`; GA4 works consent-first. Set `ANALYTICS_PROVIDER` / `ANALYTICS_ID` on Vercel and production, and name the provider in the privacy policy.
+- P30: an assistive-technology pass (screen reader) to clear the accessibility statement's known limitation.

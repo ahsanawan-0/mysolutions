@@ -1144,3 +1144,57 @@
 **Follow-ups**
 - P26: the article template (`pages/insights/single`), which also switches on the posts in the sitemap; `Schema::blogPosting()` should take the author's `type` (the `team` author is an Organization).
 - C07: 3+ real published posts flip the listing to `published` (indexable, in the sitemap); the client approves the category descriptions and the author bio.
+
+---
+
+## P26: Article template + migrate the existing post (18 October 2026)
+
+**Commit:** `P26: Article template and migrated post`
+
+**Files created**
+- `templates/pages/insights/single.php` (`/insights/{slug}/`; an unknown slug, or a draft on production, is a 404): hero-inner `article` (breadcrumbs Home › Insights › Category › Post, category chip, H1, lead, meta row: author, published date, "Updated" date when it differs, reading time; the featured image is the LCP, `fetchpriority="high"`) → article body → related insights → CTA band pre-filled with the category's `quote` context. SEO: `<title>` = front matter `seo_title`, else title + suffix when it fits in 65 characters, else the title; `og:type=article` + `article:published_time / modified_time / author / section / tag`; the photographic 1200×630 OG crop; WebPage (`primaryImageOfPage` = the 16:9 crop, `mainEntity` → `#article`) + BreadcrumbList + BlogPosting.
+- `templates/sections/insights/article.php`: reading-progress bar, Key takeaways (front matter `takeaways`, `rich()`), the contents, the `.prose` body (max 720px), then share links and the author box. DOM order = reading order (takeaways → contents → body → footer); from 1100px the contents sit sticky in a right-hand column that spans every row.
+- `templates/sections/insights/related.php`: "Keep Reading", 3 C10 cards from `Blog::related()` (same category, then shared tags, then newest) + "View all insights"; absent when there are no other posts.
+- Components: `toc.php` (C41), `author-box.php` (C42), `share-links.php` (C43); CSS `components/prose.css`, `toc.css`, `author-box.css`, `share.css`, `reading-progress.css` (C44), `pages/article.css`; JS `modules/toc.js` (collapse below 1100px, close after a jump, scrollspy), `modules/reading-progress.js`, `modules/article.js` (an overflowing table becomes a focusable, labelled scroll region; lazy images refresh ScrollTrigger).
+- `app/lib/MarkdownQuoteRenderer.php`: `> [!NOTE|TIP|IMPORTANT|WARNING|UPDATE] Optional title` → `<aside class="callout callout--…">` with an icon and title; `> [!PULL]` → `<aside class="pull-quote">` (quotes icon, `read-along`); other quotes stay `<blockquote>`.
+- Image crops `public/assets/img/sectors/healthcare-social-care-consultation-{16x9,4x3,1x1,og}.jpg`.
+
+**Files changed**
+- `content/blog/2026-01-18-health-and-social-care-tender-vocabulary-explained.md`: rewritten (see the originality check), `seo_title` "Health and Social Care Tenders: Key Vocabulary Explained" (56 characters), the live page's meta description kept, `updated: 2026-10-18`, 5 tags, 4 takeaways, `status: draft`.
+- `app/lib/Markdown.php`: the callout / pull-quote markers (listener strips the marker line, the renderer prints the box). `app/lib/Blog.php`: front matter `seo_title`; the cache key also covers the quote renderer, the icon sprite and `src/icons.json` (icons are printed into the cached HTML).
+- `app/lib/Schema.php`: `blogPosting()` takes the `Blog::author()` entry: a Person node (url, sameAs, jobTitle, worksFor) or, for the `team` Organization, the `#organization` entity itself; adds `isPartOf #blog`, `keywords`, and `image` only when there are images. `app/lib/Page.php` documents `article_author`, `article_section`, `article_tags`; `templates/partials/head-seo.php` prints `article:tag`.
+- `app/lib/Image.php`: `Image::crop($key, '16x9'|'4x3'|'1x1'|'og')`. `scripts/images.mjs`: every image a post uses gets the three schema crops (at most 1200px wide, never upscaled; `attention` crop) and a 1200×630 OG crop, recorded as `crops` in the manifest.
+- `templates/components/hero-inner.php`: meta items take a `label` printed before the `<time>` ("Updated" 18 October 2026).
+- `content/authors.php`: `team` gains `role` (provisional) and `sameAs` (the company LinkedIn). `content/categories.php`: optional `quote` (health-social-care → `?sector=healthcare-social-care`). `app/data/insights.php`: `article` copy.
+- `app/controllers/SitemapController.php`: post image entries use the 16:9 crop. `bin/seo-audit.php` audits every article and checks the old blog URL's one-hop 301; `bin/check-content.php` checks every article's title and description.
+- `src/icons.json` (+ lightbulb, clock-counter-clockwise, seal-check, x-logo, list-bullets in regular), `src/css/main.css`, `CLAUDE.md`, `docs/03` (C41–C44).
+
+**Originality check (the prompt's gate): failed, so the post was rewritten and stays a draft**
+- The old post's body is a copy of healthcarebids.co.uk's article at the same slug (`/whats-in-a-health-and-social-care-tender-tender-vocabulary-explained/`, `datePublished` 6 June 2024 in its schema, retrieved from the Wayback Machine because the live site's TLS certificate is broken). 96.3 % of the old post's 8-word sequences appear verbatim in it. Our copy went up on 18 January 2026, so ours is the copy.
+- So the text was not migrated. The post is a new article in our own words under the same headings (ITT, service specification, clarification questions, SQ/PSQ, non-collusion, social value, TUPE, TUPE list, confidential information form, technical and quality questions), each opening with a direct answer, plus an "Old and new terms at a glance" table, the Procurement Act 2023 update callout (with `[[PENDING: client review]]`) and a "How can My Solutionz help?" section with internal links. Against the healthcarebids text, 8-word overlap is 0 % (one shared phrase: the regulations' name) and 6-word overlap 0.4 % (headings only). The outbound healthcarebids link is gone.
+- The rewrite also corrects the old post: TUPE eligibility is about assignment to the service, not a 50 % rule; employee liability information is due 28 days before the transfer.
+- Facts used (to confirm in C07): Procurement Act 2023 in force 24 February 2025 (England, Wales, Northern Ireland); Central Digital Platform + PSQ; Provider Selection Regime since 1 January 2024; standstill 8 working days (was 10 calendar days); assessment summaries; contracts over £5 million published; FOI Act 2000; Public Services (Social Value) Act 2012; NHS minimum 10 % social value and net zero weighting; TUPE 2006.
+
+**Decisions**
+- Kept `status: draft` as the prompt requires after a failed originality check; the client approves the rewrite in C07 before it is published.
+- The `team` author is the company entity in schema (name "My Solutionz", `@id #organization`), so the byline and the publisher are one entity; the visible byline stays "My Solutionz Team".
+- One `<details>` serves both TOC layouts (open in the HTML; JS collapses it below 1100px), so the no-JS list exists once. Breakpoint 1100px rather than 1024px: below it, the 720px body and a 240px column don't fit side by side.
+- Paragraphs stay 14px (L11); the prose uses a 1.75 line height for long-form reading.
+- The reading-progress bar is scroll-linked, not animation, so it also runs under reduced motion.
+- Related posts are omitted entirely when there are none (only one post exists today).
+
+**Deviations**
+- The post's text is a rewrite, not a migration (originality check above).
+- The prompt asks for the schema to "validate": the JSON-LD parses and has the docs/10 §6 fields, but the Rich Results Test and validator.schema.org need a public URL, so that run belongs to P30 or the next Vercel preview.
+
+**Checks**
+- `php -l` clean on every changed PHP file; `npm run build` clean; `npm run images` wrote the 4 crops.
+- Markdown smoke test: callouts with and without titles, pull quote, plain quote, unknown `[!BOGUS]` left as a quote, table wrapper.
+- curl: the article 200 (one H1, noindex while draft, `article:*` tags, OG crop), `/insights/no-such-post/` 404, the old URL 301 → the new URL. JSON-LD: WebPage → mainEntity #article, BreadcrumbList (4 items), BlogPosting (3 crops, ISO dates with the Europe/London offset: `2026-10-18T00:00:00+01:00`, Organization author, wordCount 2014 → 10 min read).
+- Playwright 36/37 with 3 temporary published fixture posts (removed): hero, takeaways, callouts, table, pull quote; desktop TOC open, keyboard Enter on a TOC link lands the heading under the header, `aria-current` on exactly one link, TOC sticky, progress bar advancing and moving to the top edge when the header hides; share URLs encoded; 3 related cards; CTA `?sector=healthcare-social-care#quote`; no horizontal scroll at 360 / 768 / 1024 / 1440; TOC collapsed below 1100px, opens by keyboard, closes after a jump that lands on the heading; the table becomes a focusable region at 360; reduced motion shows everything and the TOC jumps; no JS: the TOC list is open and anchors work. No console errors, no 4xx/5xx. The one failure was the test itself (in Vite dev mode the CSS is injected by JS, so a no-JS page has no styles); re-run with production assets below. Keyboard pass: every share, author and related link has a visible focus ring. With production assets (`VITE_DEV=false`): no errors; without JS the progress bar is hidden.
+- `seo-audit --all`: 37 pages with the fixtures, 34 after removing them (incl. the article) + 7 legacy redirects (incl. the old blog URL), 0 failing. `check-content`: the article 56 / 148 characters, draft; new PROVISIONAL / PENDING lines listed. Sitemap and feed list published posts only (the draft article is in neither).
+
+**Follow-ups**
+- C07: the client reviews the rewritten article (facts above) and the Procurement Act note, then sets `status: published`. Until then the old URL 301s to an article that 404s on production, so publish it before launch (or point the 301 at `/insights/category/health-social-care/`).
+- C07: real authors (Person entries with permission) give the strongest E-E-A-T signals; the `team` role line is provisional.
+- P30: Rich Results Test + validator.schema.org on a public URL.

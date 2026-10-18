@@ -211,13 +211,26 @@ final class Schema
     }
 
     /**
-     * Blog article. $post keys: title, description, url, published, modified, author (name, url?, sameAs?, jobTitle?),
-     * images (string[] absolute: 16:9, 4:3, 1:1), section?, wordCount?
+     * Blog article (P26, docs/10 §6). $post keys: title, description, url, published, modified, author (an
+     * App\Blog::author() entry: type Person|Organization, name, url?, sameAs?, jobTitle?), images (absolute URLs:
+     * 16:9, 4:3, 1:1), section?, keywords?, wordCount?, image_alt?.
+     * A Person author is a Person node; an Organization author (the `team` fallback) is the company itself, the
+     * #organization entity, so the byline and the publisher are one entity.
      */
     public static function blogPosting(array $post): array
     {
         $url = Page::absolute($post['url']);
-        $author = $post['author'] ?? ['name' => config('name')];
+        $author = $post['author'] ?? ['type' => 'Organization'];
+        $authorNode = ($author['type'] ?? 'Organization') === 'Person'
+            ? array_filter([
+                '@type'    => 'Person',
+                'name'     => $author['name'],
+                'url'      => isset($author['url']) ? Page::absolute((string) $author['url']) : null,
+                'sameAs'   => !empty($author['sameAs']) ? array_values((array) $author['sameAs']) : null,
+                'jobTitle' => $author['jobTitle'] ?? null,
+                'worksFor' => ['@id' => self::organizationId()],
+            ], static fn ($v) => $v !== null)
+            : ['@type' => 'Organization', '@id' => self::organizationId(), 'name' => config('name'), 'url' => url('/')];
         $node = [
             '@type'            => 'BlogPosting',
             '@id'              => $url . '#article',
@@ -225,21 +238,22 @@ final class Schema
             'description'      => $post['description'] ?? '',
             'url'              => $url,
             'mainEntityOfPage' => ['@id' => $url . '#webpage'],
+            'isPartOf'         => ['@id' => Page::absolute('/insights/') . '#blog'],
             'datePublished'    => Page::date($post['published'] ?? null),
             'dateModified'     => Page::date($post['modified'] ?? ($post['published'] ?? null)),
-            'author'           => array_filter([
-                '@type'    => 'Person',
-                'name'     => $author['name'],
-                'url'      => isset($author['url']) ? Page::absolute($author['url']) : null,
-                'sameAs'   => $author['sameAs'] ?? null,
-                'jobTitle' => $author['jobTitle'] ?? null,
-            ], static fn ($v) => $v !== null),
+            'author'           => $authorNode,
             'publisher'        => ['@id' => self::organizationId()],
-            'image'            => array_values($post['images'] ?? []),
             'inLanguage'       => config('locale'),
         ];
+        $images = array_values(array_filter($post['images'] ?? []));
+        if ($images !== []) {
+            $node['image'] = $images;
+        }
         if (!empty($post['section'])) {
             $node['articleSection'] = $post['section'];
+        }
+        if (!empty($post['keywords'])) {
+            $node['keywords'] = array_values((array) $post['keywords']);
         }
         if (!empty($post['wordCount'])) {
             $node['wordCount'] = (int) $post['wordCount'];

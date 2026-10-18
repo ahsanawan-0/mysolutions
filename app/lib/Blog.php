@@ -9,9 +9,10 @@ use Throwable;
 /**
  * The Insights blog (PROMPTS P16, P25): Markdown files, no database (docs/11 §6, option A).
  * Posts are content/blog/YYYY-MM-DD-slug.md with YAML front matter:
- *   title, slug (default: the file name without its date), description, date (YYYY-MM-DD), updated, author (key in
- *   content/authors.php, default `team`), category (slug in content/categories.php), tags[], image (image-manifest
- *   key), image_alt, takeaways[], status (published | draft; anything else = draft).
+ *   title (the H1), seo_title (the <title> when it should differ, P26), slug (default: the file name without its
+ *   date), description, date (YYYY-MM-DD), updated, author (key in content/authors.php, default `team`), category (slug
+ *   in content/categories.php), tags[], image (image-manifest key), image_alt, takeaways[], status (published | draft;
+ *   anything else = draft).
  * Bodies are rendered by App\Markdown (H2/H3 ids + TOC, rel="noopener" on external links, images through img()).
  * Reading time at 220 words per minute.
  *
@@ -20,7 +21,7 @@ use Throwable;
  * publish rule).
  *
  * The parsed index (front matter + rendered HTML) is cached in storage/cache/blog.php and rebuilt whenever a post,
- * authors.php, categories.php, the image manifest, the site URL or this renderer changes.
+ * authors.php, categories.php, the image manifest, the icon sprite, the site URL or the renderer changes.
  *
  * API: all(), published(), latest($n), find($slug), byCategory($slug), paginate($perPage, $page, $posts),
  * related($post, $n), categories(), category($slug), author($key), displayDate($ymd).
@@ -29,7 +30,7 @@ final class Blog
 {
     public const WORDS_PER_MINUTE = 220;
     public const PER_PAGE = 9;
-    private const CACHE_VERSION = 1;
+    private const CACHE_VERSION = 2;
 
     /** @var array<int, array<string, mixed>>|null every parsed post, newest first, drafts included */
     private static ?array $index = null;
@@ -187,7 +188,8 @@ final class Blog
     {
         $parts = [self::CACHE_VERSION, (string) config('url')];
         foreach ([...$files, base_path('content/authors.php'), base_path('content/categories.php'),
-            public_path('assets/img/manifest.json'), __FILE__, __DIR__ . '/Markdown.php', __DIR__ . '/MarkdownImageRenderer.php'] as $file) {
+            public_path('assets/img/manifest.json'), __FILE__, __DIR__ . '/Markdown.php', __DIR__ . '/MarkdownImageRenderer.php', __DIR__ . '/MarkdownQuoteRenderer.php',
+            public_path('assets/icons/sprite.svg'), base_path('src/icons.json')] as $file) {
             $parts[] = $file . '@' . (is_file($file) ? (string) filemtime($file) : '-');
         }
         return md5(implode('|', $parts));
@@ -245,6 +247,7 @@ final class Blog
             'slug'          => $slug,
             'url'           => '/insights/' . $slug . '/',
             'title'         => $title,
+            'seo_title'     => trim((string) ($m['seo_title'] ?? '')),
             'description'   => trim((string) ($m['description'] ?? '')),
             'date'          => $date,
             'updated'       => $updated !== null && $updated > $date ? $updated : $date,

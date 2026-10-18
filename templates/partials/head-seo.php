@@ -47,6 +47,7 @@ $icons = [
 <?php if ($page['modified']): ?><meta property="article:modified_time" content="<?= e($page['modified']) ?>"><?php echo "\n"; endif; ?>
 <?php if (!empty($page['article_author'])): ?><meta property="article:author" content="<?= e($page['article_author']) ?>"><?php echo "\n"; endif; ?>
 <?php if (!empty($page['article_section'])): ?><meta property="article:section" content="<?= e($page['article_section']) ?>"><?php echo "\n"; endif; ?>
+<?php foreach ((array) ($page['article_tags'] ?? []) as $tag): ?><meta property="article:tag" content="<?= e((string) $tag) ?>"><?php echo "\n"; endforeach; ?>
 <?php endif; ?>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="<?= e($page['og_image_alt']) ?>">

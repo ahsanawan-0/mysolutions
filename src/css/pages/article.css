@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Insights article (PROMPTS P26, docs/08 §9): templates/pages/insights/single.php. The hero is C32 `article`
+   (components/hero-inner.css); the body is components/prose.css; contents C41 (toc.css), author box C42, share C43,
+   reading progress C44. Layout: one column (takeaways → contents → body → footer); from 1100px the body column is
+   at most 720px and the contents sit sticky in a column on the right, spanning every row.
+   ========================================================================== */
+.article { padding-block: var(--space-10) var(--space-20); background: var(--ms-canvas); }
+.article__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+.article__takeaways, .article__toc, .article__body, .article__footer { min-width: 0; max-width: var(--container-text); }
+.article__footer { display: grid; gap: var(--space-8); margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--ms-line); }
+
+@media (min-width: 1100px) {
+  .article--toc .article__grid {
+    grid-template-columns: minmax(0, var(--container-text)) minmax(240px, 300px);
+    justify-content: space-between;
+    column-gap: clamp(var(--space-12), 6vw, var(--space-24));
+    align-items: start;
+  }
+  .article--toc .article__grid > * { grid-column: 1; }
+  .article--toc .article__grid > .article__toc {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+    transition: top var(--dur-ui) var(--ease-apple);
+  }
+  .article--toc.article--takeaways .article__grid > .article__toc { grid-row: 1 / span 3; }
+  html.is-header-hidden .article--toc .article__toc { top: var(--space-6); }
+  .article__toc .toc__panel { max-height: calc(100vh - var(--header-h) - var(--space-24)); }
+}
+
+/* ---------- Key takeaways ---------- */
+.takeaways {
+  padding: var(--space-6);
+  border-radius: var(--r-xl);
+  background: var(--azure-50);
+  box-shadow: inset 0 0 0 1px var(--azure-100);
+}
+.takeaways .takeaways__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-h4);
+  color: var(--navy-900);
+}
+.takeaways__title .icon { color: var(--azure-600); }
+.takeaways .takeaways__list { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+.takeaways__list li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); align-items: start; line-height: var(--lh-body); }
+.takeaways__check {
+  box-sizing: content-box;
+  margin-top: 1px;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--azure-600);
+  color: var(--ms-white);
+}
+.takeaways__list strong { font-weight: var(--fw-display); color: var(--ms-ink); }
+
+/* ---------- Related insights ---------- */
+.article-related { padding-block: var(--section-y); background: var(--ms-white); }
+.article-related__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--space-10);
+}
+.article-related__title { margin: 0; }
+.article-related__sub { margin: var(--space-3) 0 0; color: var(--text-2); }
+.article-related .article-related__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8) var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.article-related__item { display: flex; min-width: 0; }
+@media (min-width: 640px) {
+  .article-related .article-related__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .article-related .article-related__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article--toc .article__grid > .article__toc { transition: none; }
+}

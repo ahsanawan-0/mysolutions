@@ -118,7 +118,7 @@ final class SitemapController
 
         if (is_file(templates_path('pages/insights/single'))) {
             foreach ($published as $post) {
-                $image = $post['image'] !== '' ? \App\Image::src($post['image']) : null;
+                $image = $post['image'] !== '' ? (\App\Image::crop($post['image'], '16x9') ?? \App\Image::src($post['image'])) : null;
                 $entries[] = [
                     'loc'     => url($post['url']),
                     'lastmod' => (int) strtotime($post['updated']),

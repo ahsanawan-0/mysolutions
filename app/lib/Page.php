@@ -14,7 +14,8 @@ use Throwable;
  * status (published|draft), breadcrumbs ([[label, path|null], …]), schema (graph nodes),
  * published, modified (ISO 8601 / Y-m-d), body_class, js_modules, web_page_type
  * (WebPage|AboutPage|ContactPage|CollectionPage), primary_image (absolute URL or path), about (extra WebPage `about`
- * subjects, e.g. [['@id' => …#service]], P22), main_entity (an @id for the WebPage's mainEntity, P25).
+ * subjects, e.g. [['@id' => …#service]], P22), main_entity (an @id for the WebPage's mainEntity, P25),
+ * article_author (URL), article_section, article_tags[] (og_type 'article' only: article:* tags, P26).
  * Derived: path, indexable (bool), warnings (string[], added by Seo::prepare).
  */
 final class Page

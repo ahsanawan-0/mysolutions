@@ -5,7 +5,8 @@ declare(strict_types=1);
  * Insights categories (PROMPTS P25), in display order. A post names its category by slug (`category: compliance`).
  * Each category page /insights/category/<slug>/ uses: name (chips, cards, breadcrumbs), title + accent (the two-voice
  * H1, which reads as the category name), seo_title (30–65 chars), description (70–170 chars, unique: the meta
- * description and the hero lead).
+ * description and the hero lead). Optional `quote`: the contact form pre-fill for the CTAs on the category's articles
+ * (P26; ['sector' => slug] or ['service' => slug], see quote_url()).
  */
 return [
     'tender-writing-tips' => [
@@ -28,6 +29,7 @@ return [
         'accent'      => 'Insights',
         'seo_title'   => 'Health and Social Care Tender Insights | My Solutionz',
         'description' => 'Guidance for care providers bidding for health and social care contracts: tender vocabulary, quality questions, CQC evidence and TUPE.', // PROVISIONAL
+        'quote'       => ['sector' => 'healthcare-social-care'],
     ],
     'compliance' => [
         'name'        => 'Compliance',

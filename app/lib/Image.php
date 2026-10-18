@@ -114,6 +114,21 @@ final class Image
     }
 
     /**
+     * Path of an article crop written by scripts/images.mjs (P26): '16x9', '4x3', '1x1' (BlogPosting `image`) or 'og'
+     * (1200×630 Open Graph). Null when the image has no such crop (not used by a post, or not generated yet).
+     */
+    public static function crop(string $key, string $name): ?string
+    {
+        $crops = self::manifest()[$key]['crops'] ?? null;
+        if (!is_array($crops) || !isset($crops[$name])) {
+            return null;
+        }
+        $dir = str_contains($key, '/') ? substr($key, 0, strrpos($key, '/') + 1) : '';
+        $path = self::BASE . $dir . basename($key) . '-' . $name . '.jpg';
+        return is_file(public_path(ltrim($path, '/'))) ? $path : null;
+    }
+
+    /**
      * Branded placeholder: navy→azure gradient, faint hexagon pattern and a `[[PENDING IMAGE: key]]`
      * label, at the requested aspect ratio (`ratio => '16/9'`, default 16/9). Colours via CSS variables only.
      */

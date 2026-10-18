@@ -1,0 +1,23 @@
+/* C44 Reading progress (sections/insights/article.php, modules/reading-progress.js; P26): a 3px brand-gradient bar
+   fixed under the header (at the top edge while the header is hidden), scaled with the scroll through the article
+   body. Decorative (aria-hidden); not shown without JS. */
+.reading-progress {
+  position: fixed;
+  inset: var(--header-h) 0 auto 0;
+  z-index: 790;
+  height: 3px;
+  pointer-events: none;
+  transition: top var(--dur-ui) var(--ease-apple);
+}
+html.is-header-hidden .reading-progress { top: 0; }
+html.no-js .reading-progress { display: none; }
+.reading-progress__bar {
+  display: block;
+  height: 100%;
+  background: var(--ms-grad-brand);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress { transition: none; }
+}

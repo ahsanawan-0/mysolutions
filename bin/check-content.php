@@ -7,8 +7,9 @@ declare(strict_types=1);
  *   php bin/check-content.php            report
  *   php bin/check-content.php --strict   exit 1 when anything is found
  *
- * Reports: [[PENDING, // PROVISIONAL and status => 'draft' markers; every route's title/description
- * lengths and duplicates; img() keys missing from the image manifest; pages without breadcrumbs.
+ * Reports: [[PENDING, // PROVISIONAL and status => 'draft' markers; every route's (and, from P26, every Insights
+ * article's) title/description lengths and duplicates; img() keys missing from the image manifest; pages without
+ * breadcrumbs.
  */
 
 $_SERVER['REQUEST_URI'] = '/';
@@ -69,7 +70,12 @@ $titles = [];
 $descriptions = [];
 $probed = [];
 $routeIssues = 0;
-foreach ($routes as $path => $route) {
+// Insights articles (P26) share the /insights/{slug}/ route: probe each post through it
+$checks = $routes;
+foreach (App\Blog::all() as $post) {
+    $checks[$post['url']] = ['template' => 'pages/insights/single', 'params' => ['slug' => $post['slug']], 'built_by' => 'P26'];
+}
+foreach ($checks as $path => $route) {
     if (isset($route['controller']) || str_contains($path, '{')) {
         continue;
     }

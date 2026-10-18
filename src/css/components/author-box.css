@@ -1,0 +1,50 @@
+/* C42 Author box (templates/components/author-box.php; P26): avatar (photo, or the logo mark for the team), the
+   "About the author" eyebrow heading, name, role, bio, LinkedIn + About us links. */
+.author-box {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+}
+.author-box__avatar {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--azure-50);
+}
+.author-box__avatar picture, .author-box__avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.author-box__mark { display: grid; place-items: center; }
+.author-box__mark img { width: auto; height: 36px; }
+.author-box .author-box__eyebrow {
+  margin: 0;
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-eyebrow);
+  letter-spacing: var(--ls-eyebrow);
+  line-height: var(--lh-eyebrow);
+  text-transform: uppercase;
+  color: var(--azure-700);
+}
+.author-box__name { margin: var(--space-1) 0 0; font-family: var(--font-display); font-size: var(--fs-h4); font-weight: var(--fw-display); color: var(--ms-ink); }
+.author-box__role { margin: 0; font-size: var(--fs-small); color: var(--text-2); }
+.author-box p.author-box__bio { margin-top: var(--space-3); color: var(--text); }
+.author-box__links { display: flex; flex-wrap: wrap; gap: 0 var(--space-6); margin-top: var(--space-2); }
+.author-box__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  color: var(--link);
+  text-decoration: none;
+}
+.author-box__link:hover { color: var(--link-hover); text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 479px) {
+  .author-box { grid-template-columns: minmax(0, 1fr); }
+}

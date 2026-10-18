@@ -7,9 +7,10 @@ declare(strict_types=1);
  *   php bin/seo-audit.php                         (base http://localhost:8000, published pages only)
  *   php bin/seo-audit.php --base=https://staging.example --all   (--all also audits draft pages)
  *
+ * Pages = every static route plus every Insights article (P26).
  * Checks: exactly one <h1>; title, description, canonical, og:image, og:image:alt, twitter:card present;
- * JSON-LD parses; every <img> has alt, width and height; no href="#" dummy links. Then the 6 legacy
- * /service/<slug>/ URLs: each must 301 in one hop to its new sub-service page, which answers 200 (P21).
+ * JSON-LD parses; every <img> has alt, width and height; no href="#" dummy links. Then the legacy URLs (the 6
+ * /service/<slug>/ pages, P21, and the old blog posts, P26): each must 301 in one hop to its new page, which answers 200.
  */
 
 $_SERVER['REQUEST_URI'] = '/';
@@ -40,6 +41,12 @@ foreach ($routes as $path => $route) {
     }
     if ($page['status'] === Page::PUBLISHED || $all) {
         $urls[] = $path;
+    }
+}
+// Insights articles (P26): one /insights/{slug}/ route serves every post; published posts, or every post with --all
+foreach (App\Blog::all() as $post) {
+    if (!$post['draft'] || $all) {
+        $urls[] = $post['url'];
     }
 }
 
@@ -118,16 +125,18 @@ foreach ($urls as $path) {
     }
 }
 
-// ---------- Legacy service URLs (P21): the 6 old /service/<slug>/ pages → one-hop 301 to the new pages ----------
+// ---------- Legacy URLs: the 6 old /service/<slug>/ pages (P21) and the old blog post URLs (P26: those that 301 to
+// an article; a draft article only answers 200 off production) → one-hop 301 to the new pages ----------
 $redirects = require base_path('app/redirects.php');
-$legacy = array_filter($redirects['exact'], static fn (string $from): bool => preg_match('#^/service/[a-z0-9-]+/$#', $from) === 1, ARRAY_FILTER_USE_KEY);
+$legacy = array_filter($redirects['exact'], static fn (string $to, string $from): bool => preg_match('#^/service/[a-z0-9-]+/$#', $from) === 1
+    || (preg_match('#^/insights/([a-z0-9-]+)/$#', $to, $m) === 1 && $m[1] !== 'category' && App\Blog::find($m[1]) !== null), ARRAY_FILTER_USE_BOTH);
 $fetch = static function (string $url): array {
     $ch = curl_init($url);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_TIMEOUT => 20, CURLOPT_USERAGENT => 'MySolutionz-SEO-Audit/1.0']);
     curl_exec($ch);
     return [(int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE), (string) curl_getinfo($ch, CURLINFO_REDIRECT_URL)];
 };
-echo "\nLegacy service redirects:\n";
+echo "\nLegacy redirects:\n";
 foreach ($legacy as $from => $to) {
     [$status, $location] = $fetch($base . $from);
     $targetPath = (string) parse_url($location, PHP_URL_PATH);

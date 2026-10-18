@@ -64,4 +64,26 @@ return [
     ],
 
     'blog_name' => 'My Solutionz Insights',   // schema.org Blog name
+
+    // The article page (P26, templates/pages/insights/single.php)
+    'article' => [
+        'by'          => 'By {name}',
+        'published'   => 'Published {date}',
+        'updated'     => 'Updated {date}',
+        'toc'         => 'In this article',
+        'toc_label'   => 'Table of contents',
+        'takeaways'   => 'Key takeaways',
+        'progress'    => 'Reading progress',
+        'share'       => 'Share this article',
+        'share_on'    => 'Share on {network}',
+        'share_email' => 'Share by email',
+        'new_tab'     => '(opens in a new tab)',
+        'email_body'  => "I thought you might find this useful:\n\n{title}\n{url}",
+        'author'      => 'About the author',
+        'linkedin'    => 'Follow on LinkedIn',
+        'about'       => 'About us',
+        'related'     => ['title' => 'Keep', 'accent' => 'Reading'],
+        'related_sub' => 'More practical guidance from the My Solutionz team.', // PROVISIONAL
+        'all'         => 'View all insights',
+    ],
 ];

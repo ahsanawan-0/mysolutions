@@ -6,11 +6,15 @@ namespace App;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
+use League\CommonMark\Node\Block\Paragraph;
+use League\CommonMark\Node\Inline\Newline;
+use League\CommonMark\Node\Inline\Text;
 use League\CommonMark\Node\StringContainerHelper;
 
 /**
@@ -21,6 +25,8 @@ use League\CommonMark\Node\StringContainerHelper;
  *  - external links get rel="noopener" (no forced new tab);
  *  - `![alt](image-key)` renders through img() (App\Image: responsive <picture>, lazy, width/height; the branded
  *    placeholder while the key is not in the manifest). See App\MarkdownImageRenderer.
+ *  - P26: a quote whose first line is `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!UPDATE]` (optionally
+ *    followed by a title) is a callout box, `[!PULL]` a pull quote; see App\MarkdownQuoteRenderer.
  */
 final class Markdown
 {
@@ -55,11 +61,12 @@ final class Markdown
         $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new GithubFlavoredMarkdownExtension());
         $environment->addRenderer(Image::class, new MarkdownImageRenderer(), 10);
+        $environment->addRenderer(BlockQuote::class, new MarkdownQuoteRenderer(), 10);
         $environment->addEventListener(DocumentParsedEvent::class, [self::class, 'onParsed']);
         return self::$converter = new MarkdownConverter($environment);
     }
 
-    /** Heading ids + TOC, and rel="noopener" on external links. */
+    /** Heading ids + TOC, rel="noopener" on external links, callout / pull-quote markers. */
     public static function onParsed(DocumentParsedEvent $event): void
     {
         $used = [];
@@ -77,12 +84,52 @@ final class Markdown
                 $used[$id] = true;
                 $node->data->set('attributes/id', $id);
                 self::$toc[] = ['level' => $node->getLevel(), 'id' => $id, 'text' => $text];
+            } elseif ($node instanceof BlockQuote) {
+                self::callout($node);
             } elseif ($node instanceof Link) {
                 $linkHost = strtolower((string) parse_url($node->getUrl(), PHP_URL_HOST));
                 if ($linkHost !== '' && $linkHost !== $host && $linkHost !== $production) {
                     $node->data->set('attributes/rel', 'noopener');
                 }
             }
+        }
+    }
+
+    /**
+     * `> [!TYPE] Optional title` on a quote's first line: the marker line is removed and the type + title are stored
+     * on the node for App\MarkdownQuoteRenderer. Unknown types stay ordinary quotes.
+     */
+    private static function callout(BlockQuote $quote): void
+    {
+        $para = $quote->firstChild();
+        if (!$para instanceof Paragraph) {
+            return;
+        }
+        // The first line: the inline nodes up to the first line break
+        $line = [];
+        $text = '';
+        for ($child = $para->firstChild(); $child !== null && !$child instanceof Newline; $child = $child->next()) {
+            $line[] = $child;
+            $text .= $child instanceof Text ? $child->getLiteral() : StringContainerHelper::getChildText($child);
+        }
+        if (preg_match('/^\s*\[!(\w+)\][ \t]*(.*)$/u', $text, $m) !== 1) {
+            return;
+        }
+        $type = strtolower($m[1]);
+        if (!isset(MarkdownQuoteRenderer::TYPES[$type])) {
+            return;
+        }
+        $quote->data->set('callout', $type);
+        $quote->data->set('callout_title', trim($m[2]));
+        $break = $line !== [] ? end($line)->next() : null;
+        foreach ($line as $node) {
+            $node->detach();
+        }
+        if ($break instanceof Newline) {
+            $break->detach();
+        }
+        if ($para->firstChild() === null) {
+            $para->detach();
         }
     }
 

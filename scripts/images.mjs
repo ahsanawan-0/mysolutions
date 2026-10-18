@@ -1,6 +1,7 @@
 // Image pipeline: assets-src/images/**/*.{jpg,jpeg,png,webp} → public/assets/img/<same path>/
 // Outputs AVIF + WebP + JPEG at widths [400, 800, 1200, 1600, 1920] (never upscaling) and
 // writes public/assets/img/manifest.json (intrinsic size + generated widths) for app/lib/Image.php.
+// Images used by blog posts also get the article crops (16:9, 4:3, 1:1 + a 1200×630 OG crop; see the end, P26).
 // Usage: npm run images
 
 import { readdir, readFile, writeFile, mkdir, stat } from 'node:fs/promises';
@@ -85,6 +86,52 @@ for (const file of sources) {
   };
   console.log(`[images] ${rel} → ${widths.join('/')}w × avif/webp/jpg`);
 }
+
+// Article crops (P26, docs/10 §5–§6): every image a blog post uses (`image:` in content/blog/*.md front matter) also
+// gets the BlogPosting schema crops 16:9, 4:3 and 1:1 (at most 1200px wide, never upscaled) and a 1200×630 Open Graph
+// crop, as <key>-16x9.jpg / -4x3.jpg / -1x1.jpg / -og.jpg next to its renditions. Recorded as `crops` in the manifest
+// entry ({ name: [width, height] }) for App\Image::crop().
+const CROPS = { '16x9': [16, 9], '4x3': [4, 3], '1x1': [1, 1] };
+const OG = [1200, 630];
+const blogDir = path.join(root, 'content/blog');
+const postImages = new Set();
+for (const name of await readdir(blogDir).catch(() => [])) {
+  if (!name.endsWith('.md')) continue;
+  const front = (await readFile(path.join(blogDir, name), 'utf8')).match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const key = front?.[1].match(/^image:\s*["']?([^"'\r\n]+?)["']?\s*$/m)?.[1];
+  if (key) postImages.add(key);
+}
+let cropped = 0;
+for (const key of postImages) {
+  const file = sources.find((f) => path.relative(srcDir, f).split(path.sep).join('/').replace(/\.[^.]+$/, '') === key);
+  const entry = manifest[key];
+  if (!file || !entry) {
+    console.log(`[images] crops: no source image for "${key}" (used by a blog post)`);
+    continue;
+  }
+  const target = path.join(outDir, path.dirname(key));
+  const base = path.basename(key);
+  const names = [...Object.keys(CROPS), 'og'];
+  const exists = await Promise.all(names.map((n) => stat(path.join(target, `${base}-${n}.jpg`)).then(() => true, () => false)));
+  if (entry.crops && entry.crops.mtime === entry.mtime && exists.every(Boolean)) continue;
+
+  const crops = { mtime: entry.mtime };
+  const image = sharp(file, { failOn: 'none' }).rotate();
+  for (const [name, [rw, rh]] of Object.entries(CROPS)) {
+    const w = Math.min(1200, entry.width, Math.floor((entry.height * rw) / rh));
+    const h = Math.round((w * rh) / rw);
+    await image.clone().resize(w, h, { fit: 'cover', position: 'attention' }).jpeg(FORMATS.jpeg.opts).toFile(path.join(target, `${base}-${name}.jpg`));
+    crops[name] = [w, h];
+    cropped++;
+  }
+  // Open Graph: always exactly 1200×630 (the <head> declares that size), upscaled from a smaller source if need be
+  await image.clone().resize(OG[0], OG[1], { fit: 'cover', position: 'attention' }).jpeg({ quality: 84, mozjpeg: true, progressive: true }).toFile(path.join(target, `${base}-og.jpg`));
+  crops.og = OG;
+  cropped++;
+  entry.crops = crops;
+  console.log(`[images] ${key} → crops ${Object.keys(CROPS).map((n) => `${n} ${crops[n].join('×')}`).join(', ')}, og 1200×630`);
+}
+if (cropped) generated += cropped;
 
 await mkdir(outDir, { recursive: true });
 await writeFile(manifestFile, JSON.stringify(manifest, null, 2) + '\n', 'utf8');

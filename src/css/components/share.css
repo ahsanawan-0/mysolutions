@@ -1,0 +1,19 @@
+/* C43 Share links (templates/components/share-links.php; P26): plain share URLs as 44px round icon buttons. */
+.share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+.share .share__label { margin: 0; font-family: var(--font-display); font-size: var(--fs-ui); font-weight: var(--fw-display); color: var(--ms-ink); }
+.share .share__list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.share__link {
+  display: grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border-radius: 50%;
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  color: var(--navy-900);
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), box-shadow var(--dur-hover) var(--ease-apple);
+}
+.share__link:hover { background: var(--navy-900); box-shadow: none; color: var(--ms-white); }
+@media (prefers-reduced-motion: reduce) {
+  .share__link { transition: none; }
+}

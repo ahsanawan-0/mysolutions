@@ -1,0 +1,104 @@
+/* ==========================================================================
+   Prose (PROMPTS P26): long-form text rendered from Markdown (App\Markdown), the Insights article body.
+   Paragraphs stay at the 14px body size (L11) with a looser line height for reading; headings follow the site scale.
+   Lists, tables (`.prose-table` scrolls sideways on small screens), quotations, pull quotes (`.pull-quote`) and
+   callouts (`.callout--note|tip|important|warning|update`, App\MarkdownQuoteRenderer).
+   ========================================================================== */
+.prose { color: var(--text); font-size: var(--fs-body); line-height: 1.75; }
+.prose > * { margin-block: 0; }
+.prose > * + * { margin-top: var(--space-5); }
+.prose > h2 { margin-top: var(--space-16); }
+.prose > h3 { margin-top: var(--space-10); }
+.prose > h2 + *, .prose > h3 + * { margin-top: var(--space-4); }
+.prose > :first-child { margin-top: 0; }
+.prose h2, .prose h3 { color: var(--ms-ink); text-wrap: balance; }
+
+.prose a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.prose a:hover { color: var(--link-hover); text-decoration-thickness: 2px; }
+.prose strong { font-weight: var(--fw-display); color: var(--ms-ink); }
+
+/* Lists: azure markers, a little air between items */
+.prose ul, .prose ol { padding-left: var(--space-6); }
+.prose li + li { margin-top: var(--space-2); }
+.prose li > ul, .prose li > ol { margin-top: var(--space-2); }
+.prose li::marker { color: var(--azure-600); font-weight: var(--fw-display); }
+
+/* A real quotation */
+.prose blockquote {
+  padding: var(--space-1) 0 var(--space-1) var(--space-6);
+  border-left: 3px solid var(--azure-600);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-lead);
+  color: var(--ms-ink);
+}
+.prose blockquote > * + * { margin-top: var(--space-3); }
+
+/* Pull quote: a line set large between rules (read-along lights it up as you scroll) */
+.prose .pull-quote {
+  position: relative;
+  margin-block: var(--space-12);
+  padding: var(--space-8) 0 var(--space-8) var(--space-12);
+  border-block: 1px solid var(--ms-line);
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-display);
+  line-height: var(--lh-h3);
+  letter-spacing: var(--ls-h3);
+  color: var(--navy-900);
+}
+.pull-quote__mark { position: absolute; top: var(--space-6); left: 0; color: var(--azure-600); }
+.prose .pull-quote p { margin: 0; text-wrap: balance; }
+
+/* Callouts */
+.prose .callout {
+  --callout-accent: var(--azure-600);
+  padding: var(--space-5) var(--space-6);
+  border-left: 4px solid var(--callout-accent);
+  border-radius: var(--r-xs) var(--r-lg) var(--r-lg) var(--r-xs);
+  background: var(--ms-white);
+  box-shadow: var(--shadow-1);
+}
+.prose .callout--tip { --callout-accent: var(--ms-success); }
+.prose .callout--important { --callout-accent: var(--navy-900); }
+.prose .callout--warning { --callout-accent: var(--ms-warning); }
+.prose .callout--update { --callout-accent: var(--azure-650); background: var(--azure-50); box-shadow: none; }
+.callout__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-ui-lg);
+  line-height: 1.35;
+  color: var(--ms-ink);
+}
+.callout__title strong { font-weight: var(--fw-display); }
+.callout__icon { flex: none; color: var(--callout-accent); }
+.callout__body { margin-top: var(--space-2); }
+.callout__body > * { margin-block: 0; }
+.callout__body > * + * { margin-top: var(--space-3); }
+
+/* Tables: scroll sideways inside their frame rather than squeezing (article.js makes an overflowing one focusable) */
+.prose .prose-table {
+  overflow-x: auto;
+  border-radius: var(--r-lg);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  overscroll-behavior-x: contain;
+}
+.prose .prose-table:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+.prose table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: var(--fs-small); line-height: var(--lh-small); }
+.prose th, .prose td { padding: var(--space-3) var(--space-4); text-align: left; vertical-align: top; }
+.prose th { background: var(--navy-900); color: var(--ms-white); font-family: var(--font-display); font-weight: var(--fw-display); }
+.prose td { border-top: 1px solid var(--ms-line); }
+.prose tbody tr:nth-child(even) td { background: var(--ms-canvas); }
+
+/* Images, rules, code */
+.prose .prose-img, .prose .prose-img img, .prose .img-placeholder { display: block; width: 100%; height: auto; border-radius: var(--r-lg); }
+.prose hr { margin-block: var(--space-12); }
+.prose code { padding: 0.1em 0.35em; border-radius: var(--r-xs); background: var(--ms-mist); font-size: 0.92em; }
+
+@media (forced-colors: active) {
+  .prose .callout { border: 1px solid CanvasText; border-left-width: 4px; }
+  .pull-quote__mark { color: CanvasText; }
+}

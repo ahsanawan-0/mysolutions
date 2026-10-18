@@ -44,6 +44,11 @@
 @import '/src/css/components/subnav.css';
 @import '/src/css/components/team-cards.css';
 @import '/src/css/components/form.css';
+@import '/src/css/components/prose.css';
+@import '/src/css/components/toc.css';
+@import '/src/css/components/author-box.css';
+@import '/src/css/components/share.css';
+@import '/src/css/components/reading-progress.css';
 @import '/src/css/pages/home.css';
 @import '/src/css/pages/home-services.css';
 @import '/src/css/pages/home-approach.css';
@@ -59,5 +64,6 @@
 @import '/src/css/pages/contact.css';
 @import '/src/css/pages/thank-you.css';
 @import '/src/css/pages/insights.css';
+@import '/src/css/pages/article.css';
 @import '/src/css/pages/styleguide.css';
 @import '/src/css/pages/styleguide-motion.css';

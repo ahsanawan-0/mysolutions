@@ -32,7 +32,8 @@ declare(strict_types=1);
  * @var array|null  $parent       [label, url] → "Part of …" chip linking up (sub-services)
  * @var array|null  $breadcrumbs  [[label, path|null], …] (normally $page['breadcrumbs'])
  * @var array|null  $chip         [label, url|null] article category chip
- * @var array|null  $meta         [['icon' => …, 'text' => …, 'datetime' => …?], …] article meta row
+ * @var array|null  $meta         [['icon' => …, 'text' => …, 'datetime' => …?, 'label' => …?], …] article meta row
+ *                                (`label` is printed before the text, outside its <time>: "Updated" 18 October 2026)
  * @var array|null  $image        ['key' => …, 'alt' => …] article featured image (priority, never clipped)
  * @var string|null $slot         Trusted HTML printed above the H1, built by the page template (P24: the thank-you
  *                                check mark); never pass user input
@@ -120,6 +121,7 @@ $columns = static function () use ($images, $speeds): string {
           <?php foreach ($meta as $item): ?>
           <li class="hero-inner__meta-item">
             <?php if (!empty($item['icon'])): ?><?= icon((string) $item['icon'], 'regular', ['size' => 16]) ?><?php endif; ?>
+            <?php if (!empty($item['label'])): ?><span class="hero-inner__meta-label"><?= e((string) $item['label']) ?></span><?php endif; ?>
             <?php if (!empty($item['datetime'])): ?>
             <time datetime="<?= e((string) $item['datetime']) ?>"><?= e((string) $item['text']) ?></time>
             <?php else: ?>

@@ -1,0 +1,150 @@
+/* ==========================================================================
+   FAQ (PROMPTS P27, docs/08 §10): templates/pages/faq.php + sections/faq/browser.php. Hero = C32 `simple`.
+   Tools (search, result count, topic chips) above the questions on small screens; from 1024px a sticky column on
+   the left. Questions are the C17 accordion, grouped under H2 topics. faq-search.js filters as you type.
+   ========================================================================== */
+.faq-browser { padding-block: var(--space-12) var(--section-y); background: var(--ms-canvas); }
+.faq-browser [hidden] { display: none !important; }
+.faq-browser__layout { display: grid; gap: var(--space-10); }
+@media (min-width: 1024px) {
+  .faq-browser__layout {
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    column-gap: clamp(var(--space-12), 6vw, var(--space-24));
+    align-items: start;
+  }
+  .faq-browser__tools {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+    transition: top var(--dur-ui) var(--ease-apple);
+  }
+  html.is-header-hidden .faq-browser__tools { top: var(--space-6); }
+}
+
+/* ---------- Search ---------- */
+.faq-search__label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-display);
+  color: var(--ms-ink);
+}
+.faq-search__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--input-h);
+  padding: 0 6px 0 var(--space-4);
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line), var(--shadow-1);
+  transition: box-shadow var(--dur-hover) var(--ease-apple);
+}
+.faq-search__field:hover { box-shadow: inset 0 0 0 1px var(--azure-300), var(--shadow-1); }
+.faq-search__field:focus-within { box-shadow: inset 0 0 0 2px var(--azure-600), var(--shadow-1); }
+.faq-search__icon { flex: none; color: var(--text-2); }
+.faq-search__input {
+  flex: 1;
+  min-width: 0;
+  height: calc(var(--input-h) - 2px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ms-ink);
+  font: inherit;
+  font-size: 1rem;   /* 16px: no zoom on iOS */
+}
+.faq-search__input::placeholder { color: var(--text-2); opacity: 1; }
+.faq-search__input:focus { outline: none; }   /* the field shows the 2px azure focus ring (focus-within) */
+.faq-search__input::-webkit-search-cancel-button { cursor: pointer; }
+.faq-search__submit {
+  flex: none;
+  min-height: 40px;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--navy-900);
+  color: var(--ms-white);
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+}
+.faq-search__submit:hover { background: var(--azure-650); }
+.faq-search__submit:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+html.js .faq-search__submit { display: none; }   /* filters as you type with JS; Enter still works */
+html.js .faq-search__field { padding-right: var(--space-4); }
+.faq-search__status { min-height: 1.5em; margin: var(--space-3) 0 0; font-size: var(--fs-small); color: var(--text-2); }
+
+/* ---------- Topic chips ---------- */
+.faq-topics { margin-top: var(--space-6); }
+.faq-topics .faq-topics__list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.faq-topics__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--target-min);
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border: 1px solid var(--ms-line);
+  border-radius: var(--r-pill);
+  background: var(--ms-white);
+  color: var(--ms-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: var(--fw-medium);
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-apple), color var(--dur-hover) var(--ease-apple), border-color var(--dur-hover) var(--ease-apple);
+}
+.faq-topics__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 6px;
+  border-radius: var(--r-pill);
+  background: var(--ms-mist);
+  color: var(--text-2);
+  font-size: var(--fs-eyebrow);
+  font-variant-numeric: tabular-nums;
+}
+.faq-topics__chip[aria-current] { border-color: transparent; background: var(--navy-900); color: var(--ms-white); }
+.faq-topics__chip[aria-current] .faq-topics__count { background: rgb(var(--white-rgb) / .16); color: var(--ms-white); }
+.faq-topics__chip:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }
+@media (hover: hover) {
+  .faq-topics__chip:not([aria-current]):hover { border-color: var(--azure-600); background: var(--azure-50); color: var(--azure-800); }
+}
+@media (min-width: 1024px) {
+  .faq-topics .faq-topics__list { flex-direction: column; align-items: stretch; }
+  .faq-topics__chip { display: flex; justify-content: space-between; }
+}
+
+/* ---------- Topics + questions ---------- */
+.faq-browser__groups { display: grid; gap: var(--space-16); }   /* a gap, not sibling margins: hidden topics take no space */
+.faq-group__title { margin: 0 0 var(--space-2); font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); }
+/* Matched words: the halo is a shadow, so marking never shifts the letters ("tender|s" stays one word) */
+.faq-group__list mark { border-radius: 2px; background: var(--azure-100); box-shadow: 0 0 0 2px var(--azure-100); color: inherit; }
+
+/* ---------- No results ---------- */
+.faq-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-12) var(--space-6);
+  border-radius: var(--r-xl);
+  background: var(--ms-white);
+  box-shadow: inset 0 0 0 1px var(--ms-line);
+  text-align: center;
+}
+.faq-empty__title { margin: 0; font-size: var(--fs-h3); }
+.faq-empty__text { margin: 0; max-width: 46ch; color: var(--text-2); }
+.faq-empty__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); margin-top: var(--space-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-browser__tools, .faq-search__field, .faq-topics__chip { transition: none; }
+}
+@media (forced-colors: active) {
+  .faq-search__field { border: 1px solid CanvasText; }
+  .faq-topics__chip[aria-current] { outline: 2px solid Highlight; }
+  .faq-group__list mark { background: Mark; color: MarkText; }
+}

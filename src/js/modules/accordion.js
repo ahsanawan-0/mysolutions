@@ -79,7 +79,7 @@ export default function accordion(root) {
 
   // Deep link (#faq-cost): open the target instantly so the answer is readable
   const reveal = () => {
-    const target = location.hash.length > 1 && root.querySelector(`:scope > details${CSS.escape(location.hash)}`);
+    const target = location.hash.length > 1 && root.querySelector(`:scope > details#${CSS.escape(decodeURIComponent(location.hash.slice(1)))}`);
     if (target && !target.open) target.open = true;
   };
   reveal();

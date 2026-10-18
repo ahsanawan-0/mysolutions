@@ -1198,3 +1198,42 @@
 - C07: the client reviews the rewritten article (facts above) and the Procurement Act note, then sets `status: published`. Until then the old URL 301s to an article that 404s on production, so publish it before launch (or point the 301 at `/insights/category/health-social-care/`).
 - C07: real authors (Person entries with permission) give the strongest E-E-A-T signals; the `team` role line is provisional.
 - P30: Rich Results Test + validator.schema.org on a public URL.
+
+---
+
+## P27: FAQ page (18 October 2026)
+
+**Commit:** `P27: FAQ page`
+
+**Files created**
+- `templates/pages/faq.php` (`/faq/`): hero-inner `simple` (H1 "Frequently Asked *Questions*", breadcrumbs Home › FAQ) → the FAQ browser → "Still have a question?" CTA band → `/contact-us/#quote`. Title "Tender Writing & Bid Management FAQs | My Solutionz" (51 characters) and the prompt's description (135). `status` comes from `app/data/faq-page.php` (draft until the client approves the answers). A search URL (`?q=`) is noindex with the canonical `/faq/`. Schema: WebPage + BreadcrumbList; FAQPage only with `config('seo.faq_schema')` (off), built from every question as plain text.
+- `templates/sections/faq/browser.php`: a tools column (GET search form, `role="status"` result count, topic chips with counts) beside four H2 topics, each a C17 accordion with H3 questions, plus the empty state ("No matching questions": "Show all questions" + "Ask us a question"). Every question is always in the HTML; `?q=` marks the others `hidden` server-side.
+- `app/data/faq-page.php` (+ `faq_page()` helper): status, SEO, hero, search, status, empty state and CTA copy.
+- `src/js/modules/faq-search.js`: filters as you type (250 ms pause), on Enter without reloading, Esc clears; hides non-matching questions, empty topics and their chips, updates the chip counts, marks the matched words in the questions, announces the count, keeps `?q=` in the URL (replaceState); topic scrollspy (`aria-current` on the chip).
+- `src/css/pages/faq.css` (C45).
+
+**Files changed**
+- `app/data/faqs.php`: groups renamed to the prompt's labels (Tendering basics, Our services, Pricing & process, Sectors); 16 questions on `/faq/` (4 + 4 + 6 + 2), in group order. New (provisional): what is a tender, the Procurement Act 2023 for bidders, where tenders are published (Find a Tender = the Central Digital Platform, Contracts Finder for procurements under the old rules, the devolved portals; links out with `rel="noopener"`), what services we offer (the 3 categories with links), how our strengths stand out (current-site FAQ 4), which sectors, CQC registration for new providers. Current-site FAQs 1–3 merged into confidentiality, after submission (now incl. presentations and negotiation) and cost. Moved: never-tendered-before → Our services; bid writing vs management → Tendering basics; after submission and guarantee → Pricing & process. The response-time question keeps its `[[PENDING]]` answer and is left out on production.
+- `app/lib/helpers.php`: `rich()` also turns `[label](https://…)` into an external link (`rel="noopener"`); new `rich_blocks()` (paragraphs + "- " lists through rich()), `rich_text()` (plain text for search and schema), `faq_matches()` (all words, case- and accent-insensitive, intl Normalizer when available) and `faq_page()`.
+- `templates/components/accordion.php`: answers through `rich_blocks()`; an item with `hidden => true` is printed `hidden`. `src/css/components/accordion.css`: answer lists, links, bold; block spacing for any child.
+- `src/js/modules/accordion.js`: **bug fix (P15)**: the deep-link lookup escaped the `#` (`details\#faq-cost`), so `#faq-<id>` links never opened their answer on any page. Now `details#<escaped id>`; verified on `/faq/#faq-cost` and `/#faq-cost`.
+- `src/css/main.css`, `CLAUDE.md`, `docs/03` (C17 note, C45).
+
+**Decisions**
+- The search is a real GET form, so it works without JS (server-side filter, shareable `?q=` URLs) and the JS only makes it live. The same matching rule runs in PHP and JS.
+- Topics are anchor chips, not tabs: every question stays on one crawlable page and the chips double as the in-page navigation (sticky column from 1024px, a wrapped row on small screens).
+- No accordion group name on `/faq/`, so several answers can be open while comparing; the home teaser keeps one-at-a-time.
+- New items are tagged only where they clearly belong (`where-are-tenders-published` → opportunity identification, `strengths` → tender & bid writing and expert review, `cqc-registration` → the CQC Registration page). The healthcare sector page was left without a lone one-question FAQ.
+- The demo content: `/faq/` had no template in this build; the page contains nothing from the old immigration-theme text (checked in the browser test).
+
+**Deviations**
+- None.
+
+**Checks**
+- `php -l` clean; `npm run build` clean.
+- curl: `/faq/` 200, noindex while draft, canonical `/faq/`; `?q=tupe` → "No questions match", `?q=procurement act` → 2, `?q=CQC` → 2; `?q=<script>` is escaped in the field and the status line; the home page, the tender & bid writing and CQC pages and `/contact-us/` (which share the FAQ data) still render with no notices.
+- Playwright 36/36: one H1 with the accent; no demo text; 16 questions / 4 topics / 4 chips; typing with the keyboard filters, announces "n questions matching", writes `?q=` and marks matches; a two-word search; empty topics and chips hidden; the empty state and its announcement; Esc clears; Enter filters without reloading; "Show all questions" clears and refocuses the field; a chip jumps to its topic and becomes current; the tools column stays sticky; an answer opens by keyboard; `#faq-cost` opens; `?q=` on load is filtered and marked; no horizontal scroll at 360 / 768 / 1024 / 1440; reduced motion filters and opens answers; without JS the form submits `?q=` and the server filters, and answers open. No console errors, no 4xx/5xx.
+- `seo-audit --all`: 35 pages + 7 legacy redirects, 0 failing (`/faq/` passes). `check-content`: `/faq/` draft, title 51, description 135; the FAQ items and page copy are listed as PROVISIONAL / PENDING / DRAFT. `/faq/` is not in the sitemap while draft.
+
+**Follow-ups**
+- C06: the client approves the answers (the 4 current-site FAQs were rewritten; the new ones state facts about the Procurement Act 2023, Find a Tender and Contracts Finder), confirms the response time, then sets `status` to `published` in `app/data/faq-page.php`.

@@ -81,8 +81,17 @@
   max-width: 62ch;
   color: var(--acc-a);
 }
-.accordion__body p { margin: 0; }
-.accordion__body p + p { margin-top: var(--space-3); }
+.accordion__body > * { margin-block: 0; }
+.accordion__body > * + * { margin-top: var(--space-3); }
+/* Answer lists and links (rich_blocks(), P27) */
+.accordion__body ul { padding-left: var(--space-5); }
+.accordion__body li + li { margin-top: var(--space-2); }
+.accordion__body li::marker { color: var(--azure-600); }
+.on-dark .accordion__body li::marker { color: var(--sky-300); }
+.accordion__body strong { font-weight: var(--fw-display); color: var(--acc-q); }
+.accordion__body a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.accordion__body a:hover { color: var(--link-hover); }
+.on-dark .accordion__body a { color: var(--sky-300); }
 
 @media (max-width: 767px) {
   .accordion__body { padding-right: 0; }

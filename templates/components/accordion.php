@@ -6,8 +6,10 @@ declare(strict_types=1);
  * src/js/modules/accordion.js animates the panel height (GSAP) and closes the others with the same animation when a
  * group name is set; the plus → minus morph is CSS. Under reduced motion the browser's native toggle runs and
  * <details name> keeps "one open at a time" native where supported.
- * @var array       $items      [['id' => 'cost', 'q' => 'Question', 'a' => 'Answer text'], …] (a is plain text,
- *                              paragraphs separated by blank lines)
+ * @var array       $items      [['id' => 'cost', 'q' => 'Question', 'a' => 'Answer text'], …] (a is plain text
+ *                              printed with rich_blocks(): paragraphs separated by blank lines, "- " lines = a list,
+ *                              **bold**, [label](/path/) and [label](https://…) links; P27). An item with
+ *                              'hidden' => true is printed with the `hidden` attribute (the /faq/ search, P27)
  * @var string|null $name       Group name → one item open at a time (omit for independent items)
  * @var bool|null   $open       Open the first item on load (default false)
  * @var int|null    $level      Heading level for each question (default 3; 0 = plain text, e.g. inside a sidebar)
@@ -21,16 +23,14 @@ $qTag = $level > 0 ? 'h' . $level : 'span';
 ?>
 <div class="accordion<?= isset($class) ? ' ' . e($class) : '' ?>" data-module="accordion">
   <?php foreach ($items as $i => $item): ?>
-  <details class="accordion__item" id="<?= e($prefix . '-' . ($item['id'] ?? $i)) ?>"<?= isset($name) ? ' name="' . e($name) . '"' : '' ?><?= !empty($open) && $i === 0 ? ' open' : '' ?>>
+  <details class="accordion__item" id="<?= e($prefix . '-' . ($item['id'] ?? $i)) ?>"<?= isset($name) ? ' name="' . e($name) . '"' : '' ?><?= !empty($open) && $i === 0 ? ' open' : '' ?><?= !empty($item['hidden']) ? ' hidden' : '' ?>>
     <summary class="accordion__summary">
       <<?= $qTag ?> class="accordion__q"><?= e($item['q']) ?></<?= $qTag ?>>
       <span class="accordion__icon" aria-hidden="true"></span>
     </summary>
     <div class="accordion__panel">
       <div class="accordion__body">
-        <?php foreach (preg_split('/\n\s*\n/', trim((string) $item['a'])) ?: [] as $para): ?>
-        <p><?= e($para) ?></p>
-        <?php endforeach; ?>
+        <?= rich_blocks((string) $item['a']) ?>
       </div>
     </div>
   </details>

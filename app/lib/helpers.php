@@ -323,6 +323,34 @@ function faqs(?string $page = null, ?string $group = null): array
         ($page === null || in_array($page, $f['pages'], true)) && ($group === null || $f['group'] === $group)));
 }
 
+/** /faq/ page copy (app/data/faq-page.php, P27): faq_page('hero.title'). */
+function faq_page(string $key, mixed $default = null): mixed
+{
+    static $copy = null;
+    $copy ??= require base_path('app/data/faq-page.php');
+    return data_get($copy, $key, $default);
+}
+
+/**
+ * Does an FAQ item match a search (P27)? Every word of $query (case- and accent-insensitive) must appear in the
+ * question or the plain-text answer. The same rule runs in src/js/modules/faq-search.js.
+ */
+function faq_matches(array $item, string $query): bool
+{
+    $fold = static function (string $s): string {
+        $s = mb_strtolower($s);
+        $t = class_exists('Normalizer') ? (string) Normalizer::normalize($s, Normalizer::FORM_D) : $s;
+        return (string) preg_replace('/\p{Mn}+/u', '', $t);
+    };
+    $haystack = $fold($item['q'] . ' ' . rich_text((string) $item['a']));
+    foreach (preg_split('/\s+/u', $fold(trim($query)), -1, PREG_SPLIT_NO_EMPTY) ?: [] as $word) {
+        if (!str_contains($haystack, $word)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 /** FAQ group labels in display order (app/data/faqs.php → groups): slug → label. */
 function faq_groups(): array
 {
@@ -515,15 +543,45 @@ function pending_note(mixed $data): ?string
 
 /**
  * The client copy conventions (docs/website_content/services/*.md) as safe HTML: the text is escaped first, then
- * `**bold**` → <strong> and `[label](/path/)` → <a href="url(path)"> (root-relative paths only). Nothing else
- * becomes HTML. Service page paragraphs are printed with rich().
+ * `**bold**` → <strong>, `[label](/path/)` → <a href="url(path)"> (root-relative) and, from P27,
+ * `[label](https://…)` → an external link with rel="noopener". Nothing else becomes HTML. Service page paragraphs
+ * and FAQ answers are printed with rich().
  */
 function rich(string $text): string
 {
     $html = e($text);
     $html = preg_replace('/\*\*(.+?)\*\*/s', '<strong>$1</strong>', $html) ?? $html;
-    return preg_replace_callback('#\[([^\]]+)\]\((/[^)\s]*)\)#', static fn (array $m): string =>
-        '<a href="' . e(url(html_entity_decode($m[2], ENT_QUOTES | ENT_HTML5))) . '">' . $m[1] . '</a>', $html) ?? $html;
+    return preg_replace_callback('#\[([^\]]+)\]\((/[^)\s]*|https://[^)\s]+)\)#', static function (array $m): string {
+        $href = html_entity_decode($m[2], ENT_QUOTES | ENT_HTML5);
+        return str_starts_with($href, '/')
+            ? '<a href="' . e(url($href)) . '">' . $m[1] . '</a>'
+            : '<a href="' . e($href) . '" rel="noopener">' . $m[1] . '</a>';
+    }, $html) ?? $html;
+}
+
+/**
+ * Plain-text answer blocks (FAQ answers, P27) as HTML: paragraphs separated by blank lines become <p>, a paragraph
+ * whose lines all start with "- " becomes a <ul>; every line goes through rich().
+ */
+function rich_blocks(string $text): string
+{
+    $out = '';
+    foreach (preg_split('/\n\s*\n/', trim($text)) ?: [] as $block) {
+        $lines = preg_split('/\n/', trim($block)) ?: [];
+        if ($lines !== [] && count(array_filter($lines, static fn (string $l): bool => str_starts_with(ltrim($l), '- '))) === count($lines)) {
+            $out .= '<ul>' . implode('', array_map(static fn (string $l): string => '<li>' . rich(substr(ltrim($l), 2)) . '</li>', $lines)) . '</ul>';
+        } else {
+            $out .= '<p>' . rich($block) . '</p>';
+        }
+    }
+    return $out;
+}
+
+/** The plain text of a rich() / rich_blocks() string: markup removed, entities decoded (search, schema). */
+function rich_text(string $text): string
+{
+    $html = (string) preg_replace('#</(p|li)>#', ' ', rich_blocks($text));
+    return trim((string) preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 }
 
 /** Contact page copy (app/data/contact.php, P23): contact('form.labels.name'). */

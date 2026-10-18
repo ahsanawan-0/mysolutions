@@ -122,7 +122,8 @@ GSAP equivalents are registered once with `CustomEase.create('apple', '0.28,0.11
 | C14 | **Avatar stack** | 3–4 overlapping circles, 3px white ring |
 | C15 | **Process steps** | 01–05 numbered list with progress line; pinned scroll variant |
 | C16 | **Testimonial slider** | Quote, name, role/company, sector tag; GSAP slider; pause control |
-| C17 | **Accordion (FAQ)** | `<details>/<summary>` base + GSAP height animation; plus/minus icon morph |
+| C17 | **Accordion (FAQ)** | `<details>/<summary>` base + GSAP height animation; plus/minus icon morph. P27: answers through `rich_blocks()` (paragraphs, lists, bold, internal and external links), `hidden` items for search, `#faq-<id>` deep links open the answer. The `/faq/` page adds C45 |
+| C45 | **FAQ search** | `sections/faq/browser.php` + `pages/faq.css` + `modules/faq-search.js` (P27): a GET search form (works without JS, `?q=`), a `role="status"` result count, topic chips (pill links with count badges, navy `aria-current` by scrollspy; a vertical sticky column from 1024px), live filtering as you type (every word, case- and accent-insensitive), matched words marked, empty topics and chips hidden, an empty state with "Show all questions" and a contact button; Esc clears |
 | C18 | **Tabs** | Sector/service switcher, ARIA tabs pattern, sliding indicator |
 | C19 | **Form fields** | 52px inputs, floating labels, inline validation messages, success state with check-draw animation |
 | C20 | **Quick-Start bar** | Hero bar (sector + service selects + button) |
